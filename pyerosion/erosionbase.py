@@ -130,4 +130,7 @@ class ErosionBase:
         if src_ds is not None:
             return 'raster'
 
+        if src_ds is None:
+            raise ErosionError("File '{}' not found".format(filename))
+
         raise ErosionError("Unknown file type")
