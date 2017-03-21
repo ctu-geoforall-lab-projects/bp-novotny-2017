@@ -45,29 +45,33 @@ class ErosionError(StandardError):
     pass
 
 class ErosionBase:
-    def __init__(self, epsg='5514'):
+    def __init__(self, epsg='5514', location_path=None):
         ###########
         self.file_type = None
         self.grass_layer_types = {}
 
-        gisdb = os.path.join(tempfile.gettempdir(), 'grassdata')
-        if not os.path.isdir(gisdb):
-            os.mkdir(gisdb)
+        if not location_path:
+            gisdb = os.path.join(tempfile.gettempdir(), 'grassdata')
+            if not os.path.isdir(gisdb):
+                os.mkdir(gisdb)
 
-        # location/mapset: use random names for batch jobs
-        string_length = 16
-        location = binascii.hexlify(os.urandom(string_length))
-        mapset   = 'PERMANENT'
-        location_path = os.path.join(gisdb, location)
-        temp_dir = gisdb
-
-        # Create new location
+            # location/mapset: use random names for batch jobs
+            string_length = 16
+            location = binascii.hexlify(os.urandom(string_length))
+            mapset   = 'PERMANENT'
+            temp_dir = gisdb
+        else:
+            dirname, mapset = os.path.split(location_path.rstrip(os.path.sep))
+            gisdb, location = os.path.split(dirname)
+            
         # GRASS session must be initialized first
         gsetup.init(os.environ['GISBASE'], gisdb, location, mapset)
-        try:
-            gscript.create_location(gisdb, location, epsg, overwrite=True)
-        except ScriptError as e:
-            raise ErosionError('{}'.format(e))
+        # Create temporal location if requested 
+        if not location_path:
+            try:
+                gscript.create_location(gisdb, location, epsg, overwrite=True)
+            except ScriptError as e:
+                raise ErosionError('{}'.format(e))
 
         # Be quiet, print only error messages
         os.environ['GRASS_VERBOSE'] = '0'
