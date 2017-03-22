@@ -2,13 +2,16 @@
 
 import os
 import sys
-from pyerosion.erosionusle import ErosionUSLE
 
-location = None
+sys.path.insert(0, r'C:\Users\sanko\Documents\GitHub\bp-novotny-2017')
+from pyerosion import erosionusle
+
+reload(erosionusle)
+location = r'D:\GRASSDATA\USLE\PERMANENT'
 if len(sys.argv) > 1:
     location=sys.argv[1]
 
-er = ErosionUSLE(location_path=location)
+er = erosionusle.ErosionUSLE(location_path=location)
 # http://training.gismentors.eu/geodata/qgis/
 if location is None:
     home = os.path.expanduser("~")
