@@ -16,6 +16,7 @@ class ErosionUSLE(ErosionBase):
                                 'accu' : 'accu',
                                 'tci' : 'tci',
                                 'hpj' : 'hpj',
+                                'kpp' : 'kpp',
                                 'hpj_kpp' : 'hpj_kpp'}
         
     def run(self):
@@ -27,7 +28,7 @@ class ErosionUSLE(ErosionBase):
         formula='ls = 1.6 * pow(' + self._maps['accu'] + '* (10.0 / 22.13), 0.6) * pow(sin(' + self._maps['slope'] + '* (3.1415926/180)) / 0.09, 1.3)'
         run_command('r.mapcalc', expr=formula)
 #        KC Factor
-        run_command('v.overlay', ainput=self._maps['hpj'], binput=kpp, operator=or, output=self._maps['hpj_kpp'])
+        run_command('v.overlay', ainput=self._maps['hpj'], binput=self._maps['kpp'], operator='or', output=self._maps['hpj_kpp'])
 
     def test(self):
         run_command('g.region', flags='p')
