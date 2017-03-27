@@ -60,10 +60,13 @@ class ErosionBase:
             location = binascii.hexlify(os.urandom(string_length))
             mapset   = 'PERMANENT'
             temp_dir = gisdb
+
+            self.temporal_location = True
         else:
             dirname, mapset = os.path.split(location_path.rstrip(os.path.sep))
             gisdb, location = os.path.split(dirname)
-            
+            self.temporal_location = False
+
         # GRASS session must be initialized first
         gsetup.init(os.environ['GISBASE'], gisdb, location, mapset)
         # Create temporal location if requested 
