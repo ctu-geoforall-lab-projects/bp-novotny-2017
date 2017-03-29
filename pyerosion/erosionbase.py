@@ -8,6 +8,10 @@ import tempfile
 import binascii
 
 def findGRASS():
+        """Find GRASS.
+
+        Find location of GRASS.
+        """
     ########### SOFTWARE
     if sys.platform == 'win32':
         grass7bin = r'C:\\OSGeo4W64\\bin\\grass72.bat'
@@ -46,7 +50,17 @@ class ErosionError(StandardError):
 
 class ErosionBase:
     def __init__(self, epsg='5514', location_path=None):
-        ###########
+        """USLE constructor.
+
+        Two modes are available
+         - creating temporal location, input data are imported
+
+         - use existing location, in this case specified location must
+           contain maps defined by self.maps directory
+
+        :param epsg: EPSG code for creating new temporal location
+        :param location_path: path to existing location
+        """
         self.file_type = None
         self.grass_layer_types = {}
 
@@ -80,16 +94,29 @@ class ErosionBase:
         os.environ['GRASS_VERBOSE'] = '0'
 
     def __del__(self):
-         #Remove all temp directory
+        """Destructor.
+        Remove all temp directory
+        """
          #shutil.rmtree(temp_dir)
          pass
 
     def import_files(self, files):
+        """
+        Define name and type imported files
+        
+        :param files: Imported files
+        """
         for file_name in files:
             file_type = self._file_type_test(file_name)
             self.import_data(file_name, file_type)
 
     def import_data(self, file_name, file_type):
+        """
+        Import files
+        
+        :param file_name: name of file
+        :param file_type: type of file (raster, vector, table)
+        """
         map_name = os.path.splitext(os.path.basename(file_name))[0]
         if map_name in self.grass_layer_types:
             return # TODO: how to handler raster and vector map with the same name
@@ -109,7 +136,11 @@ class ErosionBase:
         self.grass_layer_types[map_name] = file_type
 
     def test(self):
-        #messages
+        """
+        Run test.
+
+        - prints messages
+        """
         print('Current GRASS GIS 7 environment:')
         print(gscript.gisenv())
 
@@ -122,9 +153,23 @@ class ErosionBase:
             print('{}{}'.format(' ' * 4, vect))
 
     def export_data(self, grass_file, o_path, o_name):
+        """
+        Export data
+
+        :param grass_file: File for output
+        :param o_path: Path to output file
+        :param o_name: Name of output file
+        """
         pass
 
     def _file_type_test(self, filename):
+        """
+        Run type test
+
+        return type of input test file 
+
+        :param filename: Name of input test file
+        """
         # vector test
         src_ds = ogr.Open(filename)
         if src_ds is not None:
