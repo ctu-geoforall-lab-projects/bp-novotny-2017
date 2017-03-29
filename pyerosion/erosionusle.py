@@ -29,40 +29,14 @@ class ErosionUSLE(ErosionBase):
                         'landuse' : 'landuse'
         }
         # internal input tables names
-        self._tables = { 'hpj_k' : 'hpj_k',
-                         'kpp_k' : 'kpp_k',
-                         'lu_c' : 'lu_c'
+        self._table = { 'hpj_k' : 'hpj_k',
+                        'kpp_k' : 'kpp_k',
+                        'lu_c' : 'lu_c'
         }
         # output names
-        self.output = { 'erosion' : 'g',
+        self._output = { 'erosion' : 'g',
         }
 
-        self._temp_maps = []
-
-        self._map_counter = 0
-        self._pid = os.getpid()
-        
-    def __del__(self):
-        """USLE destructor.
-
-        - deleting temporal location
-        """
-        if self.temporal_location:
-            return
-
-        for map_name, map_type in self._temp_maps:
-            run_command('g.remove', map_type=map_type, name=map_name)
-
-    def _temp_map(self, map_type):
-        """
-        Define name and type of temporal maps
-        """
-        map_name = 'map_{}_{}'.format(self._map_counter, self._pid)
-        self._temp_maps.append((map_name, map_type))
-        self._map_counter += 1
-        
-        return map_type
-    
     def run(self, terraflow=False):
         """
         Erosion computing
@@ -72,7 +46,7 @@ class ErosionUSLE(ErosionBase):
         # set computation region based on input DMT
         print("Setting up computation region")
         run_command('g.region',
-                    raster=self._input['dmt']
+                    raster=self._input['dmt'], res=50
         )
         # computing slope on input DMT
         print("Computing slope")
@@ -140,15 +114,15 @@ class ErosionUSLE(ErosionBase):
         run_command('v.db.join',
                     map=hpj_kpp_land,
                     column='a_a_HPJ',
-                    other_table=self._tables['hpj_k'],
+                    other_table=self._table['hpj_k'],
                     other_column='HPJ')
         run_command('db.execute',
-                    sql='UPDATE' + hpj_kpp_land + 'SET K = (SELECT b.K FROM ' + hpj_kpp_land +' AS a JOIN '+ self._tables['kpp_k'] +' as b ON a.a_b_KPP = b.KPP) WHERE K IS NULL'
+                    sql='UPDATE ' + hpj_kpp_land + ' SET K = (SELECT b.K FROM ' + hpj_kpp_land +' AS a JOIN '+ self._table['kpp_k'] +' as b ON a.a_b_KPP = b.KPP) WHERE K IS NULL'
         )
         run_command('v.db.join',
                     map=hpj_kpp_land,
                     column='b_LandUse',
-                    other_table=self._tables['lu_c'],
+                    other_table=self._table['lu_c'],
                     other_column='LU'
         )
         # add column KC
@@ -170,7 +144,7 @@ class ErosionUSLE(ErosionBase):
                     use='attr',
                     attribute_column='KC'
         )
-        formula1=self.output['erosion'] + ' = 40 * ls*' + hpj_kpp_land_raster + ' * 1'
+        formula1=self._output['erosion'] + ' = 40 * ls*' + hpj_kpp_land_raster + ' * 1'
         run_command('r.mapcalc',
                     expr=formula1
         )
@@ -181,4 +155,4 @@ class ErosionUSLE(ErosionBase):
 
         - prints output erosion map metadata
         """
-        run_command('r.info', map=self._outputs['erosion'])
+        run_command('r.info', map=self._output['erosion'])

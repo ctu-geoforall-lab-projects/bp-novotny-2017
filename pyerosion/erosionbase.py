@@ -8,10 +8,10 @@ import tempfile
 import binascii
 
 def findGRASS():
-        """Find GRASS.
+    """Find GRASS.
 
-        Find location of GRASS.
-        """
+    Find location of GRASS.
+    """
     ########### SOFTWARE
     if sys.platform == 'win32':
         grass7bin = r'C:\\OSGeo4W64\\bin\\grass72.bat'
@@ -93,12 +93,21 @@ class ErosionBase:
         # Be quiet, print only error messages
         os.environ['GRASS_VERBOSE'] = '0'
 
+        # Manage temporal maps
+        self._temp_maps = []
+        self._map_counter = 0
+        self._pid = os.getpid()
+
     def __del__(self):
         """Destructor.
-        Remove all temp directory
+
+        - deleting temporal location
         """
-         #shutil.rmtree(temp_dir)
-         pass
+        if self.temporal_location:
+            return
+
+        for map_name, map_type in self._temp_maps:
+            gscript.run_command('g.remove', flags='f', type=map_type, name=map_name)
 
     def import_files(self, files):
         """
@@ -186,3 +195,14 @@ class ErosionBase:
             raise ErosionError("File '{}' not found".format(filename))
 
         raise ErosionError("Unknown file type")
+
+    def _temp_map(self, map_type):
+        """
+        Define name and type of temporal maps
+        """
+        map_name = 'map_{}_{}'.format(self._map_counter, self._pid)
+        self._temp_maps.append((map_name, map_type))
+        self._map_counter += 1
+        
+        return map_name
+    
