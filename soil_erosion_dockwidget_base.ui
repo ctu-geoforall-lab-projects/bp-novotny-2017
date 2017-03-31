@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>733</width>
-    <height>198</height>
+    <width>459</width>
+    <height>253</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -21,15 +21,15 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="autoFillBackground">
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
-      <widget class="QWidget" name="tabWidgetPage1">
+      <widget class="QWidget" name="DMT">
        <attribute name="title">
         <string>DMT</string>
        </attribute>
@@ -45,17 +45,17 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox">
+         <widget class="QgsMapLayerComboBox" name="raster_box">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>1</horstretch>
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QPushButton" name="loadbutton">
+         <widget class="QPushButton" name="load_raster">
           <property name="text">
            <string>Load</string>
           </property>
@@ -76,15 +76,106 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabWidgetPage2">
+      <widget class="QWidget" name="EUC">
        <attribute name="title">
         <string>EUC</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="2">
+         <widget class="QgsMapLayerComboBox" name="shp_box">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="3">
+         <widget class="QPushButton" name="load_shp">
+          <property name="text">
+           <string>Load (.shp)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="text">
+           <string>Shapefile:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
         <string>Parameters</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>P</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>K</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>C</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="k_factor"/>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="c_factor"/>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="r_factor"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>R</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="p_factor"/>
+        </item>
+        <item row="6" column="1">
+         <widget class="QPushButton" name="Set_button">
+          <property name="text">
+           <string>Set</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -95,7 +186,7 @@
   <customwidget>
    <class>QgsMapLayerComboBox</class>
    <extends>QComboBox</extends>
-   <header>qgis.gui</header>
+   <header>qgis.gui.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
