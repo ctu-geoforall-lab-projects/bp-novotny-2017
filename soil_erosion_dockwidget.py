@@ -25,7 +25,7 @@ import os
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant
 from PyQt4.QtGui import QFileDialog
-from qgis.core import QgsProviderRegistry, QgsVectorLayer
+from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsField
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 
@@ -60,7 +60,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shp_box.setFilters(QgsMapLayerProxyModel.PolygonLayer)
         self.load_shp.clicked.connect(self.onLoadShapefile)
 
-        self.Set_button.clicked.connect(self.AddKCFactors)
+        self.Set_button.clicked.connect(self.onAddKCFactors)
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
@@ -90,13 +90,34 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.addVectorLayer(fileName, QFileInfo(fileName).baseName(), "ogr")
             self.settings.setValue(sender, os.path.dirname(fileName))
 
-    def AddKCFactors(self):
+    def onAddKCFactors(self):
         """Add K and C factor to attribute table of EUC layer"""
+        def _addColumn(layer, name):
+            for field in layer.pendingFields():
+                if field.name() == name:
+                    return
+
+            # column does not exists
+            # TODO
+            # caps & QgsVectorDataProvider.AddAttributes):
+            layer.dataProvider().addAttributes(
+                [QgsField(name, QVariant.Double)]
+            )
+            
         euc_layer=self.shp_box.currentLayer()
+        if euc_layer is None:
+            # TODO: pushMessage()
+            return
+
+        # TODO: check on readonly layers
         euc_layer.startEditing()
-        euc_layer.addFeatures([feat1,feat2])
-        euc_layer.commitChanges()
+
+        # add attribute columns if not exists
+        _addColumn(euc_layer, "K")
+        _addColumn(euc_layer, "C")
         
+        euc_layer.commitChanges()
+
 
 
 
