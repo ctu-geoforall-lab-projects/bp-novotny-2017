@@ -23,11 +23,11 @@
 
 import os
 
-from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo
+from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant
 from PyQt4.QtGui import QFileDialog
-from qgis.core import QgsProviderRegistry
+from qgis.core import QgsProviderRegistry, QgsVectorLayer
 from qgis.utils import iface
-from qgis.gui import QgsMapLayerProxyModel
+from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 
 from PyQt4 import QtGui, uic
 
@@ -59,7 +59,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         self.shp_box.setFilters(QgsMapLayerProxyModel.PolygonLayer)
         self.load_shp.clicked.connect(self.onLoadShapefile)
-        
+
+        self.Set_button.clicked.connect(self.AddKCFactors)
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
@@ -91,6 +92,10 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def AddKCFactors(self):
         """Add K and C factor to attribute table of EUC layer"""
+        euc_layer=self.shp_box.currentLayer()
+        euc_layer.startEditing()
+        euc_layer.addFeatures([feat1,feat2])
+        euc_layer.commitChanges()
         
 
 
