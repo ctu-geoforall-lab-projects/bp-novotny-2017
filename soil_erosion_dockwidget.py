@@ -115,7 +115,20 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # add attribute columns if not exists
         _addColumn(euc_layer, "K")
         _addColumn(euc_layer, "C")
+        euc_layer.commitChanges()
+
+        euc_layer.startEditing()
+        fid_k = euc_layer.dataProvider().fieldNameIndex("K")
+        fid_c = euc_layer.dataProvider().fieldNameIndex("C")
+
+        k_value=self.k_factor.text()
+        c_value=self.c_factor.text()
         
+        for feature in euc_layer.getFeatures():
+            ID = feature.id()
+            euc_layer.changeAttributeValue(ID, fid_k, k_value)
+            euc_layer.changeAttributeValue(ID, fid_c, c_value)
+    
         euc_layer.commitChanges()
 
 
