@@ -5,16 +5,19 @@ class ReadCSV():
         self._data = []
         
     def read(self, csv_file):
-        """Read CSV file info table
+        """Read CSV file into table
         """
         with open(csv_file, 'rb') as f:
             # assuming that first line contains column names
             self._data = csv.reader(f)
-
-    def value(self, key, value):
+            dic_name = dict((row[0], row[1]) for row in self._data)
+            return dic_name
+        
+    def value(self, dictionary, key):
         """Get value from table.
 
-        :param key: column name used as key
-        :param value: column name used as value
-        """        
-        pass
+        :param dictionary: dictionary name
+        :param key: row of key
+        """
+        value = dictionary.get(key)
+        return value

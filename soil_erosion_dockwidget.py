@@ -31,6 +31,8 @@ from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 
 from PyQt4 import QtGui, uic
 
+from pyerosion.read_csv import ReadCSV
+
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'soil_erosion_dockwidget_base.ui'))
 
@@ -61,6 +63,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.load_shp.clicked.connect(self.onLoadShapefile)
 
         self.Set_button.clicked.connect(self.onAddKCFactors)
+        self.Set_button.clicked.connect(self.onAddKCFactors)
+        self.Set_button.clicked.connect(self.onCreateDictionary)
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
@@ -117,23 +121,30 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         _addColumn(euc_layer, "C")
         euc_layer.commitChanges()
 
-        euc_layer.startEditing()
-        fid_k = euc_layer.dataProvider().fieldNameIndex("K")
-        fid_c = euc_layer.dataProvider().fieldNameIndex("C")
-
+        # add default values from text boxes
         k_value=self.k_factor.text()
         c_value=self.c_factor.text()
-        
-        for feature in euc_layer.getFeatures():
-            ID = feature.id()
-            euc_layer.changeAttributeValue(ID, fid_k, k_value)
-            euc_layer.changeAttributeValue(ID, fid_c, c_value)
-    
+        self.onImportValue("K", k_value, None)
+        self.onImportValue("C", c_value)
+
+    def onImportValue(self, field_name, value, ID=None):
+        euc_layer=self.shp_box.currentLayer()
+        euc_layer.startEditing()
+        fid = euc_layer.dataProvider().fieldNameIndex(field_name)
+
+        if ID is None:
+            for feature in euc_layer.getFeatures():
+                ID = feature.id()
+                euc_layer.changeAttributeValue(ID, fid, value)
+
+        euc_layer.changeAttributeValue(ID, fid, value)
         euc_layer.commitChanges()
-
-
-
-
-
-
+        
+    def onCreateDictionary(self):
+        k_dic = ReadCSV().read('C:\Users\sanko\.qgis2\python\plugins\\bp-novotny-2017\K_factor.csv')
+        self.onGetValue(k_dic, '21')
+        
+    def onGetValue(self, dictionary, key):
+        k_value = ReadCSV().value(dictionary,key)
+        self.onImportValue('K', k_value)
         
