@@ -126,6 +126,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # add default values from text boxes
         k_value = float(self.k_factor.text())
         c_value = float(self.c_factor.text())
+        # only for testing
+        k_value = self._factors['K'].value('21')
         self.onImportValue(euc_layer, "K", k_value)
         self.onImportValue(euc_layer, "C", c_value)
 
