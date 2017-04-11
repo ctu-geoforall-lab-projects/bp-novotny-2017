@@ -63,8 +63,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.load_shp.clicked.connect(self.onLoadShapefile)
 
         self.Set_button.clicked.connect(self.onAddKCFactors)
-        self.Set_button.clicked.connect(self.onAddKCFactors)
-        self.Set_button.clicked.connect(self.onCreateDictionary)
+
+        self._factors = {}
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
@@ -113,38 +113,42 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # TODO: pushMessage()
             return
 
-        # TODO: check on readonly layers
-        euc_layer.startEditing()
-
+        # read k/c factors if needed
+        if not self._factors:
+            self._readFactorCodes()
+            
         # add attribute columns if not exists
+        euc_layer.startEditing()
         _addColumn(euc_layer, "K")
         _addColumn(euc_layer, "C")
         euc_layer.commitChanges()
 
         # add default values from text boxes
-        k_value=self.k_factor.text()
-        c_value=self.c_factor.text()
-        self.onImportValue("K", k_value, None)
-        self.onImportValue("C", c_value)
+        k_value = float(self.k_factor.text())
+        c_value = float(self.c_factor.text())
+        self.onImportValue(euc_layer, "K", k_value)
+        self.onImportValue(euc_layer, "C", c_value)
 
-    def onImportValue(self, field_name, value, ID=None):
-        euc_layer=self.shp_box.currentLayer()
+    def onImportValue(self, euc_layer, field_name, value, fid=None):
         euc_layer.startEditing()
-        fid = euc_layer.dataProvider().fieldNameIndex(field_name)
-
-        if ID is None:
+        index = euc_layer.dataProvider().fieldNameIndex(field_name)
+        
+        if fid is None:
             for feature in euc_layer.getFeatures():
-                ID = feature.id()
-                euc_layer.changeAttributeValue(ID, fid, value)
-
-        euc_layer.changeAttributeValue(ID, fid, value)
+                fid = feature.id()
+                euc_layer.changeAttributeValue(fid, index, value)
+        else:
+            euc_layer.changeAttributeValue(fid, index, value)
+        
         euc_layer.commitChanges()
         
-    def onCreateDictionary(self):
-        k_dic = ReadCSV().read('C:\Users\sanko\.qgis2\python\plugins\\bp-novotny-2017\K_factor.csv')
-        self.onGetValue(k_dic, '21')
+    def _readFactorCodes(self):
+        for fact in ('K',):
+            filename = os.path.join(os.path.dirname(__file__), 'code_tables', fact + '_factor.csv')
+            self._factors[fact] = ReadCSV(filename)
+        # self.onGetValue('21')
         
-    def onGetValue(self, dictionary, key):
-        k_value = ReadCSV().value(dictionary,key)
+    def onGetValue(self, key):
+        k_value = self._factors['K'].value(key)
         self.onImportValue('K', k_value)
         
