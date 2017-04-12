@@ -28,6 +28,7 @@ from PyQt4.QtGui import QFileDialog
 from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsField
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
+from qgis.analysis import QgsOverlayAnalyzer
 
 from PyQt4 import QtGui, uic
 
@@ -56,14 +57,19 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface = iface
 
         # Set filters for QgsMapLayerComboBoxes
+        self.shp_box_euc.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+        self.load_shp_euc.clicked.connect(self.onLoadShapefile)
+        
         self.raster_box.setFilters(QgsMapLayerProxyModel.RasterLayer)
         self.load_raster.clicked.connect(self.onLoadRaster)
 
-        self.shp_box.setFilters(QgsMapLayerProxyModel.PolygonLayer)
-        self.load_shp.clicked.connect(self.onLoadShapefile)
+        self.shp_box_bpej.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+        self.load_shp_bpej.clicked.connect(self.onLoadShapefile)
 
-        self.Set_button.clicked.connect(self.onAddKCFactors)
-
+        # Set functions for buttons
+        self.set_button.clicked.connect(self.onAddKCFactors)
+        self.compute_button.clicked.connect(self.onIntersectLayers)
+        
         self._factors = {}
 
     def closeEvent(self, event):
@@ -108,7 +114,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 [QgsField(name, QVariant.Double)]
             )
             
-        euc_layer=self.shp_box.currentLayer()
+        euc_layer=self.shp_box_euc.currentLayer()
         if euc_layer is None:
             # TODO: pushMessage()
             return
@@ -153,4 +159,9 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def onGetValue(self, key):
         k_value = self._factors['K'].value(key)
         self.onImportValue('K', k_value)
-        
+
+    def onIntersectLayers(self):
+        euc_layer = self.shp_box_euc.currentLayer()
+        bpej_layer = self.shp_box_bpej.currentLayer()
+        analyzer = QgsOverlayAnalyzer()
+        analyzer.intersection(euc_layer, bpej_layer, os.path.join(os.path.dirname(__file__), 'intersect.shp'), False, None)
