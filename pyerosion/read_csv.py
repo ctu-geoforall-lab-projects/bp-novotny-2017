@@ -12,7 +12,11 @@ class ReadCSV():
     def value(self, key):
         """Get value from table.
 
-        :param dictionary: dictionary name
         :param key: row of key
         """
         return self._data.get(key, None)
+
+    def list(self):
+        """Make list of keys from dictionary
+        """
+        return self._data.keys()

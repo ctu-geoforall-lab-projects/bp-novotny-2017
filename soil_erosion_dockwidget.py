@@ -24,7 +24,7 @@
 import os
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant
-from PyQt4.QtGui import QFileDialog
+from PyQt4.QtGui import QFileDialog, QComboBox
 from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsField
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -52,9 +52,18 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
-        self.settings = QSettings("CTU","Erosion_plugin")
+        self.settings = QSettings("CTU", "Erosion_plugin")
 
         self.iface = iface
+
+        # Read code tables
+        self._factors = {}
+        self._readFactorCodes()
+
+        # Fill C combobox
+        self.combobox_c.clear()
+        list = self._factors['C'].list()
+        self.combobox_c.addItems(list)
 
         # Set filters for QgsMapLayerComboBoxes
         self.shp_box_euc.setFilters(QgsMapLayerProxyModel.PolygonLayer)
@@ -66,11 +75,12 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shp_box_bpej.setFilters(QgsMapLayerProxyModel.PolygonLayer)
         self.load_shp_bpej.clicked.connect(self.onLoadShapefile)
 
+        self.shp_box_lpis.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+        self.load_lpis.clicked.connect(self.onLoadShapefile)
+
         # Set functions for buttons
-        self.set_button.clicked.connect(self.onAddKCFactors)
-        self.compute_button.clicked.connect(self.onIntersectLayers)
-        
-        self._factors = {}
+        self.compute_k_button.clicked.connect(self.onAddKFactor)
+        self.compute_c_button.clicked.connect(self.onAddCFactor)
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
@@ -100,42 +110,54 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.addVectorLayer(fileName, QFileInfo(fileName).baseName(), "ogr")
             self.settings.setValue(sender, os.path.dirname(fileName))
 
-    def onAddKCFactors(self):
-        """Add K and C factor to attribute table of EUC layer"""
-        def _addColumn(layer, name):
-            for field in layer.pendingFields():
-                if field.name() == name:
-                    return
-
-            # column does not exists
-            # TODO
-            # caps & QgsVectorDataProvider.AddAttributes):
-            layer.dataProvider().addAttributes(
-                [QgsField(name, QVariant.Double)]
-            )
-            
-        euc_layer=self.shp_box_euc.currentLayer()
-        if euc_layer is None:
+    def onAddKFactor(self):
+        bpej_layer = self.shp_box_bpej.currentLayer()
+        if bpej_layer is None:
             # TODO: pushMessage()
             return
+        else:
+            bpej_layer.startEditing()
+            self._addColumn(bpej_layer, 'K')
+            bpej_layer.commitChanges()
 
-        # read k/c factors if needed
-        if not self._factors:
-            self._readFactorCodes()
-            
-        # add attribute columns if not exists
-        euc_layer.startEditing()
-        _addColumn(euc_layer, "K")
-        _addColumn(euc_layer, "C")
-        euc_layer.commitChanges()
+        idx = bpej_layer.fieldNameIndex('BPEJ')
+        for feature in bpej_layer.getFeatures():
+            bpej = feature.attributes()[idx]
+            fid = feature.id()
+            if bpej == '99':
+                k_value = 0
+            else:
+                k_value = self._factors['K'].value(bpej[2]+bpej[3])
+            self.onImportValue(bpej_layer, 'K', k_value, fid)
 
-        # add default values from text boxes
-        k_value = float(self.k_factor.text())
-        c_value = float(self.c_factor.text())
-        # only for testing
-        k_value = self._factors['K'].value('21')
-        self.onImportValue(euc_layer, "K", k_value)
-        self.onImportValue(euc_layer, "C", c_value)
+    def onAddCFactor(self):
+        lpis_layer = self.shp_box_lpis.currentLayer()
+        if lpis_layer is None:
+            # TODO: pushMessage()
+            return
+        else:
+            lpis_layer.startEditing()
+            self._addColumn(lpis_layer, 'C')
+            lpis_layer.commitChanges()
+
+        idx = lpis_layer.fieldNameIndex('KULTURAKOD')
+        for feature in lpis_layer.getFeatures():
+            lpis = feature.attributes()[idx]
+            fid = feature.id()
+            if lpis == 'T':
+                c_value = 0.005
+            elif lpis == 'S':
+                c_value = 0.45
+            elif lpis == 'L':
+                c_value = 0
+            elif lpis == 'V':
+                c_value = 0
+            elif lpis == 'C':
+                c_value = 0.8
+            elif lpis == 'R':
+                combobox_value = self.combobox_c.currentText()
+                c_value = self._factors['C'].value(combobox_value)
+            self.onImportValue(lpis_layer, 'C', c_value, fid)
 
     def onImportValue(self, euc_layer, field_name, value, fid=None):
         euc_layer.startEditing()
@@ -151,10 +173,22 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         euc_layer.commitChanges()
         
     def _readFactorCodes(self):
-        for fact in ('K',):
+        for fact in ('K','C'):
             filename = os.path.join(os.path.dirname(__file__), 'code_tables', fact + '_factor.csv')
             self._factors[fact] = ReadCSV(filename)
         # self.onGetValue('21')
+
+    def _addColumn(self, layer, name):
+        for field in layer.pendingFields():
+            if field.name() == name:
+                return
+
+        # column does not exists
+        # TODO
+        # caps & QgsVectorDataProvider.AddAttributes):
+        layer.dataProvider().addAttributes(
+            [QgsField(name, QVariant.Double)]
+        )
         
     def onGetValue(self, key):
         k_value = self._factors['K'].value(key)
