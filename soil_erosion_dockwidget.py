@@ -33,6 +33,7 @@ from qgis.analysis import QgsOverlayAnalyzer
 from PyQt4 import QtGui, uic
 
 from pyerosion.read_csv import ReadCSV
+from pyerosion.erosionusle import ErosionUSLE
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'soil_erosion_dockwidget_base.ui'))
@@ -82,6 +83,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.compute_k_button.clicked.connect(self.onAddKFactor)
         self.compute_c_button.clicked.connect(self.onAddCFactor)
 
+        self.set_button.clicked.connect(self.onCompute)
+                
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
@@ -190,8 +193,21 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             [QgsField(name, QVariant.Double)]
         )
         
-    def onIntersectLayers(self):
-        euc_layer = self.shp_box_euc.currentLayer()
+    # def onIntersectLayers(self):
+    #     euc_layer = self.shp_box_euc.currentLayer()
+    #     bpej_layer = self.shp_box_bpej.currentLayer()
+    #     analyzer = QgsOverlayAnalyzer()
+    #     analyzer.intersection(euc_layer, bpej_layer, os.path.join(os.path.dirname(__file__), 'intersect.shp'), False, None)
+
+    def onCompute(self):
+        data = []
+        lpis_layer = self.shp_box_lpis.currentLayer()
+        data.append(lpis_layer.dataProvider().dataSourceUri())
         bpej_layer = self.shp_box_bpej.currentLayer()
-        analyzer = QgsOverlayAnalyzer()
-        analyzer.intersection(euc_layer, bpej_layer, os.path.join(os.path.dirname(__file__), 'intersect.shp'), False, None)
+        # TODO: vypocet v oddelenem  vlakne
+        er = ErosionUSLE()
+        # TODO: show progress (import, run)
+        er.import_files(data)
+        er.run()
+        # er.export()
+        # pridat vysledek do mapove okna
