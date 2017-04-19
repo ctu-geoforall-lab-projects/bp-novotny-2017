@@ -120,6 +120,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self._addColumn(bpej_layer, 'K')
             bpej_layer.commitChanges()
 
+        bpej_layer.startEditing()
         idx = bpej_layer.fieldNameIndex('BPEJ')
         for feature in bpej_layer.getFeatures():
             bpej = feature.attributes()[idx]
@@ -127,9 +128,10 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             if bpej == '99':
                 k_value = 0
             else:
-                k_value = self._factors['K'].value(bpej[2]+bpej[3])
-            self.onImportValue(bpej_layer, 'K', k_value, fid)
-
+                k_value = self._factors['K'].value(bpej[2] + bpej[3])
+            self.setFieldValue(bpej_layer, 'K', k_value, fid)
+        bpej_layer.commitChanges()
+        
     def onAddCFactor(self):
         lpis_layer = self.shp_box_lpis.currentLayer()
         if lpis_layer is None:
@@ -140,6 +142,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self._addColumn(lpis_layer, 'C')
             lpis_layer.commitChanges()
 
+        lpis_layer.startEditing()
+        combobox_value = self.combobox_c.currentText()
         idx = lpis_layer.fieldNameIndex('KULTURAKOD')
         for feature in lpis_layer.getFeatures():
             lpis = feature.attributes()[idx]
@@ -155,12 +159,11 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             elif lpis == 'C':
                 c_value = 0.8
             elif lpis == 'R':
-                combobox_value = self.combobox_c.currentText()
                 c_value = self._factors['C'].value(combobox_value)
-            self.onImportValue(lpis_layer, 'C', c_value, fid)
-
-    def onImportValue(self, euc_layer, field_name, value, fid=None):
-        euc_layer.startEditing()
+            self.setFieldValue(lpis_layer, 'C', c_value, fid)
+        lpis_layer.commitChanges()
+        
+    def setFieldValue(self, euc_layer, field_name, value, fid=None):
         index = euc_layer.dataProvider().fieldNameIndex(field_name)
         
         if fid is None:
@@ -170,13 +173,10 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             euc_layer.changeAttributeValue(fid, index, value)
         
-        euc_layer.commitChanges()
-        
     def _readFactorCodes(self):
         for fact in ('K','C'):
             filename = os.path.join(os.path.dirname(__file__), 'code_tables', fact + '_factor.csv')
             self._factors[fact] = ReadCSV(filename)
-        # self.onGetValue('21')
 
     def _addColumn(self, layer, name):
         for field in layer.pendingFields():
@@ -190,10 +190,6 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             [QgsField(name, QVariant.Double)]
         )
         
-    def onGetValue(self, key):
-        k_value = self._factors['K'].value(key)
-        self.onImportValue('K', k_value)
-
     def onIntersectLayers(self):
         euc_layer = self.shp_box_euc.currentLayer()
         bpej_layer = self.shp_box_bpej.currentLayer()
