@@ -1,13 +1,16 @@
-import csv
+import codecs
 
 class ReadCSV():
     def __init__(self, csv_file):
         """Read CSV file into table
         """
-        with open(csv_file, 'rb') as f:
+        with codecs.open(csv_file, 'rb', 'utf-8') as f:
             # assuming that first line contains column names
-            data = csv.reader(f)
-            self._data = dict((row[0], row[1]) for row in data)
+            # csv is not used here because it do not support unicode (in Python 2)
+            self._data = {}
+            for line in f.readlines():
+                c1, c2 = line.split(',', 1)
+                self._data[c1] = c2
         
     def value(self, key):
         """Get value from table.
