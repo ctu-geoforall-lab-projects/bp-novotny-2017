@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>459</width>
+    <width>455</width>
     <height>234</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="EUC">
        <attribute name="title">
@@ -42,20 +42,36 @@
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="0" column="0">
          <widget class="QLabel" name="label_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
-            <width>132</width>
+            <width>0</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>132</width>
-            <height>28</height>
+            <width>16777215</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="text">
            <string>EUC:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QgsMapLayerComboBox" name="shp_box_euc">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
          </widget>
         </item>
@@ -79,8 +95,56 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="1">
-         <widget class="QgsMapLayerComboBox" name="shp_box_euc"/>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="K">
+       <attribute name="title">
+        <string>K</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="1" column="3">
+         <widget class="QPushButton" name="load_shp_bpej">
+          <property name="text">
+           <string>Load (.shp)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="4">
+         <widget class="QPushButton" name="compute_k_button">
+          <property name="text">
+           <string>Compute K factor</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_bpej">
+          <property name="text">
+           <string>BPEJ:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QgsMapLayerComboBox" name="shp_box_bpej">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -131,57 +195,20 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="K">
-       <attribute name="title">
-        <string>K</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="4" column="2">
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_bpej">
-          <property name="text">
-           <string>BPEJ:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QPushButton" name="load_shp_bpej">
-          <property name="text">
-           <string>Load (.shp)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="4">
-         <widget class="QPushButton" name="compute_k_button">
-          <property name="text">
-           <string>Compute K factor</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1" colspan="2">
-         <widget class="QgsMapLayerComboBox" name="shp_box_bpej"/>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
         <string>C</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_6">
         <item row="0" column="1" colspan="2">
-         <widget class="QgsMapLayerComboBox" name="shp_box_lpis"/>
+         <widget class="QgsMapLayerComboBox" name="shp_box_lpis">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_2">
@@ -199,6 +226,12 @@
         </item>
         <item row="2" column="0" colspan="4">
          <widget class="QPushButton" name="compute_c_button">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Compute C factor</string>
           </property>
@@ -225,7 +258,14 @@
          </spacer>
         </item>
         <item row="1" column="1" colspan="2">
-         <widget class="QComboBox" name="combobox_c"/>
+         <widget class="QComboBox" name="combobox_c">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -293,7 +333,7 @@
   <customwidget>
    <class>QgsMapLayerComboBox</class>
    <extends>QComboBox</extends>
-   <header>qgis.gui.h</header>
+   <header>qgsmaplayercombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
