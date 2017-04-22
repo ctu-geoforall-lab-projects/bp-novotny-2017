@@ -1,11 +1,11 @@
 import os
 
 from erosionbase import ErosionBase
-
+from PyQt4.QtCore import QThread, pyqtSignal
 from grass.script.core import run_command
 
-class ErosionUSLE(ErosionBase):
-    def __init__(self, epsg='5514', location_path=None):
+class ErosionUSLE(ErosionBase, QThread):
+    def __init__(self, dmt, bpej, lpis, epsg='5514', location_path=None):
         """USLE constructor.
 
         Two modes are available
@@ -17,20 +17,20 @@ class ErosionUSLE(ErosionBase):
         :param epgs: EPSG code for creating new temporal location
         :param location_path: path to existing location
         """
+        # set signals:
+        computeProgress = pyqtSignal()
+
         ErosionBase.__init__(self, epsg, location_path)
+        QThread.__init__(self)
 
         # overwrite existing maps/files by default
         os.environ['GRASS_OVERWRITE']='1'
 
         # internal input map names
         self._input = { 'euc' : 'euc',
-                        'dmt' : 'dmt',
-                        'bpej' : 'bpej',
-                        'lpis' : 'lpis'
-        }
-        # internal input tables names
-        self._table = { 'K_factor' : 'K_factor',
-                        'C_factor' : 'C_factor'
+                        'dmt' : dmt,
+                        'bpej' : bpej,
+                        'lpis' : lpis
         }
         # output names
         self._output = { 'erosion' : 'g',
@@ -42,6 +42,7 @@ class ErosionUSLE(ErosionBase):
         :param terraflow: True : computing direction by method terraflow
                                     False : computing direction by method wattershed
         """
+        self.computeProgress.emit()
         # set computation region based on input DMT
         print("Setting up computation region")
         run_command('g.region',

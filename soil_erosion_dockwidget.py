@@ -23,8 +23,8 @@
 
 import os
 
-from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant
-from PyQt4.QtGui import QFileDialog, QComboBox
+from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread
+from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar
 from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsField
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -201,13 +201,44 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def onCompute(self):
         data = []
-        lpis_layer = self.shp_box_lpis.currentLayer()
-        data.append(lpis_layer.dataProvider().dataSourceUri())
+        dmt_layer = self.raster_box.currentLayer()
+        dmt_path = dmt_layer.dataProvider().dataSourceUri()
+        data.append(dmt_path)
+        dmt_name = os.path.splitext(os.path.basename(dmt_path))[0]
+
         bpej_layer = self.shp_box_bpej.currentLayer()
-        # TODO: vypocet v oddelenem  vlakne
-        er = ErosionUSLE()
+        bpej_path = bpej_layer.dataProvider().dataSourceUri()
+        data.append(bpej_path [:bpej_path.rfind('|')])
+        bpej_name = os.path.splitext(os.path.basename(bpej_path))[0]
+
+        lpis_layer = self.shp_box_lpis.currentLayer()
+        lpis_path = lpis_layer.dataProvider().dataSourceUri()
+        data.append(lpis_path [:lpis_path.rfind('|')])
+        lpis_name = os.path.splitext(os.path.basename(lpis_path))[0]
+
+        er = ErosionUSLE(dmt_name, bpej_name, lpis_name)
+        er.computeProgress.connect(self.progressBar)
         # TODO: show progress (import, run)
         er.import_files(data)
         er.run()
         # er.export()
         # pridat vysledek do mapove okna
+
+    def progressBar(self):
+        """Initializing progress bar.
+
+        :text: message to indicate what operation is currently on
+        """
+        self.progressMessageBar = iface.messageBar().createMessage(u"Erosion Plugin:", u" Computing...")
+        self.progress = QProgressBar()
+        self.progress.setMaximum(100)
+        self.progress.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+        self.cancelButton = QtGui.QPushButton()
+        self.cancelButton.setText('Cancel')
+        self.progressMessageBar.layout().addWidget(self.cancelButton)
+        self.progressMessageBar.layout().addWidget(self.progress)
+        self.iface.messageBar().pushWidget(self.progressMessageBar, iface.messageBar().INFO)
+
+        self.cancelButton.clicked.connect(self.onCancelButton)
+

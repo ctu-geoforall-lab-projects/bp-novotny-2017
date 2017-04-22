@@ -42,13 +42,12 @@ temp_dir = None
 import grass.script as gscript
 from grass.script import setup as gsetup
 from grass.exceptions import ScriptError, CalledModuleError
-
 from osgeo import ogr, gdal
 
 class ErosionError(StandardError):
     pass
 
-class ErosionBase:
+class ErosionBase():
     def __init__(self, epsg='5514', location_path=None):
         """USLE constructor.
 
