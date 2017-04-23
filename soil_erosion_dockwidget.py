@@ -217,6 +217,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         lpis_name = os.path.splitext(os.path.basename(lpis_path))[0]
 
         er = ErosionUSLE(dmt_name, bpej_name, lpis_name)
+        er.computeStat.connect(self.setStatus)
         er.computeProgress.connect(self.progressBar)
         # TODO: show progress (import, run)
         er.import_files(data)
@@ -241,4 +242,13 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.messageBar().pushWidget(self.progressMessageBar, iface.messageBar().INFO)
 
         self.cancelButton.clicked.connect(self.onCancelButton)
+
+    def setStatus(self, num, text):
+        """Update progress status.
+
+        :num: progress percent
+        """
+
+        self.progress.setFormat(text)
+        self.progress.setValue(num)
 

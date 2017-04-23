@@ -5,6 +5,10 @@ from PyQt4.QtCore import QThread, pyqtSignal
 from grass.script.core import run_command
 
 class ErosionUSLE(ErosionBase, QThread):
+    # set signals:
+    computeProgress = pyqtSignal()
+    computeStat = pyqtSignal(int, str)
+
     def __init__(self, dmt, bpej, lpis, epsg='5514', location_path=None):
         """USLE constructor.
 
@@ -17,8 +21,6 @@ class ErosionUSLE(ErosionBase, QThread):
         :param epgs: EPSG code for creating new temporal location
         :param location_path: path to existing location
         """
-        # set signals:
-        computeProgress = pyqtSignal()
 
         ErosionBase.__init__(self, epsg, location_path)
         QThread.__init__(self)
@@ -45,6 +47,7 @@ class ErosionUSLE(ErosionBase, QThread):
         self.computeProgress.emit()
         # set computation region based on input DMT
         print("Setting up computation region")
+        self.computeStat.emit(10, u'Start computing...')
         run_command('g.region',
                     raster=self._input['dmt'], res=50
         )
