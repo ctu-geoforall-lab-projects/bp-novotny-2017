@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
-from PyQt4.QtGui import QAction, QIcon
+from PyQt4.QtGui import QAction, QIcon, QToolButton
 # Initialize Qt resources from file resources.py
 import resources
 
@@ -64,9 +64,8 @@ class SoilErosion:
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&Soil Erosion')
-        # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'SoilErosion')
-        self.toolbar.setObjectName(u'SoilErosion')
+        # add plugin icon into plugin toolbar
+        self.toolButton = QToolButton()
 
         #print "** INITIALIZING SoilErosion"
 
@@ -152,7 +151,8 @@ class SoilErosion:
             action.setWhatsThis(whats_this)
 
         if add_to_toolbar:
-            self.toolbar.addAction(action)
+            self.toolButton.setDefaultAction(action)
+            self.iface.addToolBarWidget(self.toolButton)
 
         if add_to_menu:
             self.iface.addPluginToMenu(
@@ -203,8 +203,6 @@ class SoilErosion:
                 self.tr(u'&Soil Erosion'),
                 action)
             self.iface.removeToolBarIcon(action)
-        # remove the toolbar
-        del self.toolbar
 
     #--------------------------------------------------------------------------
 
