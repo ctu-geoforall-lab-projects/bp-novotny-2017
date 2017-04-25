@@ -2,7 +2,7 @@ import os
 
 from erosionbase import ErosionBase
 from PyQt4.QtCore import QThread, pyqtSignal
-from grass.script.core import run_command
+from grass.script.core import run_command, parse_command
 
 class ErosionUSLE(ErosionBase, QThread):
     # set signals:
@@ -35,7 +35,7 @@ class ErosionUSLE(ErosionBase, QThread):
                         'lpis' : lpis
         }
         # output names
-        self._output = { 'erosion' : 'g',
+        self._output = { 'erosion' : 'usle_g',
         }
 
     def run(self, terraflow=False):
@@ -48,8 +48,9 @@ class ErosionUSLE(ErosionBase, QThread):
         # set computation region based on input DMT
         print("Setting up computation region")
         self.computeStat.emit(10, u'Start computing...')
-        run_command('g.region',
-                    raster=self._input['dmt'], res=50
+        reg = parse_command('g.region',
+                            raster=self._input['dmt'],
+                            flags='g'
         )
         # computing slope on input DMT
         print("Computing slope")
@@ -88,7 +89,7 @@ class ErosionUSLE(ErosionBase, QThread):
             )
         #  computing LS Factor
         print("Computing LS factor")
-        formula='ls = 1.6 * pow(' + accu + '* (10.0 / 22.13), 0.6) * pow(sin(' + \
+        formula='ls = 1.6 * pow(' + accu + '* (' + reg['nsres'] +' / 22.13), 0.6) * pow(sin(' + \
         slope + '* (3.1415926/180)) / 0.09, 1.3)'
         run_command('r.mapcalc',
                     expr=formula
@@ -112,7 +113,7 @@ class ErosionUSLE(ErosionBase, QThread):
         run_command('v.db.update',
                     map=bpej_lpis,
                     column='KC',
-                    query_column='K * C')
+                    query_column='a_K * b_C')
         # compute final G Factor (Erosion factor)
         print("Computing Erosion factor")
         bpej_lpis_raster=self._temp_map('raster')
@@ -120,12 +121,19 @@ class ErosionUSLE(ErosionBase, QThread):
                     input=bpej_lpis,
                     output=bpej_lpis_raster,
                     use='attr',
-                    attribute_column='KC'
+                    attribute_column='KC',
+                    where='KC IS NOT NULL'
         )
-        formula1=self._output['erosion'] + ' = 40 * ls*' + bpej_lpis_raster + ' * 1'
+        usle=self._output['erosion'] + ' = 40 * ls *' + bpej_lpis_raster + ' * 1'
         run_command('r.mapcalc',
-                    expr=formula1
+                    expr=usle
         )
+        run_command('r.colors',
+                    flags='ne',
+                    map=self._output['erosion'],
+                    color='corine'
+        )
+        print ("Computation finished")
         
     def test(self):
         """
@@ -133,4 +141,5 @@ class ErosionUSLE(ErosionBase, QThread):
 
         - prints output erosion map metadata
         """
-        run_command('r.info', map=self._output['erosion'])
+        run_command('g.gisenv')
+        run_command('r.univar', map=self._output['erosion'])

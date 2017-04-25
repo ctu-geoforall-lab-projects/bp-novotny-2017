@@ -108,7 +108,7 @@ class ErosionBase():
         for map_name, map_type in self._temp_maps:
             gscript.run_command('g.remove', flags='f', type=map_type, name=map_name)
 
-    def import_files(self, files):
+    def import_data(self, files):
         """
         Define name and type imported files
         
@@ -116,9 +116,9 @@ class ErosionBase():
         """
         for file_name in files:
             file_type = self._file_type_test(file_name)
-            self.import_data(file_name, file_type)
+            self.import_file(file_name, file_type)
 
-    def import_data(self, file_name, file_type):
+    def import_file(self, file_name, file_type):
         """
         Import files
         
@@ -160,7 +160,7 @@ class ErosionBase():
         for vect in gscript.list_strings(type = 'vect'):
             print('{}{}'.format(' ' * 4, vect))
 
-    def export_data(self, grass_file, o_path, o_name):
+    def export_data(self, outdir):
         """
         Export data
 
@@ -168,7 +168,24 @@ class ErosionBase():
         :param o_path: Path to output file
         :param o_name: Name of output file
         """
-        pass
+        for k, v in iter(self._output.items()):
+            print ("Exporting '{}'".format(v))
+            # determine map type
+            if gscript.find_file(name=v, element='cell')['fullname']:
+                # raster detected
+                gscript.run_command('g.region',
+                                    raster=v)
+                gscript.run_command('r.out.gdal',
+                                    input=v,
+                                    output=os.path.join(outdir, v + '.tif'))
+            elif gscript.find_file(name=v, element='vector')['fullname']:
+                # vector detected
+                gscript.run_command('v.out.ogr',
+                                    flags='sm',
+                                    input=v,
+                                    output=os.path.join(outdir, v + '.shp'))
+            else:
+                pass # TODO: warning
 
     def _file_type_test(self, filename):
         """

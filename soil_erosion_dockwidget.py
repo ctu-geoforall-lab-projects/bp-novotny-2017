@@ -23,7 +23,7 @@
 
 import os
 
-from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread
+from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread, Qt
 from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar
 from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsField
 from qgis.utils import iface
@@ -220,9 +220,10 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         er.computeStat.connect(self.setStatus)
         er.computeProgress.connect(self.progressBar)
         # TODO: show progress (import, run)
-        er.import_files(data)
+        er.import_data(data)
         er.run()
-        # er.export()
+        er.test()
+        er.export_data('/tmp')
         # pridat vysledek do mapove okna
 
     def progressBar(self):
@@ -252,3 +253,5 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.progress.setFormat(text)
         self.progress.setValue(num)
 
+    def onCancelButton(self):
+        pass
