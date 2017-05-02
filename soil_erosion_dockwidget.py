@@ -217,25 +217,24 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         data.append(lpis_path [:lpis_path.rfind('|')])
         lpis_name = os.path.splitext(os.path.basename(lpis_path))[0]
 
-        er = ErosionUSLE(dmt_name, bpej_name, lpis_name)
-        er.computeStat.connect(self.setStatus)
-        er.computeProgress.connect(self.progressBar)
-        er.import_data(data)
-        er.run()
-        er.test()
-        # Export results to temporary directory
-        temp_path = tempfile.mkdtemp()
-        er.export_data(temp_path)
+        self.computeThread = ComputeThread(dmt_name, bpej_name, lpis_name, data)
+        self.computeThread.computeStat.connect(self.setStatus)
+        self.computeThread.computeProgress.connect(self.progressBar)
+        if not self.computeThread.isRunning():
+            self.computeThread.start()
+
+    def computeFinished(self):
+        if self.computeThread.aborted:
+            return
+
         # Import results to QGIS
+        temp_path = self.computeThread.output_path()
         for file in os.listdir(temp_path):
             if file.endswith(".tif"):
-                iface.addRasterLayer(os.path.join(temp_path, file), 'Soil Erosion')
-                style_name = os.path.join(os.path.dirname(__file__), 'code_tables', 'colors.gml')
-                se_layer = None
-                for lyr in QgsMapLayerRegistry.instance().mapLayers().values():
-                    if lyr.name() == 'Soil Erosion':
-                        se_layer = lyr
-                        break
+                se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
+                                                'Soil Erosion')
+                style_name = os.path.join(os.path.dirname(__file__),
+                                          'style', 'colors.gml')
                 se_layer.loadNamedStyle(style_name)
 
     def progressBar(self):
@@ -267,3 +266,27 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def onCancelButton(self):
         pass
+
+class ComputeThread(QThread):
+    # set signals:
+    computeProgress = pyqtSignal()
+    computeStat = pyqtSignal(int, str)
+
+    def __init__(self, dmt_name, bpej_name, lpis_name, data):
+        QtCore.QThread.__init__(self)
+        self.dmt_name = dmt_name
+        self.bpej_name = bpej_name
+        self.lpis_name = lpis_name
+        self.data = data
+        
+    def run(self):
+        er = ErosionUSLE(self.dmt_name, self.bpej_name, self.lpis_name,
+                         computeProgress, computeStat)
+        er.import_data(self.data)
+        er.run()
+        # Export results to temporary directory
+        self.temp_path = tempfile.mkdtemp()
+        er.export_data(self.temp_path)
+
+    def output_path(self):
+        return self.temp_path

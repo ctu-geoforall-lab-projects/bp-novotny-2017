@@ -1,15 +1,12 @@
 import os
 
 from erosionbase import ErosionBase
-from PyQt4.QtCore import QThread, pyqtSignal
 from grass.script.core import run_command, parse_command
 
-class ErosionUSLE(ErosionBase, QThread):
-    # set signals:
-    computeProgress = pyqtSignal()
-    computeStat = pyqtSignal(int, str)
+class ErosionUSLE(ErosionBase):
 
-    def __init__(self, dmt, bpej, lpis, epsg='5514', location_path=None):
+    def __init__(self, dmt, bpej, lpis, epsg='5514', location_path=None,
+                 computeProgress=None, computeStat=None):
         """USLE constructor.
 
         Two modes are available
@@ -25,6 +22,9 @@ class ErosionUSLE(ErosionBase, QThread):
         ErosionBase.__init__(self, epsg, location_path)
         QThread.__init__(self)
 
+        self._computeProgress = computeProgress
+        self._computeStat = computeStat
+        
         # overwrite existing maps/files by default
         os.environ['GRASS_OVERWRITE']='1'
 
@@ -38,6 +38,10 @@ class ErosionUSLE(ErosionBase, QThread):
         self._output = { 'erosion' : 'usle_g',
         }
 
+    def computeProgress(self, perc, label):
+        if self._computeStat is not None:
+            self._computeStat.emit(perc, lable)
+        
     def run(self, terraflow=False):
         """
         Erosion computing
@@ -47,7 +51,7 @@ class ErosionUSLE(ErosionBase, QThread):
         self.computeProgress.emit()
         # set computation region based on input DMT
         print("Setting up computation region")
-        self.computeStat.emit(5, u'Setting up computation region...')
+        self.computeProgress(5, u'Setting up computation region...')
         reg = parse_command('g.region',
                             raster=self._input['dmt'],
                             flags='g'
