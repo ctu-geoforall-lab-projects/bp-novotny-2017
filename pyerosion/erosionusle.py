@@ -87,6 +87,7 @@ class ErosionUSLE(ErosionBase, QThread):
             )
         else:
             run_command('r.watershed',
+                        flags='a',
                         elevation=self._input['dmt'],
                         accumulation=accu
             )
