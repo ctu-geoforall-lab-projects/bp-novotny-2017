@@ -47,13 +47,14 @@ class ErosionUSLE(ErosionBase, QThread):
         self.computeProgress.emit()
         # set computation region based on input DMT
         print("Setting up computation region")
-        self.computeStat.emit(10, u'Start computing...')
+        self.computeStat.emit(5, u'Setting up computation region...')
         reg = parse_command('g.region',
                             raster=self._input['dmt'],
                             flags='g'
         )
         # computing slope on input DMT
         print("Computing slope")
+        self.computeStat.emit(10, u'Computing slope...')
         slope = self._temp_map('raster')
         run_command('r.slope.aspect',
                     elevation=self._input['dmt'],
@@ -61,6 +62,7 @@ class ErosionUSLE(ErosionBase, QThread):
         )
         # setting up mask
         print("Setting up mask")
+        self.computeStat.emit(15, u'Setting up mask...')
         run_command('r.mask',
                     raster=self._input['dmt']
         )
@@ -68,6 +70,7 @@ class ErosionUSLE(ErosionBase, QThread):
         # TODO: discuss accumulation computation (which module, use
         # filled DMT?)
         print("Computing accumulation")
+        self.computeStat.emit(20, u'Computing accumulation...')
         accu = self._temp_map('raster')
         if terraflow:
             dmt_fill = self._temp_map('raster')
@@ -89,6 +92,7 @@ class ErosionUSLE(ErosionBase, QThread):
             )
         #  computing LS Factor
         print("Computing LS factor")
+        self.computeStat.emit(30, u'Computing LS factor...')
         formula='ls = 1.6 * pow(' + accu + '* (' + reg['nsres'] +' / 22.13), 0.6) * pow(sin(' + \
         slope + '* (3.1415926/180)) / 0.09, 1.3)'
         run_command('r.mapcalc',
@@ -96,6 +100,7 @@ class ErosionUSLE(ErosionBase, QThread):
         )
         # computing KC Factor
         print("Computing KC factor")
+        self.computeStat.emit(50, u'Computing KC factor...')
         # overlay layers: bpej and lpis
         bpej_lpis = self._temp_map('vector')
         run_command('v.overlay',
@@ -116,6 +121,7 @@ class ErosionUSLE(ErosionBase, QThread):
                     query_column='a_K * b_C')
         # compute final G Factor (Erosion factor)
         print("Computing Erosion factor")
+        self.computeStat.emit(85, u'Computing Erosion factor...')
         bpej_lpis_raster=self._temp_map('raster')
         run_command('v.to.rast',
                     input=bpej_lpis,
@@ -134,6 +140,7 @@ class ErosionUSLE(ErosionBase, QThread):
                     color='corine'
         )
         print ("Computation finished")
+        self.computeStat.emit(100, u'Computation finished.')
         
     def test(self):
         """

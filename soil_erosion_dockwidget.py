@@ -22,13 +22,14 @@
 """
 
 import os
+import tempfile
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread, Qt
 from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar
-from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsField
+from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
-from qgis.analysis import QgsOverlayAnalyzer
+# from qgis.analysis import QgsOverlayAnalyzer
 
 from PyQt4 import QtGui, uic
 
@@ -219,12 +220,23 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         er = ErosionUSLE(dmt_name, bpej_name, lpis_name)
         er.computeStat.connect(self.setStatus)
         er.computeProgress.connect(self.progressBar)
-        # TODO: show progress (import, run)
         er.import_data(data)
         er.run()
         er.test()
-        er.export_data('/tmp')
-        # pridat vysledek do mapove okna
+        # Export results to temporary directory
+        temp_path = tempfile.mkdtemp()
+        er.export_data(temp_path)
+        # Import results to QGIS
+        for file in os.listdir(temp_path):
+            if file.endswith(".tif"):
+                iface.addRasterLayer(os.path.join(temp_path, file), 'Soil Erosion')
+                style_name = os.path.join(os.path.dirname(__file__), 'code_tables', 'colors.gml')
+                se_layer = None
+                for lyr in QgsMapLayerRegistry.instance().mapLayers().values():
+                    if lyr.name() == 'Soil Erosion':
+                        se_layer = lyr
+                        break
+                se_layer.loadNamedStyle(style_name)
 
     def progressBar(self):
         """Initializing progress bar.
