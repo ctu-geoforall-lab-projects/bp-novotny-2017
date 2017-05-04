@@ -273,7 +273,7 @@ class ComputeThread(QThread):
     computeStat = pyqtSignal(int, str)
 
     def __init__(self, dmt_name, bpej_name, lpis_name, data):
-        QtCore.QThread.__init__(self)
+        QThread.__init__(self)
         self.dmt_name = dmt_name
         self.bpej_name = bpej_name
         self.lpis_name = lpis_name
@@ -281,7 +281,7 @@ class ComputeThread(QThread):
         
     def run(self):
         er = ErosionUSLE(self.dmt_name, self.bpej_name, self.lpis_name,
-                         computeProgress, computeStat)
+                         ComputeThread.computeProgress, ComputeThread.computeStat)
         er.import_data(self.data)
         er.run()
         # Export results to temporary directory

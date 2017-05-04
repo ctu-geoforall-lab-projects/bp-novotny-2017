@@ -20,7 +20,6 @@ class ErosionUSLE(ErosionBase):
         """
 
         ErosionBase.__init__(self, epsg, location_path)
-        QThread.__init__(self)
 
         self._computeProgress = computeProgress
         self._computeStat = computeStat
