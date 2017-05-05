@@ -1,4 +1,5 @@
 import os
+import sys
 
 from erosionbase import ErosionBase
 from grass.script.core import run_command, parse_command
@@ -6,7 +7,7 @@ from grass.script.core import run_command, parse_command
 class ErosionUSLE(ErosionBase):
 
     def __init__(self, dmt, bpej, lpis, epsg='5514', location_path=None,
-                 computeProgress=None, computeStat=None):
+                 computeStat=None):
         """USLE constructor.
 
         Two modes are available
@@ -21,7 +22,6 @@ class ErosionUSLE(ErosionBase):
 
         ErosionBase.__init__(self, epsg, location_path)
 
-        self._computeProgress = computeProgress
         self._computeStat = computeStat
         
         # overwrite existing maps/files by default
@@ -37,43 +37,39 @@ class ErosionUSLE(ErosionBase):
         self._output = { 'erosion' : 'usle_g',
         }
 
-    def computeProgress(self, perc, label):
+    def computeStat(self, perc, label):
         if self._computeStat is not None:
-            self._computeStat.emit(perc, lable)
-        
+            self._computeStat.emit(perc, label)
+        sys.stderr.write('[pyerosion] {}: {}\n'.format(perc, label))
+
     def run(self, terraflow=False):
         """
         Erosion computing
         :param terraflow: True : computing direction by method terraflow
                                     False : computing direction by method wattershed
         """
-        self.computeProgress.emit()
         # set computation region based on input DMT
-        print("Setting up computation region")
-        self.computeProgress(5, u'Setting up computation region...')
+        self.computeStat(5, u'Setting up computation region...')
         reg = parse_command('g.region',
                             raster=self._input['dmt'],
                             flags='g'
         )
         # computing slope on input DMT
-        print("Computing slope")
-        self.computeStat.emit(10, u'Computing slope...')
+        self.computeStat(10, u'Computing slope...')
         slope = self._temp_map('raster')
         run_command('r.slope.aspect',
                     elevation=self._input['dmt'],
                     slope=slope
         )
         # setting up mask
-        print("Setting up mask")
-        self.computeStat.emit(15, u'Setting up mask...')
+        self.computeStat(15, u'Setting up mask...')
         run_command('r.mask',
                     raster=self._input['dmt']
         )
         # computing accumulation
         # TODO: discuss accumulation computation (which module, use
         # filled DMT?)
-        print("Computing accumulation")
-        self.computeStat.emit(20, u'Computing accumulation...')
+        self.computeStat(20, u'Computing accumulation...')
         accu = self._temp_map('raster')
         if terraflow:
             dmt_fill = self._temp_map('raster')
@@ -95,16 +91,14 @@ class ErosionUSLE(ErosionBase):
                         accumulation=accu
             )
         #  computing LS Factor
-        print("Computing LS factor")
-        self.computeStat.emit(30, u'Computing LS factor...')
+        self.computeStat(30, u'Computing LS factor...')
         formula='ls = 1.6 * pow(' + accu + '* (' + reg['nsres'] +' / 22.13), 0.6) * pow(sin(' + \
         slope + '* (3.1415926/180)) / 0.09, 1.3)'
         run_command('r.mapcalc',
                     expr=formula
         )
         # computing KC Factor
-        print("Computing KC factor")
-        self.computeStat.emit(50, u'Computing KC factor...')
+        self.computeStat(50, u'Computing KC factor...')
         # overlay layers: bpej and lpis
         bpej_lpis = self._temp_map('vector')
         run_command('v.overlay',
@@ -124,8 +118,7 @@ class ErosionUSLE(ErosionBase):
                     column='KC',
                     query_column='a_K * b_C')
         # compute final G Factor (Erosion factor)
-        print("Computing Erosion factor")
-        self.computeStat.emit(85, u'Computing Erosion factor...')
+        self.computeStat(85, u'Computing Erosion factor...')
         bpej_lpis_raster=self._temp_map('raster')
         run_command('v.to.rast',
                     input=bpej_lpis,
@@ -143,8 +136,7 @@ class ErosionUSLE(ErosionBase):
                     map=self._output['erosion'],
                     color='corine'
         )
-        print ("Computation finished")
-        self.computeStat.emit(100, u'Computation finished.')
+        self.computeStat(100, u'Computation finished.')
         
     def test(self):
         """

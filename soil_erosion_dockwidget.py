@@ -201,6 +201,9 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     #     analyzer.intersection(euc_layer, bpej_layer, os.path.join(os.path.dirname(__file__), 'intersect.shp'), False, None)
 
     def onCompute(self):
+        if hasattr(self, "computeThread"):
+            return
+        
         data = []
         dmt_layer = self.raster_box.currentLayer()
         dmt_path = dmt_layer.dataProvider().dataSourceUri()
@@ -217,15 +220,17 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         data.append(lpis_path [:lpis_path.rfind('|')])
         lpis_name = os.path.splitext(os.path.basename(lpis_path))[0]
 
+        self.progressBar()
         self.computeThread = ComputeThread(dmt_name, bpej_name, lpis_name, data)
+        self.computeThread.computeFinished.connect(self.computeFinished)
         self.computeThread.computeStat.connect(self.setStatus)
-        self.computeThread.computeProgress.connect(self.progressBar)
+        #self.computeThread.computeProgress.connect(self.progressBar)
         if not self.computeThread.isRunning():
             self.computeThread.start()
 
     def computeFinished(self):
-        if self.computeThread.aborted:
-            return
+        # if self.computeThread.aborted:
+        #     return
 
         # Import results to QGIS
         temp_path = self.computeThread.output_path()
@@ -236,6 +241,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 style_name = os.path.join(os.path.dirname(__file__),
                                           'style', 'colors.gml')
                 se_layer.loadNamedStyle(style_name)
+
+        del self.computeThread
 
     def progressBar(self):
         """Initializing progress bar.
@@ -260,7 +267,6 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         :num: progress percent
         """
-
         self.progress.setFormat(text)
         self.progress.setValue(num)
 
@@ -269,9 +275,10 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 class ComputeThread(QThread):
     # set signals:
-    computeProgress = pyqtSignal()
+    # computeProgress = pyqtSignal()
     computeStat = pyqtSignal(int, str)
-
+    computeFinished = pyqtSignal()
+    
     def __init__(self, dmt_name, bpej_name, lpis_name, data):
         QThread.__init__(self)
         self.dmt_name = dmt_name
@@ -281,12 +288,14 @@ class ComputeThread(QThread):
         
     def run(self):
         er = ErosionUSLE(self.dmt_name, self.bpej_name, self.lpis_name,
-                         ComputeThread.computeProgress, ComputeThread.computeStat)
+                         computeStat=self.computeStat)
         er.import_data(self.data)
         er.run()
         # Export results to temporary directory
         self.temp_path = tempfile.mkdtemp()
         er.export_data(self.temp_path)
+
+        self.computeFinished.emit()
 
     def output_path(self):
         return self.temp_path
