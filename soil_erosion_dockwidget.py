@@ -203,7 +203,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def onCompute(self):
         if hasattr(self, "computeThread"):
             return
-        
+        self._cancel = False
         data = []
         dmt_layer = self.raster_box.currentLayer()
         dmt_path = dmt_layer.dataProvider().dataSourceUri()
@@ -211,11 +211,17 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         dmt_name = os.path.splitext(os.path.basename(dmt_path))[0]
 
         bpej_layer = self.shp_box_bpej.currentLayer()
+        self.checkField('BPEJ', bpej_layer, 'K')
+        if self._cancel == True:
+            return
         bpej_path = bpej_layer.dataProvider().dataSourceUri()
         data.append(bpej_path [:bpej_path.rfind('|')])
         bpej_name = os.path.splitext(os.path.basename(bpej_path))[0]
 
         lpis_layer = self.shp_box_lpis.currentLayer()
+        self.checkField('LPIS', lpis_layer, 'C')
+        if self._cancel == True:
+            return
         lpis_path = lpis_layer.dataProvider().dataSourceUri()
         data.append(lpis_path [:lpis_path.rfind('|')])
         lpis_name = os.path.splitext(os.path.basename(lpis_path))[0]
@@ -229,6 +235,11 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if not self.computeThread.isRunning():
             self.computeThread.start()
 
+    def checkField(self, name_lyr, layer, field_name):
+        if layer.fieldNameIndex(field_name) == -1:
+            self.showError(u'{} layer must contain field {}'.format(name_lyr,field_name))
+            self._cancel = True
+
     def showError(self, text):
         error_box = QMessageBox.critical(self, u'Soil Erosion Plugin',
                                      u"{}".format(text))
@@ -241,11 +252,11 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         temp_path = self.computeThread.output_path()
         for file in os.listdir(temp_path):
             if file.endswith(".tif"):
-                se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
+                self.se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
                                                 'Soil Erosion')
                 style_name = os.path.join(os.path.dirname(__file__),
                                           'style', 'colors.gml')
-                se_layer.loadNamedStyle(style_name)
+                self.se_layer.loadNamedStyle(style_name)
 
         del self.computeThread
         # kill progress bar if it is still on (if computation is still on)
