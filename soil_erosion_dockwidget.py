@@ -25,7 +25,7 @@ import os
 import tempfile
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread, Qt
-from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar
+from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton
 from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -258,8 +258,11 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.cancelButton.setText('Cancel')
         self.progressMessageBar.layout().addWidget(self.cancelButton)
         self.progressMessageBar.layout().addWidget(self.progress)
-        self.iface.messageBar().pushWidget(self.progressMessageBar, iface.messageBar().INFO)
 
+        msgBar = self.iface.messageBar()
+        msgBar.pushWidget(self.progressMessageBar, iface.messageBar().INFO)
+        msgBar.findChildren(QToolButton)[0].setHidden(True)
+        
         self.cancelButton.clicked.connect(self.onCancelButton)
 
     def setStatus(self, num, text):
