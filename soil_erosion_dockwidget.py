@@ -25,7 +25,7 @@ import os
 import tempfile
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread, Qt
-from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton
+from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMessageBox
 from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -262,19 +262,35 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         msgBar = self.iface.messageBar()
         msgBar.pushWidget(self.progressMessageBar, iface.messageBar().INFO)
         msgBar.findChildren(QToolButton)[0].setHidden(True)
-        
+
         self.cancelButton.clicked.connect(self.onCancelButton)
+
+    def onCancelButton(self):
+        """Show message box with question on canceling. Cancel computation."""
+
+        reply = QMessageBox.question(self, u'Soil Erosion Plugin',
+                                     u"Cancel computation?{ls}".format(
+                                         ls=2 * os.linesep),
+                                     QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
+                                     QtGui.QMessageBox.Yes)
+        if reply == QMessageBox.Yes:
+            self.computeThread.terminate()
+
+            # kill progress bar if it is still on (if computation is still on)
+            try:
+                self.progress.setParent(None)
+                self.iface.messageBar().popWidget(self.progressMessageBar)
+            except:
+                pass
 
     def setStatus(self, num, text):
         """Update progress status.
 
         :num: progress percent
         """
-        self.progress.setFormat(text)
+        self.progressMessageBar.setText(text)
+        self.progress.setFormat('{}%'.format(num))
         self.progress.setValue(num)
-
-    def onCancelButton(self):
-        pass
 
 class ComputeThread(QThread):
     # set signals:
