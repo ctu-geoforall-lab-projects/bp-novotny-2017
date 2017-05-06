@@ -58,6 +58,9 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         self.iface = iface
 
+        # Define first computation, no results in map window
+        self._first_computation = True
+
         # Read code tables
         self._factors = {}
         self._readFactorCodes()
@@ -204,6 +207,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if hasattr(self, "computeThread"):
             return
         self._cancel = False
+        if self._first_computation == False:
+            QgsMapLayerRegistry.instance().removeMapLayer(self._se_layer.id())
         data = []
         dmt_layer = self.raster_box.currentLayer()
         dmt_path = dmt_layer.dataProvider().dataSourceUri()
@@ -252,11 +257,12 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         temp_path = self.computeThread.output_path()
         for file in os.listdir(temp_path):
             if file.endswith(".tif"):
-                self.se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
+                self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
                                                 'Soil Erosion')
                 style_name = os.path.join(os.path.dirname(__file__),
                                           'style', 'colors.gml')
-                self.se_layer.loadNamedStyle(style_name)
+                self._se_layer.loadNamedStyle(style_name)
+        self._first_computation = False
 
         del self.computeThread
         # kill progress bar if it is still on (if computation is still on)
