@@ -224,9 +224,14 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.computeThread = ComputeThread(dmt_name, bpej_name, lpis_name, data)
         self.computeThread.computeFinished.connect(self.computeFinished)
         self.computeThread.computeStat.connect(self.setStatus)
+        self.computeThread.computeError.connect(self.showError)
         #self.computeThread.computeProgress.connect(self.progressBar)
         if not self.computeThread.isRunning():
             self.computeThread.start()
+
+    def showError(self, text):
+        error_box = QMessageBox.critical(self, u'Soil Erosion Plugin',
+                                     u"{}".format(text))
 
     def computeFinished(self):
         # if self.computeThread.aborted:
@@ -300,9 +305,9 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 class ComputeThread(QThread):
     # set signals:
-    # computeProgress = pyqtSignal()
     computeStat = pyqtSignal(int, str)
     computeFinished = pyqtSignal()
+    computeError = pyqtSignal(str)
     
     def __init__(self, dmt_name, bpej_name, lpis_name, data):
         QThread.__init__(self)
@@ -313,13 +318,16 @@ class ComputeThread(QThread):
         
     def run(self):
         er = ErosionUSLE(self.dmt_name, self.bpej_name, self.lpis_name,
-                         computeStat=self.computeStat)
+                         computeStat=self.computeStat, computeError=self.computeError)
         er.import_data(self.data)
         er.run()
         # Export results to temporary directory
-        self.temp_path = tempfile.mkdtemp()
-        er.export_data(self.temp_path)
-
+        self.computeStat.emit(100, u'Export data to map window...')
+        try:
+            self.temp_path = tempfile.mkdtemp()
+            er.export_data(self.temp_path)
+        except:
+            self.computeError.emit(u'Error in importing results to map window.')
         self.computeFinished.emit()
 
     def output_path(self):
