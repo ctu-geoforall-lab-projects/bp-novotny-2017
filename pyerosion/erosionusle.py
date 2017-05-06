@@ -6,7 +6,7 @@ from grass.script.core import run_command, parse_command
 
 class ErosionUSLE(ErosionBase):
 
-    def __init__(self, dmt, bpej, lpis, epsg='5514', location_path=None,
+    def __init__(self, data, epsg='5514', location_path=None,
                  computeStat=None, computeError=None):
         """USLE constructor.
 
@@ -28,11 +28,16 @@ class ErosionUSLE(ErosionBase):
         # overwrite existing maps/files by default
         os.environ['GRASS_OVERWRITE']='1'
 
+        self.euc_name = os.path.splitext(os.path.basename(data[0]))[0]
+        self.dmt_name = os.path.splitext(os.path.basename(data[1]))[0]
+        self.bpej_name = os.path.splitext(os.path.basename(data[2]))[0]
+        self.lpis_name = os.path.splitext(os.path.basename(data[3]))[0]
+
         # internal input map names
-        self._input = { 'euc' : 'euc',
-                        'dmt' : dmt,
-                        'bpej' : bpej,
-                        'lpis' : lpis
+        self._input = { 'euc' : self.euc_name,
+                        'dmt' : self.dmt_name,
+                        'bpej' : self.bpej_name,
+                        'lpis' : self.lpis_name
         }
         # output names
         self._output = { 'erosion' : 'usle_g',

@@ -210,10 +210,13 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if self._first_computation == False:
             QgsMapLayerRegistry.instance().removeMapLayer(self._se_layer.id())
         data = []
+        euc_layer = self.shp_box_euc.currentLayer()
+        euc_path = euc_layer.dataProvider().dataSourceUri()
+        data.append(euc_path[:euc_path.rfind('|')])
+
         dmt_layer = self.raster_box.currentLayer()
         dmt_path = dmt_layer.dataProvider().dataSourceUri()
         data.append(dmt_path)
-        dmt_name = os.path.splitext(os.path.basename(dmt_path))[0]
 
         bpej_layer = self.shp_box_bpej.currentLayer()
         self.checkField('BPEJ', bpej_layer, 'K')
@@ -221,7 +224,6 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             return
         bpej_path = bpej_layer.dataProvider().dataSourceUri()
         data.append(bpej_path [:bpej_path.rfind('|')])
-        bpej_name = os.path.splitext(os.path.basename(bpej_path))[0]
 
         lpis_layer = self.shp_box_lpis.currentLayer()
         self.checkField('LPIS', lpis_layer, 'C')
@@ -229,10 +231,9 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             return
         lpis_path = lpis_layer.dataProvider().dataSourceUri()
         data.append(lpis_path [:lpis_path.rfind('|')])
-        lpis_name = os.path.splitext(os.path.basename(lpis_path))[0]
 
         self.progressBar()
-        self.computeThread = ComputeThread(dmt_name, bpej_name, lpis_name, data)
+        self.computeThread = ComputeThread(data)
         self.computeThread.computeFinished.connect(self.computeFinished)
         self.computeThread.computeStat.connect(self.setStatus)
         self.computeThread.computeError.connect(self.showError)
@@ -326,25 +327,24 @@ class ComputeThread(QThread):
     computeFinished = pyqtSignal()
     computeError = pyqtSignal(str)
     
-    def __init__(self, dmt_name, bpej_name, lpis_name, data):
+    def __init__(self, data):
         QThread.__init__(self)
-        self.dmt_name = dmt_name
-        self.bpej_name = bpej_name
-        self.lpis_name = lpis_name
         self.data = data
         
     def run(self):
-        er = ErosionUSLE(self.dmt_name, self.bpej_name, self.lpis_name,
-                         computeStat=self.computeStat, computeError=self.computeError)
-        er.import_data(self.data)
+        er = ErosionUSLE(self.data, computeStat=self.computeStat, computeError=self.computeError)
+        try:
+            er.import_data(self.data)
+        except:
+            self.computeError.emit(u'Error during exporting layers to Grass for computation.')
         er.run()
         # Export results to temporary directory
-        self.computeStat.emit(100, u'Export data to map window...')
+        self.computeStat.emit(99, u'Export data to map window...')
         try:
             self.temp_path = tempfile.mkdtemp()
             er.export_data(self.temp_path)
         except:
-            self.computeError.emit(u'Error in importing results to map window.')
+            self.computeError.emit(u'Error during importing results to map window.')
         self.computeFinished.emit()
 
     def output_path(self):
