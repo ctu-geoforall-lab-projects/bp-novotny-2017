@@ -206,35 +206,61 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def onCompute(self):
         if hasattr(self, "computeThread"):
             return
-        self._cancel = False
+        # remove results from map window, if it is not first computation
         if self._first_computation == False:
             QgsMapLayerRegistry.instance().removeMapLayer(self._se_layer.id())
-        data = []
+
+        # find input layers
         euc_layer = self.shp_box_euc.currentLayer()
-        euc_path = euc_layer.dataProvider().dataSourceUri()
-        data.append(euc_path[:euc_path.rfind('|')])
-
         dmt_layer = self.raster_box.currentLayer()
-        dmt_path = dmt_layer.dataProvider().dataSourceUri()
-        data.append(dmt_path)
-
         bpej_layer = self.shp_box_bpej.currentLayer()
+        lpis_layer = self.shp_box_lpis.currentLayer()
+
+        # check fields
+        self._cancel = False
         self.checkField('BPEJ', bpej_layer, 'K')
         if self._cancel == True:
             return
-        bpej_path = bpej_layer.dataProvider().dataSourceUri()
-        data.append(bpej_path [:bpej_path.rfind('|')])
 
-        lpis_layer = self.shp_box_lpis.currentLayer()
         self.checkField('LPIS', lpis_layer, 'C')
         if self._cancel == True:
             return
+
+        # check crs of input layers
+        euc_crs = euc_layer.crs().authid()
+        dmt_crs = dmt_layer.crs().authid()
+        bpej_crs = bpej_layer.crs().authid()
+        lpis_crs = lpis_layer.crs().authid()
+        if euc_crs == dmt_crs == bpej_crs == lpis_crs:
+            if not int(euc_crs[5:]) >= 100000:
+                epsg = int(euc_crs[5:])
+            else:
+                self.showError(u'It\'s not allow compute in own projection!\n\nSet CRS of'\
+                               u' input layers: {}\n\nPlease change CRS of input layers.'.format(euc_crs))
+                return
+        else:
+            self.showError(u'Layers have different projection:\nEUC: {}\nDMT: {}\nBPEJ: {}\nLP'\
+                           u'IS: {}'.format(euc_crs, dmt_crs, bpej_crs, lpis_crs))
+            return
+
+        # add paths to layers to data
+        data = []
+
+        euc_path = euc_layer.dataProvider().dataSourceUri()
+        data.append(euc_path[:euc_path.rfind('|')])
+
+        dmt_path = dmt_layer.dataProvider().dataSourceUri()
+        data.append(dmt_path)
+
+        bpej_path = bpej_layer.dataProvider().dataSourceUri()
+        data.append(bpej_path [:bpej_path.rfind('|')])
+
         lpis_path = lpis_layer.dataProvider().dataSourceUri()
         data.append(lpis_path [:lpis_path.rfind('|')])
 
         self.progressBar()
-        self.computeThread = ComputeThread(data)
-        self.computeThread.computeFinished.connect(self.computeFinished)
+        self.computeThread = ComputeThread(data, epsg)
+        self.computeThread.computeFinished.connect(lambda: self.importResults(epsg))
         self.computeThread.computeStat.connect(self.setStatus)
         self.computeThread.computeError.connect(self.showError)
         #self.computeThread.computeProgress.connect(self.progressBar)
@@ -243,14 +269,13 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def checkField(self, name_lyr, layer, field_name):
         if layer.fieldNameIndex(field_name) == -1:
-            self.showError(u'{} layer must contain field {}'.format(name_lyr,field_name))
+            self.showError(u'{} layer must contain field {}'.format(name_lyr, field_name))
             self._cancel = True
 
     def showError(self, text):
-        error_box = QMessageBox.critical(self, u'Soil Erosion Plugin',
-                                     u"{}".format(text))
+        QMessageBox.critical(self, u'Soil Erosion Plugin', u"{}".format(text))
 
-    def computeFinished(self):
+    def importResults(self, epsg):
         # if self.computeThread.aborted:
         #     return
 
@@ -260,6 +285,9 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             if file.endswith(".tif"):
                 self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
                                                 'Soil Erosion')
+                crs = self._se_layer.crs()
+                crs.createFromId(epsg)
+                self._se_layer.setCrs(crs)
                 style_name = os.path.join(os.path.dirname(__file__),
                                           'style', 'colors.gml')
                 self._se_layer.loadNamedStyle(style_name)
@@ -327,12 +355,12 @@ class ComputeThread(QThread):
     computeFinished = pyqtSignal()
     computeError = pyqtSignal(str)
     
-    def __init__(self, data):
+    def __init__(self, data, epsg):
         QThread.__init__(self)
         self.data = data
-        
+        self.epsg = epsg
     def run(self):
-        er = ErosionUSLE(self.data, computeStat=self.computeStat, computeError=self.computeError)
+        er = ErosionUSLE(self.data, self.epsg, computeStat=self.computeStat, computeError=self.computeError)
         try:
             er.import_data(self.data)
         except:
