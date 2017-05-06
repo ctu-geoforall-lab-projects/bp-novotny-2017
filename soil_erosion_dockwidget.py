@@ -243,6 +243,12 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 se_layer.loadNamedStyle(style_name)
 
         del self.computeThread
+        # kill progress bar if it is still on (if computation is still on)
+        try:
+            self.progress.setParent(None)
+            self.iface.messageBar().popWidget(self.progressMessageBar)
+        except:
+            pass
 
     def progressBar(self):
         """Initializing progress bar.
