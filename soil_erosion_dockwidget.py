@@ -29,6 +29,7 @@ from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMess
 from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
+from qgis.analysis import QgsZonalStatistics
 # from qgis.analysis import QgsOverlayAnalyzer
 
 from PyQt4 import QtGui, uic
@@ -292,6 +293,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 # style_name = os.path.join(os.path.dirname(__file__),
                 #                           'style', 'colors.gml')
                 # self._se_layer.loadNamedStyle(style_name)
+                euc = self.shp_box_euc.currentLayer()
+                self.zonalStat(euc, self._se_layer)
         self._first_computation = False
 
         del self.computeThread
@@ -388,6 +391,11 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer.setRenderer(myPseudoRenderer)
 
         layer.triggerRepaint()
+
+    def zonalStat(self, vector_layer, raster_layer):
+        prefix = 'Test'
+        zoneStat = QgsZonalStatistics(vector_layer, raster_layer, prefix)
+        # zoneStat.calculateStatistics(None)
 
 class ComputeThread(QThread):
     # set signals:
