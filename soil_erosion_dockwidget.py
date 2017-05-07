@@ -25,8 +25,8 @@ import os
 import tempfile
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread, Qt
-from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMessageBox
-from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry
+from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMessageBox, QColor
+from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 # from qgis.analysis import QgsOverlayAnalyzer
@@ -288,9 +288,10 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 crs = self._se_layer.crs()
                 crs.createFromId(epsg)
                 self._se_layer.setCrs(crs)
-                style_name = os.path.join(os.path.dirname(__file__),
-                                          'style', 'colors.gml')
-                self._se_layer.loadNamedStyle(style_name)
+                self.setStyle(self._se_layer)
+                # style_name = os.path.join(os.path.dirname(__file__),
+                #                           'style', 'colors.gml')
+                # self._se_layer.loadNamedStyle(style_name)
         self._first_computation = False
 
         del self.computeThread
@@ -348,6 +349,45 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.progressMessageBar.setText(text)
         self.progress.setFormat('{}%'.format(num))
         self.progress.setValue(num)
+
+    def setStyle(self, layer):
+        provider = layer.dataProvider()
+        extent = layer.extent()
+
+        stats = provider.bandStatistics(1, QgsRasterBandStats.All, extent, 0)
+        if stats.minimumValue < 0:
+            min = 0
+        else:
+            min = stats.minimumValue
+
+        max = stats.maximumValue
+        range = max - min
+        add = range // 2
+        interval = min + add
+
+        colDic = {'red': '#ff0000', 'yellow': '#ffff00', 'blue': '#0000ff'}
+
+        valueList = [min, interval, max]
+
+        lst = [QgsColorRampShader.ColorRampItem(valueList[0], QColor(colDic['red'])),
+               QgsColorRampShader.ColorRampItem(valueList[1], QColor(colDic['yellow'])),
+               QgsColorRampShader.ColorRampItem(valueList[2], QColor(colDic['blue']))]
+
+        myRasterShader = QgsRasterShader()
+        myColorRamp = QgsColorRampShader()
+
+        myColorRamp.setColorRampItemList(lst)
+        myColorRamp.setColorRampType(QgsColorRampShader.INTERPOLATED)
+        # TODO: add classificationMode=Continuos
+        myRasterShader.setRasterShaderFunction(myColorRamp)
+
+        myPseudoRenderer = QgsSingleBandPseudoColorRenderer(layer.dataProvider(),
+                                                            layer.type(),
+                                                            myRasterShader)
+
+        layer.setRenderer(myPseudoRenderer)
+
+        layer.triggerRepaint()
 
 class ComputeThread(QThread):
     # set signals:
