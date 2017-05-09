@@ -298,6 +298,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 self.zonalStat(euc, se_source)
         self._first_computation = False
 
+        self.computeThread.cleanup()
         del self.computeThread
         # kill progress bar if it is still on (if computation is still on)
         try:
@@ -337,6 +338,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                                      QtGui.QMessageBox.Yes)
         if reply == QMessageBox.Yes:
             self.computeThread.terminate()
+            self.computeThread.cleanup()
             del self.computeThread
 
             # kill progress bar if it is still on (if computation is still on)
@@ -411,18 +413,24 @@ class ComputeThread(QThread):
         QThread.__init__(self)
         self.data = data
         self.epsg = epsg
+        self.er = None
+
+    def cleanup(self):
+        if self.er:
+            print self.er.location_path() # TODO: remove directory
+
     def run(self):
-        er = ErosionUSLE(self.data, self.epsg, computeStat=self.computeStat, computeError=self.computeError)
+        self.er = ErosionUSLE(self.data, self.epsg, computeStat=self.computeStat, computeError=self.computeError)
         try:
-            er.import_data(self.data)
+            self.er.import_data(self.data)
         except:
             self.computeError.emit(u'Error during exporting layers to Grass for computation.')
-        er.run()
+        self.er.run()
         # Export results to temporary directory
         self.computeStat.emit(99, u'Export data to map window...')
         try:
             self.temp_path = tempfile.mkdtemp()
-            er.export_data(self.temp_path)
+            self.er.export_data(self.temp_path)
         except:
             self.computeError.emit(u'Error during importing results to map window.')
         self.computeFinished.emit()

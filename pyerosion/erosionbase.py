@@ -108,6 +108,11 @@ class ErosionBase():
         for map_name, map_type in self._temp_maps:
             gscript.run_command('g.remove', flags='f', type=map_type, name=map_name)
 
+    def location_path(self):
+        ge = gscript.gisenv()
+
+        return os.path.join(ge['GISDBASE'], ge['LOCATION_NAME'])
+
     def import_data(self, files):
         """
         Define name and type imported files
