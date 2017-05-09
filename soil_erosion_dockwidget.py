@@ -383,6 +383,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         myColorRamp.setColorRampItemList(lst)
         myColorRamp.setColorRampType(QgsColorRampShader.INTERPOLATED)
         # TODO: add classificationMode=Continuos
+        # myColorRamp.setClassificationMode(QgsColorRampShader.ClassificationMode(1))
+        # AttributeError: type object 'QgsColorRampShader' has no attribute 'setClassificationMode'
         myRasterShader.setRasterShaderFunction(myColorRamp)
 
         myPseudoRenderer = QgsSingleBandPseudoColorRenderer(layer.dataProvider(),
