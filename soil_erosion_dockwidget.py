@@ -23,6 +23,7 @@
 
 import os
 import tempfile
+import shutil
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread, Qt
 from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMessageBox, QColor
@@ -416,8 +417,9 @@ class ComputeThread(QThread):
         self.er = None
 
     def cleanup(self):
+        # remove directory with temporary files
         if self.er:
-            print self.er.location_path() # TODO: remove directory
+            shutil.rmtree(self.er.location_path())
 
     def run(self):
         self.er = ErosionUSLE(self.data, self.epsg, computeStat=self.computeStat, computeError=self.computeError)
