@@ -294,7 +294,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 #                           'style', 'colors.gml')
                 # self._se_layer.loadNamedStyle(style_name)
                 euc = self.shp_box_euc.currentLayer()
-                self.zonalStat(euc, self._se_layer)
+                se_source = self._se_layer.source()
+                self.zonalStat(euc, se_source)
         self._first_computation = False
 
         del self.computeThread
@@ -392,10 +393,10 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         layer.triggerRepaint()
 
-    def zonalStat(self, vector_layer, raster_layer):
-        prefix = 'Test'
-        zoneStat = QgsZonalStatistics(vector_layer, raster_layer, prefix)
-        # zoneStat.calculateStatistics(None)
+    def zonalStat(self, vlayer, rlayer_source):
+        prefix = 'Erosion_'
+        zonalstats = QgsZonalStatistics(vlayer, rlayer_source, prefix, stats=QgsZonalStatistics.Statistic(4))
+        zonalstats.calculateStatistics(None)
 
 class ComputeThread(QThread):
     # set signals:
