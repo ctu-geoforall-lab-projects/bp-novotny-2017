@@ -6,7 +6,7 @@ from grass.script.core import run_command, parse_command
 
 class ErosionUSLE(ErosionBase):
 
-    def __init__(self, data, epsg='5514', location_path=None,
+    def __init__(self, data, factors, epsg='5514', location_path=None,
                  computeStat=None, computeError=None):
         """USLE constructor.
 
@@ -32,6 +32,8 @@ class ErosionUSLE(ErosionBase):
         self.dmt_name = os.path.splitext(os.path.basename(data[1]))[0]
         self.bpej_name = os.path.splitext(os.path.basename(data[2]))[0]
         self.lpis_name = os.path.splitext(os.path.basename(data[3]))[0]
+        self.r_factor = factors[0]
+        self.p_factor = factors[1]
 
         # internal input map names
         self._input = { 'euc' : self.euc_name,
@@ -163,7 +165,7 @@ class ErosionUSLE(ErosionBase):
                         attribute_column='KC',
                         where='KC IS NOT NULL'
             )
-            usle=self._output['erosion'] + ' = 40 * ls *' + bpej_lpis_raster + ' * 1'
+            usle=self._output['erosion'] + '=' + self.r_factor + '* ls *' + bpej_lpis_raster + '*' + self.p_factor
             run_command('r.mapcalc',
                         expr=usle
             )

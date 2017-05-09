@@ -278,8 +278,15 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         lpis_path = lpis_layer.dataProvider().dataSourceUri()
         data.append(lpis_path [:lpis_path.rfind('|')])
 
+        # find r, p factors and add them to factors
+        factors = []
+        r_factor = self.r_factor.text()
+        p_factor = self.p_factor.text()
+        factors.append(r_factor)
+        factors.append(p_factor)
+
         self.progressBar()
-        self.computeThread = ComputeThread(data, epsg)
+        self.computeThread = ComputeThread(data, factors, epsg)
         self.computeThread.computeFinished.connect(lambda: self.importResults(epsg))
         self.computeThread.computeStat.connect(self.setStatus)
         self.computeThread.computeError.connect(self.showError)
@@ -434,9 +441,10 @@ class ComputeThread(QThread):
     computeFinished = pyqtSignal()
     computeError = pyqtSignal(str)
     
-    def __init__(self, data, epsg):
+    def __init__(self, data, factors, epsg):
         QThread.__init__(self)
         self.data = data
+        self.factors = factors
         self.epsg = epsg
         self.er = None
 
@@ -446,7 +454,7 @@ class ComputeThread(QThread):
             shutil.rmtree(self.er.location_path())
 
     def run(self):
-        self.er = ErosionUSLE(self.data, self.epsg, computeStat=self.computeStat, computeError=self.computeError)
+        self.er = ErosionUSLE(self.data, self.factors, self.epsg, computeStat=self.computeStat, computeError=self.computeError)
         try:
             self.er.import_data(self.data)
         except:
