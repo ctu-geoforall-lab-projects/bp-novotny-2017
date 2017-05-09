@@ -290,7 +290,9 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 crs = self._se_layer.crs()
                 crs.createFromId(epsg)
                 self._se_layer.setCrs(crs)
-                self.setStyle(self._se_layer)
+                # # Set style be renderer:
+                # self.setStyle(self._se_layer)
+                # # set style on .gml file:
                 # style_name = os.path.join(os.path.dirname(__file__),
                 #                           'style', 'colors.gml')
                 # self._se_layer.loadNamedStyle(style_name)
