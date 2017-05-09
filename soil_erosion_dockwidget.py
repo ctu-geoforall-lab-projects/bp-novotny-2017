@@ -121,57 +121,75 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def onAddKFactor(self):
         bpej_layer = self.shp_box_bpej.currentLayer()
+        bpej_error = u'layer must contain field \'BPEJ\'(format:\'X.XX.XX\' or  value \'99\' for NoData)'
         if bpej_layer is None:
-            # TODO: pushMessage()
+            self.showError(u'You have to choose or load BPEJ layer.\n This ' + bpej_error)
+            return
+        elif bpej_layer.fieldNameIndex('BPEJ') == -1:
+            self.showError(u'BPEJ ' + bpej_error)
             return
         else:
             bpej_layer.startEditing()
             self._addColumn(bpej_layer, 'K')
             bpej_layer.commitChanges()
 
-        bpej_layer.startEditing()
-        idx = bpej_layer.fieldNameIndex('BPEJ')
-        for feature in bpej_layer.getFeatures():
-            bpej = feature.attributes()[idx]
-            fid = feature.id()
-            if bpej == '99':
-                k_value = 0
-            else:
-                k_value = self._factors['K'].value(bpej[2] + bpej[3])
-            self.setFieldValue(bpej_layer, 'K', k_value, fid)
-        bpej_layer.commitChanges()
-        
+        try:
+            bpej_layer.startEditing()
+            idx = bpej_layer.fieldNameIndex('BPEJ')
+            for feature in bpej_layer.getFeatures():
+                bpej = feature.attributes()[idx]
+                fid = feature.id()
+                if bpej == '99':
+                    k_value = 0
+                else:
+                    k_value = self._factors['K'].value(bpej[2] + bpej[3])
+                self.setFieldValue(bpej_layer, 'K', k_value, fid)
+            bpej_layer.commitChanges()
+        except:
+            self.showError(u'BPEJ ' + bpej_error)
+            return
+
     def onAddCFactor(self):
         lpis_layer = self.shp_box_lpis.currentLayer()
+        lpis_error = u'layer must contain field \'KULTURAKOD\'\nwith allowed codes for land:\n   R - Arable land\n' \
+                     u'   T - Permanent grassland\n   S - Orchard\n   L - Forest\n   V - Vineyard\n   C - Hop-garden\n' \
+                     u'At least one feature must have code \'R\'!'
         if lpis_layer is None:
-            # TODO: pushMessage()
+            self.showError(u'You have to choose or load LPIS layer.\nThis ' + lpis_error)
+            return
+        elif lpis_layer.fieldNameIndex('KULTURAKOD') == -1:
+            self.showError(u'LPIS ' + lpis_error)
             return
         else:
             lpis_layer.startEditing()
             self._addColumn(lpis_layer, 'C')
             lpis_layer.commitChanges()
 
-        lpis_layer.startEditing()
-        combobox_value = self.combobox_c.currentText()
-        idx = lpis_layer.fieldNameIndex('KULTURAKOD')
-        for feature in lpis_layer.getFeatures():
-            lpis = feature.attributes()[idx]
-            fid = feature.id()
-            if lpis == 'T':
-                c_value = 0.005
-            elif lpis == 'S':
-                c_value = 0.45
-            elif lpis == 'L':
-                c_value = 0
-            elif lpis == 'V':
-                c_value = 0
-            elif lpis == 'C':
-                c_value = 0.8
-            elif lpis == 'R':
-                c_value = self._factors['C'].value(combobox_value)
-            self.setFieldValue(lpis_layer, 'C', c_value, fid)
-        lpis_layer.commitChanges()
-        
+        try:
+            lpis_layer.startEditing()
+            combobox_value = self.combobox_c.currentText()
+            idx = lpis_layer.fieldNameIndex('KULTURAKOD')
+            for feature in lpis_layer.getFeatures():
+                lpis = feature.attributes()[idx]
+                fid = feature.id()
+                if lpis == 'T':
+                    c_value = 0.005
+                elif lpis == 'S':
+                    c_value = 0.45
+                elif lpis == 'L':
+                    c_value = 0
+                elif lpis == 'V':
+                    c_value = 0
+                elif lpis == 'C':
+                    c_value = 0.8
+                elif lpis == 'R':
+                    c_value = self._factors['C'].value(combobox_value)
+                self.setFieldValue(lpis_layer, 'C', c_value, fid)
+            lpis_layer.commitChanges()
+        except:
+            self.showError(u'LPIS ' + lpis_error)
+            return
+
     def setFieldValue(self, euc_layer, field_name, value, fid=None):
         index = euc_layer.dataProvider().fieldNameIndex(field_name)
         
@@ -238,11 +256,11 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 epsg = int(euc_crs[5:])
             else:
                 self.showError(u'It\'s not allow compute in own projection!\n\nSet CRS of'\
-                               u' input layers: {}\n\nPlease change CRS of input layers.'.format(euc_crs))
+                               u' input layers: {}\n\nPlease change CRS of input layers to EPSG Code.'.format(euc_crs))
                 return
         else:
-            self.showError(u'Layers have different projection:\nEUC: {}\nDMT: {}\nBPEJ: {}\nLP'\
-                           u'IS: {}'.format(euc_crs, dmt_crs, bpej_crs, lpis_crs))
+            self.showError(u'All inputs have to be at the same projection!\nEUC: {}\nDMT: {}\nBPEJ: {}\nLPIS: {}\n'\
+                           u'Please set only one projections for all input layers.'.format(euc_crs, dmt_crs, bpej_crs, lpis_crs))
             return
 
         # add paths to layers to data
@@ -271,7 +289,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def checkField(self, name_lyr, layer, field_name):
         if layer.fieldNameIndex(field_name) == -1:
-            self.showError(u'{} layer must contain field {}'.format(name_lyr, field_name))
+            self.showError(u'{} layer must contain field {}.\nClick on \'Compute {} factor\''\
+                           .format(name_lyr, field_name, field_name))
             self._cancel = True
 
     def showError(self, text):
@@ -285,20 +304,23 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         temp_path = self.computeThread.output_path()
         for file in os.listdir(temp_path):
             if file.endswith(".tif"):
-                self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
-                                                'Soil Erosion')
-                crs = self._se_layer.crs()
-                crs.createFromId(epsg)
-                self._se_layer.setCrs(crs)
-                # # Set style be renderer:
-                # self.setStyle(self._se_layer)
-                # # set style on .gml file:
-                # style_name = os.path.join(os.path.dirname(__file__),
-                #                           'style', 'colors.gml')
-                # self._se_layer.loadNamedStyle(style_name)
-                euc = self.shp_box_euc.currentLayer()
-                se_source = self._se_layer.source()
-                self.zonalStat(euc, se_source)
+                try:
+                    self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
+                                                    'Soil Erosion')
+                    crs = self._se_layer.crs()
+                    crs.createFromId(epsg)
+                    self._se_layer.setCrs(crs)
+                    # # Set style be renderer:
+                    # self.setStyle(self._se_layer)
+                    # # set style on .gml file:
+                    # style_name = os.path.join(os.path.dirname(__file__),
+                    #                           'style', 'colors.gml')
+                    # self._se_layer.loadNamedStyle(style_name)
+                    euc = self.shp_box_euc.currentLayer()
+                    se_source = self._se_layer.source()
+                    self.zonalStat(euc, se_source)
+                except:
+                    self.computeError.emit(u'Error during compute zonal statistics.')
         self._first_computation = False
 
         self.computeThread.cleanup()
@@ -431,7 +453,7 @@ class ComputeThread(QThread):
             self.computeError.emit(u'Error during exporting layers to Grass for computation.')
         self.er.run()
         # Export results to temporary directory
-        self.computeStat.emit(99, u'Export data to map window...')
+        self.computeStat.emit(85, u'Compute average erosion for EUC...')
         try:
             self.temp_path = tempfile.mkdtemp()
             self.er.export_data(self.temp_path)

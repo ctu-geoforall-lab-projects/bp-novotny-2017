@@ -154,7 +154,7 @@ class ErosionUSLE(ErosionBase):
             return
         # compute final G Factor (Erosion factor)
         try:
-            self.computeStat(90, u'Computing Erosion factor...')
+            self.computeStat(75, u'Computing Erosion factor...')
             bpej_lpis_raster=self._temp_map('raster')
             run_command('v.to.rast',
                         input=bpej_lpis,
