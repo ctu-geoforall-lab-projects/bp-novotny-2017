@@ -337,6 +337,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                                      QtGui.QMessageBox.Yes)
         if reply == QMessageBox.Yes:
             self.computeThread.terminate()
+            del self.computeThread
 
             # kill progress bar if it is still on (if computation is still on)
             try:
