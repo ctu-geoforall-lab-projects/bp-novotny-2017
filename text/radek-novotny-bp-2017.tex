@@ -1,129 +1,218 @@
-% arara: pdflatex: { synctex: yes }
-% arara: makeindex: { style: ctuthesis }
-% arara: bibtex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%															BAKALÁŘSKÁ PRÁCE														%%
+%% 									Zásuvný modul QGIS pro~výpočet erozního smyvu na~orné půdě										%%
+%% 															 Radek NOVOTNÝ															%%
+%%																																	%%
+%% 					(pro formátování využita šablona: http://geo3.fsv.cvut.cz/kurzy/mod/resource/view.php?id=775 ) 					%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[
+  12pt,         			% Velikost základního písma je 12 bodů
+  a4paper,      			% Formát papíru je A4
+  oneside,       			% Oboustranný tisk
+  pdftex,				    % překlad bude proveden programem 'pdftex' do PDF
+]{report}       			% Dokument třídy 'zpráva'
 
-% The class takes all the key=value arguments that \ctusetup does,
-% and a couple more: draft and oneside
-\documentclass[twoside]{ctuthesis}
+\newcommand{\Fbox}[1]{\fbox{\strut#1}}
 
-\ctusetup{
-	preprint = \ctuverlog,
-%	mainlanguage = english,
-%	titlelanguage = czech,
-	mainlanguage = czech,
-	otherlanguages = {english},
-	title-czech = {Zásuvný modul QGIS pro~výpočet~erozního~smyvu~na~orné půdě},
-	title-english = {Soil Loss on Arable Land QGIS Plugin},
-	subtitle-czech = {},
-	subtitle-english = {},
-	doctype = B,
-	faculty = F1,
-	department-czech = {Katedra geomatiky},
-	department-english = {Department of Geomatics},
-	author = {Radek Novotný},
-	supervisor = {Ing. Martin Landa, Ph.D.},
-	supervisor-address = {ČVUT v Praze - Fakulta stavební, \\ Thákurova 2077/7, Praha 6\\ B802},
-	%supervisor-specialist = {John Doe},
-	fieldofstudy-english = {Mathematical Engineering},
-	subfieldofstudy-english = {Mathematical Modelling},
-	fieldofstudy-czech = {Geodézie, kartografie a geoinformatika},
-	subfieldofstudy-czech = {Geodézie a kartografie},
-	keywords-czech = {slovo, klíč},
-	keywords-english = {word, key},
-	day = 28,
-	month = 5,
-	year = 2017,
-	specification-file = {ctutest-zadani.pdf},
-%	front-specification = true,
-%	front-list-of-figures = false,
-%	front-list-of-tables = false,
-%	monochrome = true,
-%	layout-short = true,
+\usepackage[czech, english]{babel}	% použití češtiny a angličtiny
+\usepackage[utf8]{inputenc}			% Kódování zdrojových souborů je UTF8
+
+\usepackage[square,sort,comma,numbers]{natbib}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{font=small}
+\usepackage{enumitem} 
+\setlist{leftmargin=*} % bez odsazení
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatletter
+
+\usepackage[dvips]{graphicx}   
+\usepackage{color}
+\usepackage{transparent}
+\usepackage{wrapfig}
+\usepackage{float} 
+\usepackage{listings}
+
+
+\usepackage{cmap}           
+\usepackage[T1]{fontenc}    
+
+\usepackage{textcomp}
+\usepackage[compact]{titlesec}
+\usepackage{amsmath}
+\addtolength{\jot}{1em} 
+
+\usepackage{chngcntr}
+\counterwithout{footnote}{chapter}
+
+\usepackage{acronym}
+
+\usepackage[
+    unicode,                
+    breaklinks=true,        
+    hypertexnames=false,
+    colorlinks=true, % true for print version
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+]{hyperref}         
+
+\usepackage{url}
+\usepackage{fancyhdr}
+%\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{algcompatible}
+\renewcommand{\ALG@name}{Pseudokód}% Update algorithm name
+\def\ALG@name{Pseudokód}
+
+\usepackage[
+  cvutstyle,          
+  bachelor           
+]{thesiscvut}
+
+\newif\ifweb
+\ifx\ifHtml\undefined % Mimo HTML.
+    \webfalse
+\else % V HTML.
+    \webtrue
+\fi 
+
+\renewcommand{\figurename}{Obrázek}
+\def\figurename{Obrázek}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% Definice informací o dokumentu  %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Název práce
+\nazev{Zásuvný modul QGIS pro~výpočet~erozního~smyvu~na~orné půdě}
+{Soil Loss on Arable Land QGIS Plugin}
+
+%% Jméno a příjmení autora
+\autor{Radek}{Novotný}
+
+%% Jméno a příjmení vedoucího práce včetně titulů
+\garant{Ing.~Martin~Landa,~Ph.D.}
+
+%% Označení oboru studia
+\oborstudia{Geodézie, kartografie a~geoinformatika}{}
+
+%% Označení ústavu
+\ustav{Katedra geomatiky}{}
+
+%% Rok obhajoby
+\rok{2017}
+
+%Mesic obhajoby
+\mesic{červen}
+
+%% Místo obhajoby
+\misto{Praha}
+
+%% Abstrakt
+\abstrakt 
+{Cílem bakalářské práce je návrh softwarového nástroje pro výpočet a prezentaci erozního smyvu na orné půdě, který je podkladem pro agrotechnická a organizační opatření při projektování komplexních pozemkových úprav, případně opatření proti nežádoucím vlivům odtokových poměrů. Výstupem aplikace je rastrový soubor prezentující hodnotu erozního smyvu v tunách na hektar za rok (t/ha.rok) pomocí barevné škály v zájmovém území a souhrnná tabulka obsahující výsledné hodnoty erozně hodnocených ploch. Jako platforma pro vývoj nástroje bude použit programovací jazyk Python, grafický framework PyQt, open source desktopový program QGIS a jeho API (rozhraní pro programovaní aplikací). Nástroj bude implementován ve formě tzv. zásuvného modulu pod licencí GNU GPL.
 }
+{Abstract in English}
 
-\ctuprocess
+%% Klíčová slova
+\klicovaslova
+{GIS, QGIS, GRASS, zásuvný~modul, python,  půdní eroze, USLE}
+{GIS, QGIS, GRASS, plugin, python, soil erosion, USLE}
 
-\addto\ctucaptionsczech{%
-	\def\supervisorname{Vedoucí}%
-	\def\subfieldofstudyname{Studijní program}%
-}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ctutemplateset{maketitle twocolumn default}{
-	\begin{twocolumnfrontmatterpage}
-		\ctutemplate{twocolumn.thanks}
-		\ctutemplate{twocolumn.declaration}
-		\ctutemplate{twocolumn.abstract.in.titlelanguage}
-		\ctutemplate{twocolumn.abstract.in.secondlanguage}
-		\ctutemplate{twocolumn.tableofcontents}
-		\ctutemplate{twocolumn.listoffigures}
-	\end{twocolumnfrontmatterpage}
-}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Nastavení polí ve Vlastnostech dokumentu PDF
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nastavenipdf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Theorem declarations, this is the reasonable default, anybody can do what they wish.
-% If you prefer theorems in italics rather than slanted, use \theoremstyle{plainit}
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-
-\theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{example}[theorem]{Example}
-\newtheorem{conjecture}[theorem]{Conjecture}
-
-\theoremstyle{note}
-\newtheorem*{remark*}{Remark}
-\newtheorem{remark}[theorem]{Remark}
-
-\setlength{\parskip}{5ex plus 0.2ex minus 0.2ex}
-
-% Abstract in Czech
-\begin{abstract-czech}
-Cílem bakalářské práce je návrh softwarového nástroje pro výpočet a prezentaci erozního smyvu na orné půdě, který je podkladem pro agrotechnická a organizační opatření při projektování komplexních pozemkových úprav, případně opatření proti nežádoucím vlivům odtokových poměrů. Výstupem aplikace je rastrový soubor prezentující hodnotu erozního smyvu v tunách na hektar za rok (t/ha.rok) pomocí barevné škály v zájmovém území a souhrnná tabulka obsahující výsledné hodnoty erozně hodnocených ploch.
-
-Jako platforma pro vývoj nástroje bude použit programovací jazyk Python, grafický framework PyQt, open source desktopový program QGIS a jeho API (rozhraní pro programovaní aplikací). Nástroj bude implementován ve formě tzv. zásuvného modulu pod licencí GNU GPL.
-\end{abstract-czech}
-
-% Abstract in English
-\begin{abstract-english}
- Let us suppose we are given a modulus $d$.  In \cite{cite:10}, the main result was the extension of Newton random variables.  We show that ${\Gamma_{\mathfrak{{r}},b}} ( {Z_{\beta,f}} ) \sim \bar{E}$.  The work in \cite{cite:20} did not consider the infinite, hyper-reversible, local case. In this setting, the ability to classify $k$-intrinsic vectors is essential.
- 
-Let us suppose $\mathfrak{{a}} > \mathfrak{{c}}''$.  Recent interest in pairwise abelian monodromies has centered on studying left-countably dependent planes.  We show that $\Delta \ge 0$.  It was Brouwer who first asked whether classes can be described. B. Artin \cite{cite:30} improved upon the results of M. Bernoulli by deriving nonnegative classes.
-\end{abstract-english}
-
-% Acknowledgements / Podekovani
-\begin{thanks}
-Děkuji ČVUT, že mi je tak dobrou \emph{alma mater}.
-\end{thanks}
-
-% Declaration / Prohlaseni
-\begin{declaration}
-Prohlašuji, že jsem předloženou práci vypracoval samostatně, a že jsem uvedl veškerou použitou literaturu.
-
-V Praze, \ctufield{day}.~\monthinlanguage{title}~\ctufield{year}
-\end{declaration}
-
-% Only for testing purposes
-\listfiles
-\usepackage[pagewise]{lineno}
-\usepackage{lipsum,blindtext}
-\usepackage{mathrsfs} % provides \mathscr used in the ridiculous examples
-
+%%% Začátek dokumentu
 \begin{document}
 
-\maketitle
+\catcode`\-=12  % pro vypnuti aktivniho znaku '-' pouzivaneho napr. v \cline 
+
+% aktivace záhlaví
+\zahlavi
+
+% předefinování vzhledu záhlaví
+\renewcommand{\chaptermark}[1]{%
+	\markboth{\MakeUppercase
+	{%
+	\thechapter.%
+	\ #1}}{}}
+
+% Vysázení přebalu práce
+%\vytvorobalku
+
+% Vysázení titulní stránky práce
+\vytvortitulku
+
+% Vysázení listu zadani
+\stranka{}%
+	{\includegraphics[scale=0.7]{./pictures/zadani.pdf}}%\sffamily\Huge\centering\ }%ZDE VLOŽIT LIST ZADÁNÍ}%
+	%{\sffamily\centering Z~důvodu správného číslování stránek}
+
+% Vysázení stránky s abstraktem
+\vytvorabstrakt
+
+% Vysázení prohlaseni o samostatnosti
+\vytvorprohlaseni
+
+% Vysázení poděkování
+\stranka{%nahore
+       }{%uprostred
+       }{%dole
+       \sffamily
+	\begin{flushleft}
+		\large
+		\MakeUppercase{Poděkování}
+	\end{flushleft}
+	\vspace{1em}
+		%\noindent
+	\par\hspace{2ex}
+	{Podekovani...}
+}
+
+% Vysázení obsahu
+\obsah
+
+% Vysázení seznamu obrázků
+\seznamobrazku
+
+% Vysázení seznamu tabulek
+\seznamtabulek
+
+% jednotlivé kapitoly
+
+\include{2-teorie}
 
 
+% Vysázení seznamu zkratek
+%\include{radek-novotny-bp-2017-zkratky}
 
-\input{1-eroze}
+% Literatura
+\nocite{*}
+\def\refname{Literatura}
+\bibliographystyle{mystyle}
+\bibliography{radek-novotny-bp-2017-literatura}
 
 
-\appendix
+% Začátek příloh
+%\def\figurename{Figure}%
+%\prilohy
 
-\printindex
+% Vysázení seznamu příloh
+%\seznampriloh
 
-\appendix
+% Vložení souboru s přílohami
+%\include{prilohy}
 
-
+% Konec dokumentu
 \end{document}
