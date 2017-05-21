@@ -25,7 +25,7 @@ import os
 import tempfile
 import shutil
 
-from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread, Qt
+from PyQt4.QtCore import QSettings, pyqtSignal, QLocale, QFileInfo, QVariant, QThread, Qt, QTranslator, QCoreApplication, qVersion
 from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMessageBox, QColor
 from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer, QgsSymbolV2, QgsRendererRangeV2, QgsGraduatedSymbolRendererV2
 from qgis.utils import iface
@@ -56,7 +56,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
-        self.settings = QSettings("CTU", "Erosion_plugin")
+        self.settings = QSettings("CTU", "Soil_Erosion_Plugin")
 
         self.iface = iface
 
@@ -90,7 +90,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.compute_c_button.clicked.connect(self.onAddCFactor)
 
         self.set_button.clicked.connect(self.onCompute)
-                
+
+
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
@@ -101,7 +102,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         lastUsedFilePath = self.settings.value(sender, '')
 
         fileName = QFileDialog.getOpenFileName(self,self.tr(u'Open Raster'), 
-                                               self.tr(u'{}').format(lastUsedFilePath),
+                                               u'{}'.format(lastUsedFilePath),
                                                QgsProviderRegistry.instance().fileRasterFilters())
         if fileName:
             self.iface.addRasterLayer(fileName, QFileInfo(fileName).baseName())
@@ -113,7 +114,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         lastUsedFilePath = self.settings.value(sender, '')
         
         fileName = QFileDialog.getOpenFileName(self,self.tr(u'Open Shapefile'),
-                                               self.tr(u'{}').format(lastUsedFilePath), 
+                                               u'{}'.format(lastUsedFilePath),
                                                QgsProviderRegistry.instance().fileVectorFilters())
         if fileName:
             self.iface.addVectorLayer(fileName, QFileInfo(fileName).baseName(), "ogr")
@@ -121,18 +122,21 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def onAddKFactor(self):
         bpej_layer = self.shp_box_bpej.currentLayer()
-        bpej_error = u'layer must contain field \'BPEJ\'(format:\'X.XX.XX\' or  value \'99\' for NoData)'
-        if bpej_layer is None:
-            self.showError(u'You have to choose or load BPEJ layer.\n This ' + bpej_error)
-            return
-        elif bpej_layer.fieldNameIndex('BPEJ') == -1:
-            self.showError(u'BPEJ ' + bpej_error)
-            return
-        else:
-            bpej_layer.startEditing()
-            self._addColumn(bpej_layer, 'K')
-            bpej_layer.commitChanges()
-
+        bpej_error = self.tr(u'layer must contain field \'BPEJ\'(format:\'X.XX.XX\' or  value \'99\' for NoData)')
+        try:
+            if bpej_layer is None:
+                self.showError(self.tr(u'You have to choose or load BPEJ layer.\n This ') + bpej_error)
+                return
+            elif bpej_layer.fieldNameIndex('BPEJ') == -1:
+                self.showError(self.tr(u'BPEJ ') + bpej_error)
+                return
+            else:
+                bpej_layer.startEditing()
+                self._addColumn(bpej_layer, 'K')
+                bpej_layer.commitChanges()
+        except:
+            bpej_layer.rollBack()
+            self.showError(self.tr(u'Error during add \'K\' field, please check BPEJ layer.'))
         try:
             bpej_layer.startEditing()
             idx = bpej_layer.fieldNameIndex('BPEJ')
@@ -146,19 +150,20 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 self.setFieldValue(bpej_layer, 'K', k_value, fid)
             bpej_layer.commitChanges()
         except:
-            self.showError(u'BPEJ ' + bpej_error)
+            bpej_layer.rollBack()
+            self.showError(self.tr(u'BPEJ ') + bpej_error)
             return
 
     def onAddCFactor(self):
         lpis_layer = self.shp_box_lpis.currentLayer()
-        lpis_error = u'layer must contain field \'KULTURAKOD\'\nwith allowed codes for land:\n   R - Arable land\n' \
+        lpis_error = self.tr(u'layer must contain field \'KULTURAKOD\'\nwith allowed codes for land:\n   R - Arable land\n' \
                      u'   T - Permanent grassland\n   S - Orchard\n   L - Forest\n   V - Vineyard\n   C - Hop-garden\n' \
-                     u'At least one feature must have code \'R\'!'
+                     u'At least one feature must have code \'R\'!')
         if lpis_layer is None:
-            self.showError(u'You have to choose or load LPIS layer.\nThis ' + lpis_error)
+            self.showError(self.tr(u'You have to choose or load LPIS layer.\nThis ') + lpis_error)
             return
         elif lpis_layer.fieldNameIndex('KULTURAKOD') == -1:
-            self.showError(u'LPIS ' + lpis_error)
+            self.showError(self.tr(u'LPIS ') + lpis_error)
             return
         else:
             lpis_layer.startEditing()
@@ -166,7 +171,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             lpis_layer.commitChanges()
 
         try:
-            lpis_layer.startEditing()
+            # lpis_layer.startEditing()
             combobox_value = self.combobox_c.currentText()
             idx = lpis_layer.fieldNameIndex('KULTURAKOD')
             for feature in lpis_layer.getFeatures():
@@ -187,7 +192,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 self.setFieldValue(lpis_layer, 'C', c_value, fid)
             lpis_layer.commitChanges()
         except:
-            self.showError(u'LPIS ' + lpis_error)
+            lpis_layer.rollBack()
+            self.showError(self.tr(u'LPIS ') + lpis_error)
             return
 
     def setFieldValue(self, euc_layer, field_name, value, fid=None):
@@ -255,12 +261,12 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             if not int(euc_crs[5:]) >= 100000:
                 epsg = int(euc_crs[5:])
             else:
-                self.showError(u'It\'s not allow compute in own projection!\n\nSet CRS of'\
-                               u' input layers: {}\n\nPlease change CRS of input layers to EPSG Code.'.format(euc_crs))
+                self.showError(self.tr(u'It\'s not allow compute in own projection!\n\nSet CRS of'\
+                               u' input layers: {}\n\nPlease change CRS of input layers to EPSG Code.').format(euc_crs))
                 return
         else:
-            self.showError(u'All inputs have to be at the same projection!\nEUC: {}\nDMT: {}\nBPEJ: {}\nLPIS: {}\n'\
-                           u'Please set only one projections for all input layers.'.format(euc_crs, dmt_crs, bpej_crs, lpis_crs))
+            self.showError(self.tr(u'All inputs have to be at the same projection!\nEUC: {}\nDMT: {}\nBPEJ: {}\nLPIS: {}\n'\
+                           u'Please set only one projections for all input layers.').format(euc_crs, dmt_crs, bpej_crs, lpis_crs))
             return
 
         # add paths to layers to data
@@ -296,12 +302,12 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def checkField(self, name_lyr, layer, field_name):
         if layer.fieldNameIndex(field_name) == -1:
-            self.showError(u'{} layer must contain field {}.\nClick on \'Compute {} factor\''\
+            self.showError(self.tr(u'{} layer must contain field {}.\nClick on \'Compute {} factor\'')\
                            .format(name_lyr, field_name, field_name))
             self._cancel = True
 
     def showError(self, text):
-        QMessageBox.critical(self, u'Soil Erosion Plugin', u"{}".format(text))
+        QMessageBox.critical(self, self.tr(u'Soil Erosion Plugin'), u"{}".format(text))
 
     def importResults(self, epsg):
         # if self.computeThread.aborted:
@@ -351,7 +357,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def setVectorStyle(self, layer):
         # define ranges: label, lower value, upper value, hex value of color
         g_values = (
-            ('velmi slabe ohrožena', 0.0, 1.0, '#458b00'),
+            ('velmi slabe ohrozena', 0.0, 1.0, '#458b00'),
             ('slabe ohrozena', 1.0, 2.0, '#bcee68'),
             ('stredne ohrozena', 2.0, 4.0, '#eedd82'),
             ('silne ohrozena', 4.0, 8.0, '#ffa07a'),
@@ -376,13 +382,13 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         :text: message to indicate what operation is currently on
         """
-        self.progressMessageBar = iface.messageBar().createMessage(u"Erosion Plugin:", u" Computing...")
+        self.progressMessageBar = iface.messageBar().createMessage(self.tr(u'Soil Erosion Plugin:'), self.tr(u' Computing...'))
         self.progress = QProgressBar()
         self.progress.setMaximum(100)
         self.progress.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
         self.cancelButton = QtGui.QPushButton()
-        self.cancelButton.setText('Cancel')
+        self.cancelButton.setText(self.tr('Cancel'))
         self.progressMessageBar.layout().addWidget(self.cancelButton)
         self.progressMessageBar.layout().addWidget(self.progress)
 
@@ -395,8 +401,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def onCancelButton(self):
         """Show message box with question on canceling. Cancel computation."""
 
-        reply = QMessageBox.question(self, u'Soil Erosion Plugin',
-                                     u"Cancel computation?{ls}".format(
+        reply = QMessageBox.question(self, self.tr(u'Soil Erosion Plugin'),
+                                     self.tr(u'Cancel computation?{ls}').format(
                                          ls=2 * os.linesep),
                                      QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
                                      QtGui.QMessageBox.Yes)
@@ -490,15 +496,15 @@ class ComputeThread(QThread):
         try:
             self.er.import_data(self.data)
         except:
-            self.computeError.emit(u'Error during exporting layers to Grass for computation.')
+            self.computeError.emit(self.tr(u'Error during exporting layers to Grass for computation.'))
         self.er.run()
         # Export results to temporary directory
-        self.computeStat.emit(85, u'Compute average erosion for EUC...')
+        self.computeStat.emit(85, self.tr(u'Compute average erosion for EUC...'))
         try:
             self.temp_path = tempfile.mkdtemp()
             self.er.export_data(self.temp_path)
         except:
-            self.computeError.emit(u'Error during importing results to map window.')
+            self.computeError.emit(self.tr(u'Error during importing results to map window.'))
         self.computeFinished.emit()
 
     def output_path(self):

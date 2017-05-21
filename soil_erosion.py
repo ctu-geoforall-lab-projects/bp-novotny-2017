@@ -20,7 +20,7 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt, QFileInfo, QLocale
 from PyQt4.QtGui import QAction, QIcon, QToolButton
 # Initialize Qt resources from file resources.py
 import resources
@@ -48,18 +48,29 @@ class SoilErosion:
         self.plugin_dir = os.path.dirname(__file__)
 
         # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
-        locale_path = os.path.join(
-            self.plugin_dir,
-            'i18n',
-            'SoilErosion_{}.qm'.format(locale))
-
-        if os.path.exists(locale_path):
+        pluginPath = QFileInfo(os.path.realpath(__file__)).path()  # patch by Régis Haubourg
+        localeName = QLocale.system().name()
+        if QFileInfo(pluginPath).exists():
+            self.localePath = pluginPath + "/i18n/soilerosion_" + localeName + ".qm"
+        if QFileInfo(self.localePath).exists():
             self.translator = QTranslator()
-            self.translator.load(locale_path)
-
+            self.translator.load(self.localePath)
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
+
+        # # initialize locale
+        # locale = QSettings().value('locale/userLocale')[0:2]
+        # locale_path = os.path.join(
+        #     self.plugin_dir,
+        #     'i18n',
+        #     'SoilErosion_{}.qm'.format(locale))
+        #
+        # if os.path.exists(locale_path):
+        #     self.translator = QTranslator()
+        #     self.translator.load(locale_path)
+        #
+        #     if qVersion() > '4.3.3':
+        #         QCoreApplication.installTranslator(self.translator)
 
         # Declare instance attributes
         self.actions = []
