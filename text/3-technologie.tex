@@ -1,0 +1,29 @@
+%!TEX ROOT=radek-novotny-bp-2017.tex
+\chapter{Technologie}
+\label{3-technologie}
+Cílem této kapitoly je v krátkosti popsat technologie, jež byly použity pro implementaci teoretických poznatků do softwarového nástroje – zásuvného modulu pro QGIS.
+\section{Python}
+Celý kód byl psán ve skriptovacím programovacím jazyce Python. Jedná se o objektově orientovaný jazyk představený v roce 1991 Guido van Rossumem. Python je dále vyvíjen jako open source projekt, který je zdarma distribuován na většinu platforem. Jazyk se vyznačuje jednoduchou, ale účelnou syntaxí, reprezentovanou např. dynamickou kontrolou datových typů nebo definicí bloků pomocí odsazování. Výhodou Pythonu je i jeho poměrně snadné rozšíření jazykem C, který je výkonnější a dokáže zrychlit náročnější operace.
+
+V současné době je stále nejvyužívanější verzí Python 2.7.x, kterou byla druhá řada ukončena a nyní se v ní jen opravují chyby. Už od roku 2008 je ve vývoji třetí řada, ta však není zpětně kompatibilní. Proto je potřeba software napsaný v Python 2 pro novou verzi adaptovat.
+\section{Qt}
+Qt je multiplatformní aplikační framework, který je využíván pro tvorbu aplikací s grafickým uživatelským rozhraním (GUI). Qt toolkit byl vytvořen v roce 1999 firmou Trolltech, v roce 2008 jej odkoupila společnost Nokia, která je stále hlavním vývojářem toolkitu, přestože v roce 2011 prodala licenci na komerční projekty vytvořené v Qt firmě Digia.
+
+Hlavními aplikacemi jsou Qt Creator, sloužící ke kompletní tvorbě aplikací, a Qt Designer, pomocí kterého je navrhováno samotné GUI. Výhodou je přizpůsobení výsledného GUI nativnímu vzhledu operačního systému. Qt podporuje používání řady jazyků, od výchozího C++ po Python, který je na Qt navázán pomocí frameworku PyQt.
+\section{QGIS}
+QGIS, jehož název vychází z původně používaného Quantum GIS, je open source (licence GNU/GPL) geografický informační systém (GIS) dostupný z platforem Mac OS X, Linux, Unix, a Microsoft Windows, přičemž od roku 2014 je vyvíjena i verze pro Android. Samotný vývoj QGIS začal Gary Sherman v roce 2002, poté byl projekt zařazen do Open Source Geospatial Foundation (2007) a v roce 2009 vyšla jeho první verze. V současnosti je aktuální verzí 2.18, jež by měla být poslední v druhé řadě, přičemž by měla být nahrazena verzí 3.0, která bude postavena na Python 3 s Qt5 a PyQt5. Od svého vzniku je QGIS udržován a dále vyvíjen dobrovolníky.
+
+QGIS podporuje většinu funkcí, které jsou od GIS očekávány, ať už se jedná o podporu mnoha vstupních formátů vektorových i rastrových dat, výběr a úpravy objektů nebo práci s atributovými tabulkami. Výhodou je rovněž podpora modulů z GRASS GIS, pomocí kterých jsou zvládány složitější výpočetní operace.
+Silnou stránkou jsou rovněž zásuvné moduly (pluginy). Díky rozsáhlé uživatelské komunitě v akademickém, ale stále častěji i profesním prostředí, a veřejné licenci GNU/GPL, pod kterou celý QGIS funguje, je vývoj nových zásuvných modulů značně zjednodušen. V QGIS je pluginů velké množství, čímž se významně rozšiřují možnosti práce se softwarem. Zásuvný modul pro QGIS je i výsledkem této práce.
+
+\section{GRASS GIS}
+GRASS GIS (Geographic Resources Analysis Support System) je stejně jako QGIS multiplatformním geografickým informačním systémem, který je volně šiřitelný pod licencí GNU/GPL. Jeho vývoj započala U.S. Army Corps of Enginneer/CERL (Construction Engineering Research Lab) už počátkem 80. let, na jejich konci byly veškeré zdrojové kódy uvolněny veřejnosti a v roce 1995 CERL z projektu odešel úplně. Další vývoj se poté začal odehrávat na akademické půdě, především na Baylor University v Texasu, USA a v Hannoveru v Německu. V roce 2008 byl projekt zařazen do Open Source Geospatial Foundation.
+
+GRASS pracuje s vektorovými i rastrovými daty pomocí modulů, kterých je z obdobných důvodů jako u QGIS mnoho. Technika použití modulů je spjata s dlouhou historií a počátky vývoje softwaru, kdy bylo potřeba s výkonem procesoru i využitím operační paměti šetřit. 
+
+Dalším specifikem GRASS GIS je nutnost pracovat s daty v pevně definované adresářové struktuře, díky čemuž je uživatel nucen data systematizovat. Struktura je rozdělena na databázi, lokaci a mapset. 
+-	Databáze (Databanka) je běžným adresářem na disku a obsahuje veškerá data, ke kterým GRASS přistupuje. 
+-	Lokace (Projekt) je adresář umístěný v databance, pro který je definován souřadnicový systém a jeho obsahem jsou data související s daným projektem.
+-	Mapset tvoří soubor map z jedné lokace, jež jsou určitým způsobem logicky provázány. Součástí každé lokace je mapset s názvem PERMANENT, který by měl obsahovat základní datové vrstvy.
+
+GRASS je možné ovládat, jak z příkazové řádky, tak pomocí GUI. Další možností je přistupovat k modulům GRASS pomocí GUI QGIS, které mnoho uživatelů shledává přívětivějším.
