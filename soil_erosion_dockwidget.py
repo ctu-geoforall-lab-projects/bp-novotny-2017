@@ -27,7 +27,7 @@ import shutil
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QLocale, QFileInfo, QVariant, QThread, Qt, QTranslator, QCoreApplication, qVersion
 from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMessageBox, QColor
-from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer, QgsSymbolV2, QgsRendererRangeV2, QgsGraduatedSymbolRendererV2
+from qgis.core import QgsProject, QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer, QgsSymbolV2, QgsRendererRangeV2, QgsGraduatedSymbolRendererV2
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.analysis import QgsZonalStatistics
@@ -234,8 +234,18 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             return
         # remove results from map window, if it is not first computation
         if self._first_computation == False:
-            QgsMapLayerRegistry.instance().removeMapLayer(self._se_layer.id())
-
+            try:
+                QgsMapLayerRegistry.instance().removeMapLayer(self._se_layer.id())
+                for field in self._euc_vector.pendingFields():
+                    if field.name() == 'Erosion_G_':
+                        field_id = self._euc_vector.fieldNameIndex('Erosion_G_')
+                        fList = list()
+                        fList.append(field_id)
+                        self._euc_vector.dataProvider().deleteAttributes(fList)
+                QgsMapLayerRegistry.instance().removeMapLayer(self._euc_vector.id())
+            except:
+                self.showError(u'Delete layer is not possible')
+                return
         # find input layers
         euc_layer = self.shp_box_euc.currentLayer()
         dmt_layer = self.raster_box.currentLayer()
@@ -317,33 +327,34 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         temp_path = self.computeThread.output_path()
         for file in os.listdir(temp_path):
             if file.endswith(".tif"):
-                # try:
-                self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
-                                                'Soil Erosion')
-                crs = self._se_layer.crs()
-                crs.createFromId(epsg)
-                self._se_layer.setCrs(crs)
-                # # Set style be renderer:
-                # self.setStyle(self._se_layer)
-                # # set style on .gml file:
-                euc = self.shp_box_euc.currentLayer()
-                euc_vector = iface.addVectorLayer(euc.source(), "EUC", euc.providerType())
-                se_source = self._se_layer.source()
-                self.zonalStat(euc_vector, se_source)
-                self.setVectorStyle(euc_vector)
-                for field in euc_vector.pendingFields():
-                    if field.name() == 'C':
-                        euc_vector.startEditing()
-                        oldname = field.name()
-                        field.setName('NewName')
-                        newname = field.name()
-                        self.showError(u'Old name: {},New name: {}'.format(oldname,newname))
-                        euc_vector.commitChanges()
-        # style_name = os.path.join(os.path.dirname(__file__),
-        #                           'style', 'euc_colors.gml')
-        # euc_vector.loadNamedStyle(style_name)
-        #         except:
-        #             self.computeError.emit(u'Error during compute zonal statistics.')
+                try:
+                    self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
+                                                    'Soil Erosion')
+                    crs = self._se_layer.crs()
+                    crs.createFromId(epsg)
+                    self._se_layer.setCrs(crs)
+                    self.layerOnTop(self._se_layer)
+                    # # Set style be renderer:
+                    # self.setStyle(self._se_layer)
+                    # # set style on .gml file:
+                    euc = self.shp_box_euc.currentLayer()
+                    self._euc_vector = iface.addVectorLayer(euc.source(), "EUC", euc.providerType())
+                    self.layerOnTop(self._euc_vector)
+                    se_source = self._se_layer.source()
+                    self.zonalStat(self._euc_vector, se_source)
+                    self.setVectorErosionStyle(self._euc_vector)
+
+                # for field in _euc_vector.pendingFields():
+                #     if field.name() == 'C':
+                #         _euc_vector.startEditing()
+                #         oldname = field.name()
+                #         field.setName('NewName')
+                #         newname = field.name()
+                #         self.showError(u'Old name: {},New name: {}'.format(oldname,newname))
+                #         _euc_vector.commitChanges()
+
+                except:
+                    self.computeError.emit(u'Error during compute zonal statistics.')
         self._first_computation = False
 
         self.computeThread.cleanup()
@@ -354,7 +365,15 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.messageBar().popWidget(self.progressMessageBar)
         except:
             pass
-    def setVectorStyle(self, layer):
+    def layerOnTop(self, layer):
+        root = QgsProject.instance().layerTreeRoot()
+        alayer = root.findLayer(layer.id())
+        clone = alayer.clone()
+        parent = alayer.parent()
+        parent.insertChildNode(0, clone)
+        parent.removeChildNode(alayer)
+
+    def setVectorErosionStyle(self, layer):
         # define ranges: label, lower value, upper value, hex value of color
         g_values = (
             ('velmi slabe ohrozena', 0.0, 1.0, '#458b00'),
@@ -374,7 +393,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             ranges.append(rng)
 
         # create the renderer and assign it to a layer
-        expression = 'G_mean'  # field name
+        expression = 'Erosion_G_'  # field name
         renderer = QgsGraduatedSymbolRendererV2(expression, ranges)
         layer.setRendererV2(renderer)
     def progressBar(self):
@@ -469,7 +488,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer.triggerRepaint()
 
     def zonalStat(self, vlayer, rlayer_source):
-        prefix = 'G_'
+        prefix = 'Erosion_G_'
         zonalstats = QgsZonalStatistics(vlayer, rlayer_source, prefix, stats=QgsZonalStatistics.Statistic(4))
         zonalstats.calculateStatistics(None)
 
