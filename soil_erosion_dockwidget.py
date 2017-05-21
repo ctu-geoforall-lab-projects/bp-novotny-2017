@@ -27,7 +27,7 @@ import shutil
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QLocale, QFileInfo, QVariant, QThread, Qt, QTranslator, QCoreApplication, qVersion
 from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMessageBox, QColor
-from qgis.core import QgsProject, QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer, QgsSymbolV2, QgsRendererRangeV2, QgsGraduatedSymbolRendererV2
+from qgis.core import QgsProject, QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer, QgsSymbolV2, QgsRendererRangeV2, QgsGraduatedSymbolRendererV2, QgsRendererCategoryV2, QgsCategorizedSymbolRendererV2
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.analysis import QgsZonalStatistics
@@ -144,11 +144,12 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 bpej = feature.attributes()[idx]
                 fid = feature.id()
                 if bpej == '99':
-                    k_value = 0
+                    k_value = None
                 else:
                     k_value = self._factors['K'].value(bpej[2] + bpej[3])
                 self.setFieldValue(bpej_layer, 'K', k_value, fid)
             bpej_layer.commitChanges()
+            self.setBpejStyle(bpej_layer)
         except:
             bpej_layer.rollBack()
             self.showError(self.tr(u'BPEJ ') + bpej_error)
@@ -171,7 +172,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             lpis_layer.commitChanges()
 
         try:
-            # lpis_layer.startEditing()
+            self.setLpisStyle(lpis_layer)
+            lpis_layer.startEditing()
             combobox_value = self.combobox_c.currentText()
             idx = lpis_layer.fieldNameIndex('KULTURAKOD')
             for feature in lpis_layer.getFeatures():
@@ -182,9 +184,9 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 elif lpis == 'S':
                     c_value = 0.45
                 elif lpis == 'L':
-                    c_value = 0
+                    c_value = 0.003
                 elif lpis == 'V':
-                    c_value = 0
+                    c_value = 0.85
                 elif lpis == 'C':
                     c_value = 0.8
                 elif lpis == 'R':
@@ -244,7 +246,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                         self._euc_vector.dataProvider().deleteAttributes(fList)
                 QgsMapLayerRegistry.instance().removeMapLayer(self._euc_vector.id())
             except:
-                self.showError(u'Delete layer is not possible')
+                self.showError(self.tr(u'Error during deleting layers from previous computation.'))
                 return
         # find input layers
         euc_layer = self.shp_box_euc.currentLayer()
@@ -373,18 +375,67 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         parent.insertChildNode(0, clone)
         parent.removeChildNode(alayer)
 
+    def setBpejStyle(self, layer):
+        # define ranges: label, lower value, upper value, hex value of color
+        k_values = (
+            (self.tr('0.0-0.1'), 0.0, 0.1, '#458b00'),
+            (self.tr('0.1-0.2'), 0.1, 0.2, '#bcee68'),
+            (self.tr('0.2-0.3'), 0.2, 0.3, '#eedd82'),
+            (self.tr('0.3-0.4'), 0.3, 0.4, '#ffa07a'),
+            (self.tr('0.4-0.5'), 0.4, 0.5, '#ff4500'),
+            (self.tr('0.5 and more'), 0.5, 9999.0, '#8b2500'),
+        )
+
+        # create a category for each item in k_values
+        ranges = []
+        for label, lower, upper, color in k_values:
+            symbol = QgsSymbolV2.defaultSymbol(layer.geometryType())
+            symbol.setColor(QColor(color))
+            rng = QgsRendererRangeV2(lower, upper, symbol, label)
+            ranges.append(rng)
+
+        # create the renderer and assign it to a layer
+        expression = 'K'  # field name
+        renderer = QgsGraduatedSymbolRendererV2(expression, ranges)
+        layer.setRendererV2(renderer)
+
+    def setLpisStyle(self, layer):
+        # define a lookup: value -> (color, label)
+        land_types = {
+            'L': ('#005900', self.tr('Forest')),
+            'R': ('#6d4237', self.tr('Arable land')),
+            'S': ('#fb5858', self.tr('Orchard')),
+            'V': ('#d875e4', self.tr('Vineyard')),
+            'C': ('#f2d773', self.tr('Hop-garden')),
+            'T': ('#329932', self.tr('Permanent grassland')),
+            '': ('#808080', self.tr('Unknown')),
+        }
+
+        # create a category for each item in land_types
+        categories = []
+        for land_type, (color, label) in land_types.items():
+            symbol = QgsSymbolV2.defaultSymbol(layer.geometryType())
+            symbol.setColor(QColor(color))
+            category = QgsRendererCategoryV2(land_type, symbol, label)
+            categories.append(category)
+
+        # create the renderer and assign it to a layer
+        expression = 'KULTURAKOD'  # field name
+        renderer = QgsCategorizedSymbolRendererV2(expression, categories)
+        layer.setRendererV2(renderer)
+
     def setVectorErosionStyle(self, layer):
         # define ranges: label, lower value, upper value, hex value of color
         g_values = (
-            ('velmi slabe ohrozena', 0.0, 1.0, '#458b00'),
-            ('slabe ohrozena', 1.0, 2.0, '#bcee68'),
-            ('stredne ohrozena', 2.0, 4.0, '#eedd82'),
-            ('silne ohrozena', 4.0, 8.0, '#ffa07a'),
-            ('velmi silne ohrozena', 8.0, 10.0, '#ff4500'),
-            ('extremne ohrozena', 10.0, 9999.0, '#8b2500'),
+            (self.tr('Very weakly endangered'), 0.0, 1.0, '#458b00'),
+            (self.tr('Weakly endangered'), 1.0, 2.0, '#bcee68'),
+            (self.tr('Moderately endangered'), 2.0, 4.0, '#eedd82'),
+            (self.tr('Severely endangered'), 4.0, 8.0, '#ffa07a'),
+            (self.tr('Very severely endangered'), 8.0, 10.0, '#ff4500'),
+            (self.tr('Extremely endangered'), 10.0, 999999.9, '#8b2500'),
         )
 
-        # create a category for each item in animals
+        # create a category for each item in g_values
         ranges = []
         for label, lower, upper, color in g_values:
             symbol = QgsSymbolV2.defaultSymbol(layer.geometryType())
