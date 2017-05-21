@@ -150,6 +150,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 self.setFieldValue(bpej_layer, 'K', k_value, fid)
             bpej_layer.commitChanges()
             self.setBpejStyle(bpej_layer)
+            self.iface.messageBar().pushMessage(self.tr('Soil Erosion Plugin'), self.tr('K factor is computed!'))
         except:
             bpej_layer.rollBack()
             self.showError(self.tr(u'BPEJ ') + bpej_error)
@@ -193,6 +194,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     c_value = self._factors['C'].value(combobox_value)
                 self.setFieldValue(lpis_layer, 'C', c_value, fid)
             lpis_layer.commitChanges()
+            self.iface.messageBar().pushMessage(self.tr('Soil Erosion Plugin'), self.tr('C factor is computed!'))
         except:
             lpis_layer.rollBack()
             self.showError(self.tr(u'LPIS ') + lpis_error)

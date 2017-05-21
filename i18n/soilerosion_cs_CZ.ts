@@ -4,17 +4,17 @@
 <context>
     <name>ComputeThread</name>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="569"/>
+        <location filename="../soil_erosion_dockwidget.py" line="571"/>
         <source>Error during exporting layers to Grass for computation.</source>
         <translation>Chyba během exportu vrstev do GRASS GIS pro výpočet modelu.</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="572"/>
+        <location filename="../soil_erosion_dockwidget.py" line="574"/>
         <source>Compute average erosion for EUC...</source>
         <translation>Výpočet průměrné roční eroze pro jednotlivé EUC...</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="577"/>
+        <location filename="../soil_erosion_dockwidget.py" line="579"/>
         <source>Error during importing results to map window.</source>
         <translation>Chyba při vkládání výsledků do mapového okna.</translation>
     </message>
@@ -117,12 +117,12 @@
 Tato </translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="155"/>
+        <location filename="../soil_erosion_dockwidget.py" line="156"/>
         <source>BPEJ </source>
         <translation>BPEJ </translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="160"/>
+        <location filename="../soil_erosion_dockwidget.py" line="161"/>
         <source>layer must contain field &apos;KULTURAKOD&apos;
 with allowed codes for land:
    R - Arable land
@@ -143,19 +143,19 @@ s povolenými kódy pro půdu:
 Alespoň jeden prvek musí být typu &apos;R&apos;!</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="164"/>
+        <location filename="../soil_erosion_dockwidget.py" line="165"/>
         <source>You have to choose or load LPIS layer.
 This </source>
         <translation>Musíte vybrat nebo nahrát vrstvu LPIS.
 Tato </translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="198"/>
+        <location filename="../soil_erosion_dockwidget.py" line="200"/>
         <source>LPIS </source>
         <translation>LPIS </translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="276"/>
+        <location filename="../soil_erosion_dockwidget.py" line="278"/>
         <source>It&apos;s not allow compute in own projection!
 
 Set CRS of input layers: {}
@@ -168,7 +168,7 @@ Nastavený souřadnicový systém: {}
 Prosím, změnte souřadnicový systém vstupních vrstev na EPSG kód.</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="280"/>
+        <location filename="../soil_erosion_dockwidget.py" line="282"/>
         <source>All inputs have to be at the same projection!
 EUC: {}
 DMT: {}
@@ -183,24 +183,24 @@ LPIS: {}
 Prosím, nastavte jeden souřadnicový systém pro všechny vstupní vrstvy.</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="317"/>
+        <location filename="../soil_erosion_dockwidget.py" line="319"/>
         <source>{} layer must contain field {}.
 Click on &apos;Compute {} factor&apos;</source>
         <translation>Vrstva {} musí obsahovat pole {}.
 Jeho výpočet proběhne po kliknutí na &apos;Vypočítat {} faktor&apos;</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="474"/>
+        <location filename="../soil_erosion_dockwidget.py" line="476"/>
         <source>Soil Erosion Plugin</source>
         <translation>Soil Erosion Plugin</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="461"/>
+        <location filename="../soil_erosion_dockwidget.py" line="463"/>
         <source>Cancel</source>
         <translation>Zrušit výpočet</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="474"/>
+        <location filename="../soil_erosion_dockwidget.py" line="476"/>
         <source>Cancel computation?{ls}</source>
         <translation>Opravdu chcete ukončit výpočet?{ls}</translation>
     </message>
@@ -210,12 +210,12 @@ Jeho výpočet proběhne po kliknutí na &apos;Vypočítat {} faktor&apos;</tran
         <translation>Chyba při přidání pole &apos;K&apos;, prosím zkontrolujte vrstvu BPEJ.</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="455"/>
+        <location filename="../soil_erosion_dockwidget.py" line="457"/>
         <source>Soil Erosion Plugin:</source>
         <translation>Soil Erosion Plugin:</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="455"/>
+        <location filename="../soil_erosion_dockwidget.py" line="457"/>
         <source> Computing...</source>
         <translation>Probíhá výpočet...</translation>
     </message>
@@ -225,104 +225,114 @@ Jeho výpočet proběhne po kliknutí na &apos;Vypočítat {} faktor&apos;</tran
         <translation type="obsolete">Zalesněná půda</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="249"/>
+        <location filename="../soil_erosion_dockwidget.py" line="251"/>
         <source>Error during deleting layers from previous computation.</source>
         <translation>Chyba během odstraňování vrstev z předchozího výpočtu.</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="380"/>
+        <location filename="../soil_erosion_dockwidget.py" line="382"/>
         <source>0.0-0.1</source>
         <translation>0,0-0,1</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="380"/>
+        <location filename="../soil_erosion_dockwidget.py" line="382"/>
         <source>0.1-0.2</source>
         <translation>0,1-0,2</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="380"/>
+        <location filename="../soil_erosion_dockwidget.py" line="382"/>
         <source>0.2-0.3</source>
         <translation>0,2-0,3</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="380"/>
+        <location filename="../soil_erosion_dockwidget.py" line="382"/>
         <source>0.3-0.4</source>
         <translation>0,3-0,4</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="380"/>
+        <location filename="../soil_erosion_dockwidget.py" line="382"/>
         <source>0.4-0.5</source>
         <translation>0,4-0,5</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="380"/>
+        <location filename="../soil_erosion_dockwidget.py" line="382"/>
         <source>0.5 and more</source>
         <translation>0,5 a více</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="405"/>
+        <location filename="../soil_erosion_dockwidget.py" line="407"/>
         <source>Forest</source>
         <translation>Zalesněná půda</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="406"/>
+        <location filename="../soil_erosion_dockwidget.py" line="408"/>
         <source>Arable land</source>
         <translation>Orná půda</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="407"/>
+        <location filename="../soil_erosion_dockwidget.py" line="409"/>
         <source>Orchard</source>
         <translation>Ovocný sad</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="408"/>
+        <location filename="../soil_erosion_dockwidget.py" line="410"/>
         <source>Vineyard</source>
         <translation>Vinice</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="409"/>
+        <location filename="../soil_erosion_dockwidget.py" line="411"/>
         <source>Hop-garden</source>
         <translation>Chmelnice</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="410"/>
+        <location filename="../soil_erosion_dockwidget.py" line="412"/>
         <source>Permanent grassland</source>
         <translation>Trvalý travní porost</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="411"/>
+        <location filename="../soil_erosion_dockwidget.py" line="413"/>
         <source>Unknown</source>
         <translation>Neznámý typ</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="429"/>
+        <location filename="../soil_erosion_dockwidget.py" line="431"/>
         <source>Very weakly endangered</source>
         <translation>Velmi slabě ohrožená</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="429"/>
+        <location filename="../soil_erosion_dockwidget.py" line="431"/>
         <source>Weakly endangered</source>
         <translation>Slabě ohrožená</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="429"/>
+        <location filename="../soil_erosion_dockwidget.py" line="431"/>
         <source>Moderately endangered</source>
         <translation>Středně ohrožená</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="429"/>
+        <location filename="../soil_erosion_dockwidget.py" line="431"/>
         <source>Severely endangered</source>
         <translation>Silně ohrožená</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="429"/>
+        <location filename="../soil_erosion_dockwidget.py" line="431"/>
         <source>Very severely endangered</source>
         <translation>Velmi silně ohrožená</translation>
     </message>
     <message>
-        <location filename="../soil_erosion_dockwidget.py" line="429"/>
+        <location filename="../soil_erosion_dockwidget.py" line="431"/>
         <source>Extremely endangered</source>
         <translation>Extrémně ohrožená</translation>
+    </message>
+    <message>
+        <location filename="../soil_erosion_dockwidget.py" line="153"/>
+        <source>K factor is computed!</source>
+        <translation>K faktor byl vypočítán!</translation>
+    </message>
+    <message>
+        <location filename="../soil_erosion_dockwidget.py" line="197"/>
+        <source>C factor is computed!</source>
+        <translation>C faktor byl vypočítán!</translation>
     </message>
 </context>
 <context>
