@@ -27,7 +27,7 @@ import shutil
 
 from PyQt4.QtCore import QSettings, pyqtSignal, QFileInfo, QVariant, QThread, Qt
 from PyQt4.QtGui import QFileDialog, QComboBox, QProgressBar, QToolButton, QMessageBox, QColor
-from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer
+from qgis.core import QgsProviderRegistry, QgsVectorLayer, QgsRasterLayer, QgsField, QgsMapLayerRegistry, QgsRasterBandStats, QgsColorRampShader, QgsRasterShader, QgsSingleBandPseudoColorRenderer, QgsSymbolV2, QgsRendererRangeV2, QgsGraduatedSymbolRendererV2
 from qgis.utils import iface
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.analysis import QgsZonalStatistics
@@ -311,23 +311,33 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         temp_path = self.computeThread.output_path()
         for file in os.listdir(temp_path):
             if file.endswith(".tif"):
-                try:
-                    self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
-                                                    'Soil Erosion')
-                    crs = self._se_layer.crs()
-                    crs.createFromId(epsg)
-                    self._se_layer.setCrs(crs)
-                    # # Set style be renderer:
-                    # self.setStyle(self._se_layer)
-                    # # set style on .gml file:
-                    # style_name = os.path.join(os.path.dirname(__file__),
-                    #                           'style', 'colors.gml')
-                    # self._se_layer.loadNamedStyle(style_name)
-                    euc = self.shp_box_euc.currentLayer()
-                    se_source = self._se_layer.source()
-                    self.zonalStat(euc, se_source)
-                except:
-                    self.computeError.emit(u'Error during compute zonal statistics.')
+                # try:
+                self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
+                                                'Soil Erosion')
+                crs = self._se_layer.crs()
+                crs.createFromId(epsg)
+                self._se_layer.setCrs(crs)
+                # # Set style be renderer:
+                # self.setStyle(self._se_layer)
+                # # set style on .gml file:
+                euc = self.shp_box_euc.currentLayer()
+                euc_vector = iface.addVectorLayer(euc.source(), "EUC", euc.providerType())
+                se_source = self._se_layer.source()
+                self.zonalStat(euc_vector, se_source)
+                self.setVectorStyle(euc_vector)
+                for field in euc_vector.pendingFields():
+                    if field.name() == 'C':
+                        euc_vector.startEditing()
+                        oldname = field.name()
+                        field.setName('NewName')
+                        newname = field.name()
+                        self.showError(u'Old name: {},New name: {}'.format(oldname,newname))
+                        euc_vector.commitChanges()
+        # style_name = os.path.join(os.path.dirname(__file__),
+        #                           'style', 'euc_colors.gml')
+        # euc_vector.loadNamedStyle(style_name)
+        #         except:
+        #             self.computeError.emit(u'Error during compute zonal statistics.')
         self._first_computation = False
 
         self.computeThread.cleanup()
@@ -338,7 +348,29 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.messageBar().popWidget(self.progressMessageBar)
         except:
             pass
+    def setVectorStyle(self, layer):
+        # define ranges: label, lower value, upper value, hex value of color
+        g_values = (
+            ('velmi slabe ohrožena', 0.0, 1.0, '#458b00'),
+            ('slabe ohrozena', 1.0, 2.0, '#bcee68'),
+            ('stredne ohrozena', 2.0, 4.0, '#eedd82'),
+            ('silne ohrozena', 4.0, 8.0, '#ffa07a'),
+            ('velmi silne ohrozena', 8.0, 10.0, '#ff4500'),
+            ('extremne ohrozena', 10.0, 9999.0, '#8b2500'),
+        )
 
+        # create a category for each item in animals
+        ranges = []
+        for label, lower, upper, color in g_values:
+            symbol = QgsSymbolV2.defaultSymbol(layer.geometryType())
+            symbol.setColor(QColor(color))
+            rng = QgsRendererRangeV2(lower, upper, symbol, label)
+            ranges.append(rng)
+
+        # create the renderer and assign it to a layer
+        expression = 'G_mean'  # field name
+        renderer = QgsGraduatedSymbolRendererV2(expression, ranges)
+        layer.setRendererV2(renderer)
     def progressBar(self):
         """Initializing progress bar.
 
@@ -431,7 +463,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer.triggerRepaint()
 
     def zonalStat(self, vlayer, rlayer_source):
-        prefix = 'Erosion_'
+        prefix = 'G_'
         zonalstats = QgsZonalStatistics(vlayer, rlayer_source, prefix, stats=QgsZonalStatistics.Statistic(4))
         zonalstats.calculateStatistics(None)
 
