@@ -2,3 +2,4 @@
 *.pyc
 .idea/
 docs/build
+sample_data/erosion-sample-data
