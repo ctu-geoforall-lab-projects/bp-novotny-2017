@@ -86,7 +86,7 @@ class ErosionUSLE(ErosionBase):
         try:
             self.computeStat(20, u'Setting up mask...')
             run_command('r.mask',
-                        raster=self._input['dmt']
+                        vector=self._input['euc']
             )
         except:
             self.computeError(u'Error in setting up mask.')
