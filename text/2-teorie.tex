@@ -341,14 +341,14 @@ ha^{-1}\cdot rok^{-1} \right)$\\
 \subsubsection{RUSLE}
 V roce 1997 byla publikována Revidovaná univerzální rovnice ztráty
 půdy (Revised Universal Soil Loss Equation), ta byla odvozena na
-základě revize, prověření a aktualizace USLE \zkratka{usle} . Došlo
+základě revize, prověření a aktualizace USLE. Došlo
 zde k významné změně způsobu určení erozních faktorů (např. zpřesnění
 časového průběhu hodnot R faktoru v patnáctidenním intervalu,
 zpřesnění časového průběhu K faktoru v důsledku zhutňování povrchu a
 rozpadu půdních agregátů srážkami či obhospodařováním, nové vztahy pro
-LS faktor). Výhodou využití RUSLE je výpočet pomocí volně přístupného
+LS faktor). Výhodou využití RUSLE je tedy přesnější určení
 %%% ML: to zavani zastaralosti zdroje, ktery jste pouzil
-programu pro DOS nebo Windows, jehož výsledkem je přesnější určení
+%%% RN: zrejme zbytecne, odstraneno
 erozního modelu. Nevýhodou je nutnost většího množství vstupních
 dat.\cite{rusle1997}
 \subsubsection{MUSLE}
@@ -360,9 +360,15 @@ splavenin z přívalového deště v povodí do velikosti
 
 %%% ML: tato kapitola se tyka ciste CR, je to tak? Pokud ano, tak by
 %%% to mel zohlednit jeji nazev
+%%% RN: CR se tyka pouze prvni polovina prvniho odstavce, zbytek by
+%%% mel platit obecne, nazvem a strukturu kapitoly jeste promyslim
+\newpage
 \subsection{Současný stav}
 USLE je v současnosti používána pro výpočet dlouhodobé eroze ve
 %%% ML: opravdu jedinou?
+%%% RN: pro vypocet dlouhodobe eroze ano, dale existuji simulacni
+%%% modely pro vypocet eroze kratkodobe, zrejme tuto kapitolu ale
+%%% jeste uppravim
 většině států světa a je jedinou doporučenou metodou v ČR (Metodika
 VÚMOP\cite{janecek2012}), existují k ní rozsáhlá katalogová data. Jsou
 vytvořeny postupy pro její výpočet v softwarech GIS a je přímo
@@ -681,10 +687,11 @@ zalesnit. Kromě půd s kódem 8 a 9, pro které je třeba hloubku půdy
 potřeba zjistit terénním průzkumem, je pro ostatní půdy přípustná
 hodnota $G_P=4,0~t\cdot ha^{-1}\cdot rok^{-1}$.\cite{Novotny2014}
 \newpage
-\section{Vrstvy využívané pro výpočet USLE v ČR}
-V České republice se při výpočtu faktorů pro USLE vychází zejména z
-vrstev BPEJ~($K, G_P$), LPIS~($C$) a DMT($LS$).
-\subsection{BPEJ}
+\chapter{Podklady}
+V této kapitole jsou popsány mapové podklady využívané při výpočtu 
+faktorů pro USLE. V České republice se jedná zejména o vrstvy 
+BPEJ~($K, G_P$), LPIS~($C$) a DMT($LS$).
+\section{BPEJ}
 Prvním krokem k vytvoření systému hodnocení půdy BPEJ bylo v roce 1961
 zahájení celosvětově ojedinělého Komplexního průzkumu půd(KPP), při
 kterém bylo odebráno okolo 700~000~ půdních sond, ze kterých byly
@@ -713,9 +720,9 @@ sklonitosti a expozice svahu ke světovým stranám(0-9). Pátá číslice
 určuje kombinaci skeletovitosti půdního profilu s hloubkou půdy(0-9),
 tato číslice je využívána pro získání hloubky půdy při určení
 $G_P$.\cite{Novotny2013}
-\subsection{LPIS}
+\section{LPIS}
 \begin{figure}[H]
-    \centering \includegraphics[scale=0.75]{./pictures/lpis.png}
+    \centering \includegraphics[scale=0.7]{./pictures/lpis.png}
       \caption[Ukázka GIS online aplikace Registr půd]{Ukázka online
         GIS aplikace Registr půd, zdroj: Registr půd\cite{lpis}}
       \label{fig:lpis}
@@ -752,21 +759,24 @@ třeba zjistit pěstované plodiny.\cite{Novotny2014}
 \end{center}
 \end{table}
 \FloatBarrier
-\subsection{DMT}
+\section{DMT}
 %%% ML: nejaky obrazek/screenshot?
+%%% RN: Idealne bych chtel vlozit porovnani 4G/5G, zatim jsem
+%       nenasel nic vhodneho.
 Pro výpočet LS faktoru se v ČR při využití GIS používají především
 digitální model reliéfu vytvořenými ČÚZK\cite{cuzk}. Výpočty nad
 DMR~4G jsou rychlejší díky pravidelné mřížce, zatímco výpočty nad
 DMR~5G poskytují přesnější model terénu.
-\subsubsection{DMR 4G}
+\subsection{DMR 4G}
 %%% ML: Zbytecne dlouha veta
-Digitální model reliéfu České republiky 4.~generace~DMR~4G, který
-vznikl leteckým laserovým skenováním v letech 2009 až 2013, zobrazuje
-přirozený nebo lidskou činností upravený zemský povrch v pravidelné
-síti 5~x~5~m, která je tvořena body s~určenou nadmořskou
+%%% RN: Rozdelil jsem ji na dve
+Digitální model reliéfu České republiky 4.~generace~(DMR~4G)
+vznikl leteckým laserovým skenováním v letech 2009 až 2013. DMR~4G 
+zobrazuje přirozený nebo lidskou činností upravený zemský povrch v 
+pravidelné síti 5~x~5~m, která je tvořena body s~určenou nadmořskou
 výškou~(Bpv). Pro tento model byla vypočtena úplná střední chyba výšky
 0,3~m v odkrytém terénu a 1~m v zalesněném terénu.
-\subsubsection{DMR 5G}
+\subsection{DMR 5G}
 Pro vytvoření páté generace digitálního modelu terénu byla použita
 stejná data jako pro čtvrtou generaci. DMR~5G se tedy od předchozího
 DMR~4G liší především použitím nepravidelné trojúhelníkové bodové
