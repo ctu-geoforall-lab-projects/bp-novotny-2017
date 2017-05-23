@@ -30,7 +30,11 @@
   
 
   
-    <link rel="top" title="Soil Erosion QGIS Plugin 0.1 documentation" href="#"/> 
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Soil Erosion QGIS Plugin 0.1 documentation" href="#"/>
+        <link rel="next" title="Instalace" href="instalace.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -51,6 +55,9 @@
             <a href="#" class="icon icon-home"> Soil Erosion QGIS Plugin
           
 
+          
+            
+            <img src="_static/icon.png" class="logo" />
           
           </a>
 
@@ -79,7 +86,9 @@
           
             
             
-                <ul class="simple">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="navod.html">Návod k použití</a></li>
 </ul>
 
             
@@ -114,7 +123,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -126,10 +135,36 @@
             
   <div class="section" id="soil-erosion-qgis-plugin">
 <h1>Soil Erosion QGIS Plugin<a class="headerlink" href="#soil-erosion-qgis-plugin" title="Permalink to this headline">¶</a></h1>
+<p>Zásuvný plugin Soil Erosion slouží pro výpočet
+a prezentaci erozního smyvu na orné půdě.</p>
+<p>Vstupem jsou vektorové vrstvy <a class="reference external" href="http://www.spucr.cz/bpej/celostatni-databaze-bpej">Bonitovaných půdně ekologických jednotek (BPEJ)</a>, <a class="reference external" href="http://eagri.cz/public/app/eagriapp/lpisdata/">Registru půd (LPIS)</a> a rastrová vrstva digitálního modelu terénu.</p>
+<p>Výstupem je rastrová vrstva znázorňující hodnotu smyvu
+.. a vektorová vrstva obsahující výsledné hodnoty průměrné
+.. dlouhodobé ztráty půdy pro definované erozně uzavřené celky.</p>
+<p>Případné chyby a nápady na vylepšení zásuvného modulu prosím pište na <a class="reference external" href="https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/issues">stránku</a>.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="navod.html">Návod k použití</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-euc">Záložka EUC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-l-s">Záložka L,S</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-k">Záložka K</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-c">Záložka C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-r-p">Záložka R,P</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#tlacitko-compute-erosion-model">Tlačítko Compute erosion model</a></li>
 </ul>
+</li>
+</ul>
+</div>
+<div class="section" id="autori">
+<h2>Autoři<a class="headerlink" href="#autori" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://geomatics.fsv.cvut.cz/research/geoforall/">Labolatoř GeoForAll</a> České vysoké
+učení technické v Praze</p>
+<ul class="simple">
+<li>Radek Novotný</li>
+</ul>
+<p>Vedoucí: Martin Landa</p>
 </div>
 </div>
 
@@ -137,6 +172,13 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="instalace.html" class="btn btn-neutral float-right" title="Instalace" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
   
 
   <hr/>

@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Návod k použití &mdash; Soil Erosion QGIS Plugin 0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Soil Erosion QGIS Plugin 0.1 documentation" href="index.html"/>
+        <link rel="prev" title="Instalace" href="instalace.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Soil Erosion QGIS Plugin
+          
+
+          
+            
+            <img src="_static/icon.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Návod k použití</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#zalozka-euc">Záložka EUC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#zalozka-l-s">Záložka L,S</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#zalozka-k">Záložka K</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#zalozka-c">Záložka C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#zalozka-r-p">Záložka R,P</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tlacitko-compute-erosion-model">Tlačítko Compute erosion model</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Soil Erosion QGIS Plugin</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Návod k použití</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/navod.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="navod-k-pouziti">
+<h1>Návod k použití<a class="headerlink" href="#navod-k-pouziti" title="Permalink to this headline">¶</a></h1>
+<p>Pro vytvoření erozního modelu je nutné vyplnění pěti záložek, ve kterých jsou
+voleny vstupy pro určení faktorů v rovnici USLE.</p>
+<div class="section" id="zalozka-euc">
+<h2>Záložka EUC<a class="headerlink" href="#zalozka-euc" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Zde se volí polygonová vektorová vrstva (.shp) určující erozně uzavřené celky (pozemky),
+pro které bude určována průměrná roční ztráta. Vrstvu je možné zvolit ze seznamu
+vrstev, či ji nahrát přes tlačítko <cite>Load(.shp)</cite>.</div></blockquote>
+<div class="figure align-center" id="id1">
+<img alt="_images/euc.png" src="_images/euc.png" />
+<p class="caption"><span class="caption-text">Figure 1: Záložka EUC</span></p>
+</div>
+</div>
+<div class="section" id="zalozka-l-s">
+<h2>Záložka L,S<a class="headerlink" href="#zalozka-l-s" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Zde se určuje raster digitálního modelu terénu, nad kterým bude probíhat
+výpočet faktorů délky a sklonu svahu (L, S). Vrstvu je možné zvolit ze seznamu
+vrstev, či ji nahrát přes tlačítko <cite>Load(raster)</cite>.</div></blockquote>
+<div class="figure align-center" id="id2">
+<img alt="_images/ls.png" src="_images/ls.png" />
+<p class="caption"><span class="caption-text">Figure 2: Záložka L,S</span></p>
+</div>
+</div>
+<div class="section" id="zalozka-k">
+<h2>Záložka K<a class="headerlink" href="#zalozka-k" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Zde se volí polygonová vektorová vrstva (.shp) BPEJ, vrstva musí obsahovat pole
+s názvem <cite>*BPEJ*</cite> ve formátu ‘X.XX.XX’, ze kterého se pomocí tlačítka <cite>Compute
+K Factor</cite>, vypočte hodnota K. Případně je možné použít vrstvu s už vypočteným
+K faktorem v poli <cite>K</cite>. Vrstvu je možné zvolit ze seznamu vrstev, či ji nahrát
+přes tlačítko <cite>Load(.shp)</cite>.</div></blockquote>
+<div class="figure align-center" id="id3">
+<img alt="_images/k.png" src="_images/k.png" />
+<p class="caption"><span class="caption-text">Figure 3: Záložka K</span></p>
+</div>
+</div>
+<div class="section" id="zalozka-c">
+<h2>Záložka C<a class="headerlink" href="#zalozka-c" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Zde se volí polygonová vektorová vrstva (.shp) LPIS, vrstva musí obsahovat pole
+s názvem <cite>*KULTURAKOD*</cite> s jednoznakovým kódem pro využití pozemku. V rolovací
+nabídce se volí primární plodina pěstovaná na pozemcích s ornou půdou. Poté se
+C faktor nastaví kliknutím na tlačítko <cite>Compute C Factor</cite>.</div></blockquote>
+<div class="figure align-center" id="id4">
+<img alt="_images/c.png" src="_images/c.png" />
+<p class="caption"><span class="caption-text">Figure 4: Záložka C</span></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Při využití dat LPIS vyexportovaných z <a class="reference external" href="http://eagri.cz/public/app/eagriapp/lpisdata/">Registru půd (LPIS)</a> a BPEJ z <a href="#id6"><span class="problematic" id="id7">`celostátní
+databáze&lt;http://www.spucr.cz/bpej/celostatni-databaze-bpej&gt;`_</span></a>, jejich
+formát odpovídá požadavkům zásuvného modulu.</p>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">Hodnoty K a C lze poté manuálně upravovat v atributové tabulce.</p>
+</div>
+</div>
+<div class="section" id="zalozka-r-p">
+<h2>Záložka R,P<a class="headerlink" href="#zalozka-r-p" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Zde je možné upravit hodnotu faktoru přívalového deště <cite>R</cite> a faktoru protierozních
+opatření <cite>P</cite>.</div></blockquote>
+<div class="figure align-center" id="id5">
+<img alt="_images/rp.png" src="_images/rp.png" />
+<p class="caption"><span class="caption-text">Figure 5: Záložka R,P</span></p>
+</div>
+</div>
+<div class="section" id="tlacitko-compute-erosion-model">
+<h2>Tlačítko Compute erosion model<a class="headerlink" href="#tlacitko-compute-erosion-model" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Po nastavení všech vstupních hodnot se stisknutím tlačítka provede výpočet
+erozního modelu. Tlačítko je viditelné ze všech záložek.</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="instalace.html" class="btn btn-neutral" title="Instalace" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Radek Novotny (CTU GeoForAll Lab).
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
