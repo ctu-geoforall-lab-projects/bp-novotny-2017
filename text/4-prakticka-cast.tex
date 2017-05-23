@@ -1,0 +1,57 @@
+%!TEX ROOT=radek-novotny-bp-2017.tex
+\chapter{Praktická část}
+\label{4-prakticka-cast}
+Následující kapitola pojednává o výsledku celé této práce, zásuvném modulu Soil Erosion, a to zejména o zvolených technických řešeních.
+\section{Vývoj}
+Při vývoji pluginu bylo čerpáno z literatury o programu QGIS\cite{masteringQgis} a programovacím jazyce Python\cite{learningPython}\cite{diveIntoPython}, ale také využito internetu a zkušeností široké základny vývojářů pro QGIS\cite{stackexchange}. Celý vývoj probíhal v angličtině s využitím webové služby GitHub\cite{github}, jež podporuje verzovací nástroj Git, celá práce je tedy, kromě přiloženého CD, dostupná právě i z GitHub repositáře\cite{mujgithub}.
+\subsection{Kostra}
+Pomocí zásuvného modulu Plugin Builder, který je zařazen do oficiálního repositáře QGIS~(kap.~\ref{qgis}), byl vytvořen adresář se základní kostrou pluginu obsahující soubory se základním grafickým uživatelským rozhraním (GUI), zdrojovým kódem a informacemi o zásuvném modulu.
+\subsection{Grafické uživatelské rozhraní}
+Na tuto základní kostru bylo navázáno vytvořením GUI v programu Qt~Designer~(kap.~\ref{qt}). Modul je tvořen jedním oknem z třídy QDockWidget, jež umožňuje ukotvení pluginu do rozhraní programu QGIS. V tomto okně je vnořen objekt třídy QTabWidget rozdělující GUI na pět záložek – EUC pro definici vrstvy obsahující erozně uzavřené celky a dále LS, K, C a RP, které tematicky odpovídají faktorům rovnice USLE počítaným ze zadaných vstupů. 
+
+Definování vstupů v jednotlivých záložkách probíhá pomocí rozbalovacího seznamu z třídy QgsMapLayerComboBox, který obsahuje vrstvy načtené v QGIS. Pro tento seznam bylo nastaveno omezení typu vrstvy dle požadavků dalšího výpočtu.  Druhou možností vstupu vrstvy je tlačítko třídy QPushButton, které načítá do QGIS novou vrstvu znovu s omezením na její typ. Poslední typ vstupu se nachází v záložce RP, jedná se o vstup pomocí pole třídy QLineEdit pomocí zapsání číselné hodnoty.
+
+V modulu jsou také další tři tlačítka z třídy QPushButton. V záložkách K a C jsou to tlačítka pro výpočet jednotlivých faktorů ve zvolené vstupní vrstvě a pod záložkami se nachází tlačítko spouštějící výpočet erozního modelu. Všechny objekty modulu se také přizpůsobují zvolené šířce okna.
+\subsection{Zdrojový kód}
+Zdrojový kód byl psán v jazyce Python 2.7~(kap.~\ref{python}) ve vývojovém prostředí PyCharm, vyvinutém českou společností JetBrains. Dále byl pro testování změn v kódu použit Plugin Reloader, který je stejně jako Plugin Builder součástí oficiálního repositáře QGIS.
+
+\section{Popis struktury}
+Strukturu kódu lze rozdělit na dvě části – tělo modulu a knihovnu pyerosion. 
+\subsection{Knihovna pyerosion}
+Tato knihovna obsahuje třídu \texttt{erosionbase.py} vycházející z projektu QGIS Erosion plugin\cite{erosiongithub} a vytvořené třídy \texttt{erosionusle.py} a \texttt{read\_csv.py}.
+\subsubsection{Třída ErosionBase}
+Tato třída v původní formátu sloužila ke spuštění programu GRASS 7.2.0~(kap.~\ref{grassgis}) a nastavení výpočetního prostředí, tedy lokace a mapsetu. Dále byla využita pro import pro import dat do tohoto programu. Tyto funkce byly využity při volání GRASS ze zásuvného modulu. Nově byla vytvořena funkce pro export dat, která je uplatněna při exportu výsledků z GRASS zpět do QGIS.
+\subsubsection{Třída ErosionUSLE}
+Ve třídě \texttt{ErosionUSLE} dědící z \texttt{ErosionBase} probíhá veškerý výpočet odehrávající se v GRASS. K tomu je využito příkaz \texttt{run\_command} z knihovny \texttt{grass.script.core}. Postup výpočtu částečně vychází z \textit{Gismentors}\cite{gismentors}.
+
+\subparagraph{Popis výpočtu a použitých modulů:}
+\begin{enumerate}
+	\item \texttt{g.region} – Nastavení výpočetního regionu.
+	\item \texttt{r.slope.aspect} – Výpočet sklonu na základě rastru DMT.
+	\item \texttt{r.mask} – Nastavení masky podle zájmového území, tedy rastru DMT.
+	\item \texttt{r.watershed} – Výpočet akumulace odtoku na základě rastru DMT. (Tato funkce byla upřednostněna před funkcí r.terraflow na základě \textit{Metodiky GIS pro navrhování TPEO}\cite{Dostal2014}.)
+	\item \texttt{r.mapcalc} – Pomocí mapové algebry vypočítán faktor LS na základě sklonu, akumulace a rozlišení rastrů dle rovnice \ref{ls_faktor}. 
+	\item \texttt{v.overlay} – Sjednocení vektorových vrstev LPIS a BPEJ.
+	\item \texttt{v.db.addcolumn} – Přidání sloupce pro faktor KC do sjednocené vrstvy.
+	\item \texttt{v.db.update} – Výpočet hodnot v sloupci KC ze sloupce K, který obsahovala vrstva BPEJ a C, který obsahovala vrstva LPIS.
+	\item \texttt{v.to.rast} – Vytvoření rastru z hodnot sloupce KC
+	\item \texttt{r.mapcalc} - Pomocí mapové algebry vypočítán výsledný faktor G z rastrů KC, LS a zadaných hodnot R a P.
+	\item \texttt{r.colors} – Obarvení výsledného rastru.
+\end{enumerate} 
+
+\subsubsection{Třída ReadCSV}
+Třída \texttt{ReadCSV} slouží ke čtení CSV (comma-separated values) souborů, ve kterých jsou uloženy hodnoty K faktoru pro jednotlivé HPJ a C faktoru pro osevní postupy. Tyto soubory jsou uloženy v adresáři \texttt{code\_tables}. 
+
+\subsection{Tělo zásuvného modulu}
+Tělo zásuvného modulu je tvořeno souborem \texttt{soil\_erosion\_dockwidget.py} s hlavní třídou \texttt{SoilErosionDockWidget} propojenou s grafickým uživatelským rozhraním umístěným v souboru \texttt{soil\_erosion\_dockwidget\_base.ui}. V této třídě jsou definovány funkce pro jednotlivé objekty GUI, import dat a výpočetní část probíhající v QGIS. Jsou zde také definovány chybové hlášení, jež jsou vypsány při nesprávném vstupu či chybě ve výpočtu. V druhé třídě tohoto souboru \texttt{ComputeThread} dochází ke spuštění výpočtu v GRASS, který probíhá v samostatném výpočetním vlákně a neovlivňuje další funkce QGIS. Během výpočtu jsou pomocí signálů přenášeny zprávy o stavu výpočtu na informační panel QGIS. 
+
+\paragraph{Dalšími součástmi těla pluginu jsou soubory:}
+\begin{itemize}
+	\item \texttt{init.py} - Sloužící k základní inicializaci pluginu.
+	\item \texttt{soil\_erosion.py} – Sloužící k zařazení pluginu do prostředí QGIS, jeho spuštění a ukončení.
+	\item \texttt{plugin\_upload.py} – Soubor pro nahrání modulu do QGIS repositáře zásuvných modulů.
+	\item \texttt{metadata.txt} – Textový soubor obsahující údaje o pluginu.
+	\item \texttt{Makefile} – Slouží ke zkompilování resources.py nebo dokumentace.
+	\item \texttt{resources.py} – Zkompilovaný soubor resources.qrc, poskytuje informace o ikoně pluginu.
+	\item \texttt{Icon.png} – Ikona pluginu.
+\end{itemize}
