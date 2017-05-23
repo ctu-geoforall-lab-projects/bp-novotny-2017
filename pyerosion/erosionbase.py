@@ -7,14 +7,32 @@ import shutil
 import tempfile
 import binascii
 
+class ErosionError(StandardError):
+    pass
+
 def findGRASS():
     """Find GRASS.
 
     Find location of GRASS.
+
+    :todo: Avoid bat file calling.
     """
     ########### SOFTWARE
     if sys.platform == 'win32':
-        grass7bin = r'C:\\OSGeo4W64\\bin\\grass72.bat'
+        qgis_prefix_path = os.environ['QGIS_PREFIX_PATH']
+        bin_path = os.path.join(os.path.split(
+            os.path.split(qgis_prefix_path)[0])[0],
+            'bin'
+        )
+        grass7bin = None
+        for grass_version in ['70', '72']:
+            gpath = os.path.join(bin_path, 'grass{}.bat'.format(grass_version))
+            if os.path.exists(gpath):
+                grass7bin = gpath
+                break
+
+        if grass7bin is None:
+            raise ErosionError("Unable to find GRASS installation.")
     else:
         grass7bin = '/usr/bin/grass'
     startcmd = [grass7bin, '--config', 'path']
@@ -37,15 +55,16 @@ def findGRASS():
 
     return grass7bin
 
-grass7bin = findGRASS()
+try:
+    grass7bin = findGRASS()
+except (StandardError, ErosionError) as e:
+    raise ErosionError('{}'.format(e))
+
 temp_dir = None
 import grass.script as gscript
 from grass.script import setup as gsetup
 from grass.exceptions import ScriptError, CalledModuleError
 from osgeo import ogr, gdal
-
-class ErosionError(StandardError):
-    pass
 
 class ErosionBase():
     def __init__(self, epsg='5514', location_path=None):
