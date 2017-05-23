@@ -25,10 +25,12 @@ Contents:
    
 Autoři
 ******
- `Labolatoř GeoForAll
+
+`Labolatoř GeoForAll
 <http://geomatics.fsv.cvut.cz/research/geoforall/>`__ České vysoké
 učení technické v Praze
 
 * Radek Novotný
 
 Vedoucí: Martin Landa
+  
