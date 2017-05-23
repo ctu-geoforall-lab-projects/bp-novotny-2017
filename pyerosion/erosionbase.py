@@ -32,7 +32,7 @@ def findGRASS():
                 break
 
         if grass7bin is None:
-            raise ErosionError("Unable to find GRASS installation.")
+            raise ImportError("No grass70.bat or grass72.bat found.")
     else:
         grass7bin = '/usr/bin/grass'
     startcmd = [grass7bin, '--config', 'path']
@@ -42,8 +42,9 @@ def findGRASS():
     out, err = p.communicate()
 
     if p.returncode != 0:
-        raise ErosionError("ERROR: Cannot find GRASS GIS 7 start script "
-                           "({cmd}: {reason})".format(cmd=startcmd, reason=err))
+        raise ImportError("Reason: ({cmd}: {reason})".format(
+            cmd=startcmd, reason=err)
+        )
 
     str_out = out.decode("utf-8")
     gisbase = str_out.rstrip(os.linesep)
@@ -57,8 +58,8 @@ def findGRASS():
 
 try:
     grass7bin = findGRASS()
-except (StandardError, ErosionError) as e:
-    raise ErosionError('{}'.format(e))
+except (StandardError, ImportError) as e:
+    raise ImportError('Unable to find GRASS installation. {}'.format(e))
 
 temp_dir = None
 import grass.script as gscript

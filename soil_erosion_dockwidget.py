@@ -36,7 +36,12 @@ from qgis.analysis import QgsZonalStatistics
 from PyQt4 import QtGui, uic
 
 from pyerosion.read_csv import ReadCSV
-from pyerosion.erosionusle import ErosionUSLE
+grassFound = False
+try:
+    from pyerosion.erosionusle import ErosionUSLE
+    grassFound = True
+except ImportError as e:
+    QMessageBox.critical(None, u'Soil Erosion Plugin', u"{}".format(e))
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'soil_erosion_dockwidget_base.ui'))
