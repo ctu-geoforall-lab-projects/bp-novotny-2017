@@ -338,7 +338,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             if file.endswith(".tif"):
                 try:
                     self._se_layer = iface.addRasterLayer(os.path.join(temp_path, file),
-                                                    'Soil Erosion')
+                                                    self.tr('G Faktor'))
                     crs = self._se_layer.crs()
                     crs.createFromId(epsg)
                     self._se_layer.setCrs(crs)

@@ -56,4 +56,4 @@ Výsledkem výpočtu by měly být následující vrstvy:
 .. figure:: images/lokalni_eroze_layer.png
    :width: 75%
 
-   Vrstva `Lokální eroze`
+   Vrstva `G faktor`

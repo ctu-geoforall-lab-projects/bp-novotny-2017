@@ -119,7 +119,7 @@ vrstev je možné najít v popisu ukázkového výpočtu.
   roční ztráty půdy pro jednotlivé pozemky, tyto pozemky jsou rovněž obarveny dle
   tabulky ohrožení půdy.
 
-- Lokální eroze:
+- G faktor:
   Rastrová vrstva zobrazující lokální hodnoty eroze ve stupních šedi.
 
 Při spuštění nového výpočtu se vytvořené vrstvy nahradí novými.
