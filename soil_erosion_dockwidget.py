@@ -246,8 +246,8 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             try:
                 QgsMapLayerRegistry.instance().removeMapLayer(self._se_layer.id())
                 for field in self._euc_vector.pendingFields():
-                    if field.name() == 'Erosion_G_':
-                        field_id = self._euc_vector.fieldNameIndex('Erosion_G_')
+                    if field.name() == 'G':
+                        field_id = self._euc_vector.fieldNameIndex(field.name())
                         fList = list()
                         fList.append(field_id)
                         self._euc_vector.dataProvider().deleteAttributes(fList)
@@ -352,7 +352,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     se_source = self._se_layer.source()
                     self.zonalStat(self._euc_vector, se_source)
                     self.setVectorErosionStyle(self._euc_vector)
-
+                    self._euc_vector.commitChanges()
                 # for field in _euc_vector.pendingFields():
                 #     if field.name() == 'C':
                 #         _euc_vector.startEditing()
@@ -360,10 +360,10 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 #         field.setName('NewName')
                 #         newname = field.name()
                 #         self.showError(u'Old name: {},New name: {}'.format(oldname,newname))
-                #         _euc_vector.commitChanges()
+                #
 
                 except:
-                    self.computeError.emit(u'Error during compute zonal statistics.')
+                    self.showError(u'Error during compute zonal statistics.')
         self._first_computation = False
 
         self.computeThread.cleanup()
@@ -451,7 +451,7 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             ranges.append(rng)
 
         # create the renderer and assign it to a layer
-        expression = 'Erosion_G_'  # field name
+        expression = 'G'  # field name
         renderer = QgsGraduatedSymbolRendererV2(expression, ranges)
         layer.setRendererV2(renderer)
     def progressBar(self):
@@ -549,6 +549,12 @@ class SoilErosionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         prefix = 'Erosion_G_'
         zonalstats = QgsZonalStatistics(vlayer, rlayer_source, prefix, stats=QgsZonalStatistics.Statistic(4))
         zonalstats.calculateStatistics(None)
+        vlayer.startEditing()
+        for field in vlayer.pendingFields():
+            if field.name() == 'Erosion_G_':
+                idx = vlayer.fieldNameIndex(field.name())
+                vlayer.renameAttribute(idx, 'G')
+        vlayer.commitChanges()
 
 class ComputeThread(QThread):
     # set signals:
