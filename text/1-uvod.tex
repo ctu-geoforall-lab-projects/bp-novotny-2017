@@ -1,2 +1,15 @@
 %!TEX ROOT=radek-novotny-bp-2017.tex
 \chapter{Úvod}
+Ačkoliv na první pohled se eroze v našich podmínkách nemusí zdát jako vážný problém a v měřítku eroze k níž dochází například v rozvojových zemích Afriky by se mohla zdát až zanedbatelná, je tomu právě naopak. V České republice je v současnosti erozně ohrožena více než polovina zemědělské orné půdy, z které tímto procesem nenávratně mizí nejúrodnější vrstva – ornice, jež vznikala po stovky let.
+
+Tento stav nastal v ČR důsledkem postupných změn v zemědělském hospodaření. První zásadní změnou byla kolektivizace zemědělství a ní související zcelování polních jednotek, přičemž docházelo k odstraňování mezí a remízků, jež tvořily přirozenou protierozní ochranu. Bohužel ani po navrácení pozemků do soukromého vlastnictví nedošlo k očekávanému rozdělení velkých polních jednotek a obnovení přirozené protierozní ochrany. 
+
+Druhá změna značně ovlivňující erozi nastala v devadesátých letech, kdy ubývala živočišná výroba a s ní i plodiny pro ni pěstované – vojtěška a jeteloviny, které mají na půdu velmi dobrý protierozní vliv. Ty byly díky štědré dotační politice nahrazeny plodinami sloužícími zejména pro výrobu biopaliv – řepkou a kukuřicí, jejichž protierozní charakter je naopak nevalný. 
+
+V posledních letech poutají projevující se důsledky těchto změn k problematice eroze větší pozornost, se kterou přichází i zvýšená snaha problém řešit. Příkladem může být Redesign erozní ohroženosti půdy v LPIS (č. j.: 43526/2016-MZE) schválený v loňském roce na Ministerstvu zemědělství. Tento materiál postupně snižuje hodnoty přípustné ztráty půdy erozí (Gp), důsledkem čehož by mělo být v roce 2030 chráněno až 60\% orné půdy.
+
+Pro návrh protierozních opatření je nutné určení ohrožených pozemků, které probíhá stanovením průměrné ztráty půdy (G) a následným porovnáním se zmíněnou přípustnou hodnotou (Gp). K tomuto určení se v ČR využívá rovnice USLE, která je po rozvoji GIS v posledních letech softwarově implementována. Nejpoužívanějším nástrojem je v současnosti aplikace Atlas EROZE, která nabízí kompletní výpočet se zahrnutím všech faktorů ovlivňujících erozi. 
+
+Tato aplikace ovšem není volně dostupná a uživatel využívající open source nástroje je odkázán na vlastní ruční řešení např. v softwaru GRASS, který nástroje pro dané kroky výpočtu obsahuje. 
+
+Cílem této práce je tedy vytvoření open source nástroje, který výpočet erozní ohroženosti provede automaticky, přičemž od uživatele se očekává pouze zadání vstupních dat. 
