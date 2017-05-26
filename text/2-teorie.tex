@@ -590,7 +590,7 @@ buňky $\left( m^2\cdot bm^{-1} \right)$ \\
 Při výpočtu jsou klíčovými faktory určení rastru zdrojových ploch,
 přičemž by neměl být použit model s jednosměrným odtokem, a zohlednění
 přerušení povrchového odtoku.\cite{Krasa2010}
-
+\newpage
 \subsection{Faktor ochranného vliv vegetace (C)}
 Vegetační faktor se uplatňuje především přímou ochranou půdy před
 dopadajícími dešťovými kapkami, dále zpomaluje povrchový odtok,
@@ -604,44 +604,55 @@ vysokou protierozní účinnost mají též traviny a
 jeteloviny. Nedostatečně půdu chrání širokořádkové plodiny jako je
 kukuřice nebo okopaniny a téměř vůbec není půda chráněna na vinicích a
 chmelnicích.
-\vspace{-10pt}
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.6]{./pictures/r_factor_graph.png}
+    \includegraphics[scale=0.8]{./pictures/r_factor_graph.png}
       \caption[Rozdělení faktoru R během vegetačního období]{Rozdělení
         faktoru R během vegetačního období [\%] dle
         \cite{janecek2012}}
       \label{fig:r_faktor_graph}
 \end{figure}
-\vspace{-16pt} Faktor C vyjadřuje poměr smyvu z pozemku chráněném
+Faktor C vyjadřuje poměr smyvu z pozemku chráněném
 pěstovanou plodinou ku~smyvu na pozemku, jež je udržován jako úhor,
 kypřený po každém dešti. Nejlepší metodou je zjištění struktury
 plodin, osevních postupů a metodiky hospodaření od~zemědělského
 subjektu užívajícího daný pozemek.
 
-Pro určení vegetačního faktoru lze též využít Protierozní
+Pro určení vegetačního faktoru lze využít Protierozní
 kalkulačku\cite{kalkulacka}, která po vybrání příslušného osevního
-postupu zobrazí C faktor pro celé období postupu.  Pokud to není
-možné, lze využít průměrné zastoupení plodin a vypočítat C faktor jako
-vážený průměr z hodnot uvedených v tabulce \ref{tabulka_c}.
+postupu zobrazí C faktor pro celé období postupu. Toto určení C faktoru vychází z následující tabulky \ref{osevni_c}.
+
 \begin{table}[!h]
 \begin{center}
 \catcode`\-=12
-    \noindent\begin{tabular}{|*{4}{c|}} \hline \bf Plodina & \bf C &
-    \bf Plodina & \bf C\\ \hline \bf pšenice ozimá &0,12 &\bf
-    chmelnice &0,80\\ \hline \bf žito ozimé &0,17 &\bf řepka ozimá
-    &0,22\\ \hline \bf ječmen jarní &0,15 &\bf slunečnice
-    &0,60\\ \hline \bf ječmen ozimý &0,17 &\bf mák &0,50\\ \hline \bf
-    oves &0,10 &\bf ostatní olejniny &0,22\\ \hline \bf kukuřice na
-    zrno&0,61 &\bf kukuřice na siláž &0,72\\ \hline \bf luštěniny
-    &0.05 &\bf ostatní pícniny - jednoleté&0,02\\ \hline \bf brambory
-    rané &0.60 &\bf ostatní pícniny - víceleté &0,01\\ \hline \bf
-    brambory pozdní &0.44 &\bf zelenina &0,45\\ \hline \bf louky
-    &0,005 &\bf sady &0,45\\ \hline
+    \noindent\begin{tabular}{|*{4}{c|}}
+    \hline
+    \bf Osevní postup & \bf Výrobní oblast - zaměření & \bf Plodiny & \bf C\\
+\hline Standartní & Bramborářská - brambory & (je, br, op, oz, br, jj)	& 0,27\\
+\hline Standartní & Bramborářská - chov skotu& (je, op, ks, ks, ov) &0,27\\
+\hline Standartní & Bramborářská - tržní plodiny &(br, op, or, oz, jj)& 0,32\\
+\hline Standartní & Kukuřičná - bez ŽV &(op, kz, jj, or, op)& 0,29\\
+\hline Standartní & Kukuřičná - tržní plodiny &(kz, ks, op, jj)& 0,32\\
+\hline Standartní & Obilnářská &(je, op, jj, ks, op, br, jj)& 0,50\\
+\hline Standartní & Obilnářská - obiloviny &(hr, op, jj, or, op, jj)& 0,29\\
+\hline Standartní & Obilnářská - tržní plodiny &(je, oz, br, jj)& 0,23\\
+\hline Standartní & Pícninářská &(jt, jt, br, jj, ov)&  0,17\\
+\hline Standartní & Pícninářská &(jt, jt, jt, ov, br, jj)& 0,15\\
+\hline Standartní & Řepařská - cukrovka & (cu, jj, hr, op) &0,11\\
+\hline Standartní & Řepařská - tržní plodiny &(op, hr, or, op)& 0,27\\
+\hline Ochranný & bez ŽV &(los, br, op, jj, hr, op)& 0,20\\
+\hline Ochranný & bez ŽV &(op, kz, jj, or, op)& 0,22\\
+\hline Ochranný & produkce mléka & (jts, jts, op, ov, br, oz)& 0,33\\
+\hline Ochranný & chov prasat a skotu & (jts, jts, op, br, los, oj)& 0,18\\
+\hline Ochranný & chov prasat & (jts, op, los, hr, oj)& 0,17\\
+\hline Ochranný &  pásma ochrany vod a CHKO &(je, op, jj, or, op, jj)& 0,17\\
+\hline Ochranný &  pásma ochrany vod a CHKO &(jts, jts, jts, op, oz, ov)& 0,17\\
+\hline Ochranný &  pásma ochrany vod a CHKO &(jts, op, oz, gps, jj) & 0,11\\
+\hline Ochranný &  pásma ochrany vod a CHKO &(jts, or, op, jj, ov) & 0,16\\
+\hline
     \end{tabular}\\
-  \caption[Hodnoty C faktoru pro jednotlivé plodiny]{Hodnoty C faktoru
-    pro jednotlivé plodiny dle metodiky \cite{janecek2012}.}
-  \label{tabulka_c}
+  \caption[Hodnoty C faktoru pro jednotlivé osevní postupy]{Hodnoty C faktoru pro jednotlivé osevní postupy dle metodiky\cite{janecek2012}.}
+  \label{osevni_c}
 \end{center}
 \end{table}
 \FloatBarrier
@@ -748,14 +759,14 @@ třeba zjistit pěstované plodiny.\cite{Novotny2014}
     \noindent\begin{tabular}{|*{3}{c|}} \hline \bf Kód & \bf Kultura &
     \bf C faktor\\ \hline R & orná půda & dle pěstované
     plodiny\\ \hline C & chmelnice & 0,8\\ \hline V & vinice &
-    0,4\\ \hline S & ovocný sad & 0,45\\ \hline T & travní porost &
+    0,8\\ \hline S & ovocný sad & 0,45\\ \hline T & travní porost &
     0,005\\ \hline L & zalesněno & 0,003-0,009\\ \hline O & jiná
     kultura & nutno určit kulturu\\ \hline
     \end{tabular}\\
   \caption[Rozdělení kultur na zemědělské půdě dle LPIS]{Rozdělení
     kultur na zemědělské půdě dle LPIS\cite{lpis} s C faktory
     dle\cite{janecek2012}.}
-  \label{tabulka_ohrozenost}
+  \label{tabulka_c_typ}
 \end{center}
 \end{table}
 \FloatBarrier
