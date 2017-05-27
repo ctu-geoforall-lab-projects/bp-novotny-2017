@@ -6,6 +6,9 @@
 Cílem této kapitoly je v krátkosti popsat technologie, jež byly
 použity pro implementaci teoretických poznatků do softwarového
 nástroje – zásuvného modulu pro QGIS.
+
+%%% ML: poznamkam pod carou v nazvech kapitol by bylo dobre se vyhnout
+%%% (napr. presunem loga do textu
 \section[QGIS]{QGIS \includegraphics[scale=0.055]{./pictures/qgis.png} 
 \footnote{http://www.qgis.org/}}
 \label{qgis}
@@ -79,6 +82,8 @@ systematizovat. Struktura je rozdělena na databázi, lokaci a mapset.
 GRASS je možné ovládat, jak z příkazové řádky, tak pomocí GUI. Další
 možností je přistupovat k modulům GRASS pomocí GUI QGIS, které mnoho
 uživatelů shledává přívětivějším.
+
+%%% ML: proc je tady nova stranka?
 \newpage
 \section[Python]{Python \includegraphics[scale=0.2]{./pictures/python.png}
 \footnote{https://www.python.org/community/logos/}}
@@ -118,7 +123,7 @@ Integrated Development Environment)  PyCharm, který byl vyvinut
 českou společností JetBrains. Toto prostředí bylo vytvořeno primárně 
 pro Python a pro open source projekty je zdarma. Jeho výhodami jsou 
 automatické doplňování textu, hledání syntaktických chyb či vytváření 
-oddělených projektů. Osobně oceňuji zejména přehlednost a rychlost 
+oddělených projektů. Osobně oceňuji zejména přehlednost a~rychlost 
 psaní kódu v tomto IDE.\cite{masteringPycharm}
 \section[GitHub]{GitHub \includegraphics[scale=0.06]{./pictures/github.png} 
 \footnote{https://github.com/}}
@@ -129,7 +134,15 @@ psaní kódu v tomto IDE.\cite{masteringPycharm}
       {Náhled verzovacího prostředí GitHub, zdroj: autor}
       \label{screen:github}
 \end{figure}
-GitHub je webová služba podporující verzovací nástroj Git, což je distribuovaný (kolektivní) systém správy verzí. Git byl vytvořen Linusem Torvaldsem pro vývoj jádra operačního systému Linux a funguje pod licencí GNU/GPL. Na tomto základu je tedy postaven GitHub, který pro open source projekty zdarma nabízí vytvoření repositáře se zdrojovým kódem, dokumentací, historií verzování, systémem pro sledování problémů (Issue tracking), zobrazování rozdílů mezi verzemi a mnoho dalšího.\cite{introducingGithub}
+GitHub je webová služba podporující verzovací nástroj Git, což je
+distribuovaný (kolektivní) systém správy verzí. Git byl vytvořen
+Linusem Torvaldsem pro vývoj jádra operačního systému Linux a funguje
+pod licencí GNU/GPL. Na tomto základu je tedy postaven GitHub, který
+pro open source projekty zdarma nabízí vytvoření repositáře se
+zdrojovým kódem, dokumentací, historií verzování, systémem pro
+sledování problémů (Issue tracking), zobrazování rozdílů mezi verzemi
+%%% ML: GitHub jiz ale open source neni...
+a mnoho dalšího.\cite{introducingGithub}
 
 \section[Qt]{Qt \includegraphics[scale=0.20]{./pictures/qt.png} 
 \footnote{https://www.qt.io/ide/}}
@@ -148,7 +161,7 @@ v roce 2011 prodala licenci na komerční projekty vytvořené v Qt firmě
 Digia.
 
 Hlavními aplikacemi jsou Qt Creator, sloužící ke kompletní tvorbě
-aplikací, a Qt Designer, pomocí kterého je navrhováno samotné
+aplikací, a~Qt Designer, pomocí kterého je navrhováno samotné
 GUI. Výhodou je přizpůsobení výsledného GUI nativnímu vzhledu
 operačního systému. Qt podporuje používání řady jazyků, od výchozího
 C++ po Python, který je na Qt navázán pomocí frameworku PyQt.\cite{qt}

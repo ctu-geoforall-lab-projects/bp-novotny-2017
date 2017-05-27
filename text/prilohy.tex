@@ -26,11 +26,11 @@ pluginu\footnote{\url{https://github.com/ctu-geoforall-lab-projects/bp-novotny-2
 současnosti veden jako \uv{Experimentální} a není zařazen do
 oficiálního repositáře QGIS. Jedinou odlišností od instalace jiných
 zásuvných modulů je nutnost přidání repositáře laboratoře
-\textit{GeoForAll Lab}, ve které je plugin \textit{Soil Erosion}
+\textit{CTU GeoForAll Lab}, ve kterém je plugin \textit{Soil Erosion}
 umístěn.
 
 
-\subsection{Přídání repositáře \textit{GeoForAll Lab}} \textit{Zásuvné
+\subsection{Přídání repositáře \textit{CTU GeoForAll Lab}} \textit{Zásuvné
 moduly} $\rightarrow$ \textit{Spravovat a instalovat zásuvné
 moduly...}.
 
@@ -45,7 +45,7 @@ V záložce \textit{Nastavení} zkontrolujte, zda je volba
 \textit{Zobrazit také experimentální zásuvné moduly} aktivní.
 
 Kliknutím na tlačítko \textit{Přidat...} připojíme repositář
-laboratoře \textit{GeoForAll
+laboratoře \textit{CTU GeoForAll
 Lab}\footnote{\url{http://geomatics.fsv.cvut.cz/research/geoforall}}
 
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor
@@ -65,7 +65,7 @@ přidání repositáře, zdroj: autor}
 	\begin{figure}[H] \centering
 		\includegraphics[width=.6\textwidth]{./pictures/zadani_repositare.png}
 		\caption[Přidání repositáře GeoForAll Lab]{Přidání
-repositáře GeoForAll Lab, zdroj: autor}
+repositáře CTU GeoForAll Lab, zdroj: autor}
 		\label{manual_zadani_repozitare_geoforall_lab}
  	\end{figure}
 
@@ -147,7 +147,7 @@ tlačítko \textit{Nahrát (rastr)}.
 		\label{zalozka_ls}
 \end{figure}
 \subsection{K} V záložce K se volí polygonová vektorová vrstva (.shp)
-BPEJ, vrstva musí obsahovat pole s názvem \uv{BPEJ} ve formátu
+BPEJ. Vrstva musí obsahovat pole s názvem \uv{BPEJ} ve formátu
 \uv{X.XX.XX}, ze kterého se pomocí tlačítka \textit{Vypočítat K
 faktor}, vypočte hodnota K a vrstva se dle jeho hodnoty barevně
 rozliší. Případně je možné použít vrstvu s předem vypočteným K
@@ -161,7 +161,7 @@ faktorem v poli \textit{K}. Vrstvu je možné zvolit ze seznamu vrstev,
 \paragraph{Tip:} Hodnoty K lze poté manuálně upravovat v atributové
 tabulce (stejně lze upravovat i hodnoty C)
 \subsection{C} Záložka C slouží ke zvolení polygonové vektorové vrstvy
-(.shp) LPIS, vrstva musí obsahovat pole s názvem \uv{KULTURAKOD} s
+(.shp) LPIS. Vrstva musí obsahovat pole s názvem \uv{KULTURAKOD} s
 jednoznakovým kódem pro využití pozemku. V rolovací nabídce se volí
 primární osevní postup užívaný na pozemcích s ornou půdou. Poté se C
 faktor nastaví kliknutím na tlačítko \textit{Vypočítat C faktor},
@@ -173,17 +173,17 @@ přičemž současně dojde k barevnému rozlišení dle využití pozemku.
 \end{figure}
 \paragraph{Poznámka:} Při využití dat LPIS vyexportovaných z Registru
 půd
-(LPIS)\footnote{\url{http://eagri.cz/public/app/eagriapp/lpisdata/}} a
-BPEJ\footnote{\url{http://www.spucr.cz/bpej/celostatni-databaze-bpej}}
+(LPIS)\footnote{\url{http://eagri.cz/public/app/eagriapp/lpisdata/}}
+a~BPEJ\footnote{\url{http://www.spucr.cz/bpej/celostatni-databaze-bpej}}
 z celostátní databáze, jejich formát odpovídá požadavkům zásuvného
 modulu.
 \paragraph{Tip:} Hodnoty C lze poté manuálně upravovat v atributové
 tabulce (stejně lze upravovat i hodnoty K)
 \subsection{R,P} V poslední záložce \textit{R,P} je možné upravit
-hodnotu faktoru přívalového deště \textit{R} pro danou oblast, tato
-hodnota je nastavena na 40, průměrná hodnota pro ČR. Dále pak hodnotu
-faktoru protierozních opatření \textit{P}, ta je nastavena na 1 (=
-Nejsou použita žádná agrotechnická protierozní opatření.)
+hodnotu faktoru přívalového deště \textit{R} pro danou oblast. Tato
+hodnota je nastavena na 40, což je průměrná hodnota pro ČR. Dále pak
+hodnotu faktoru protierozních opatření \textit{P}, ta je nastavena na
+1 (= Nejsou použita žádná agrotechnická protierozní opatření.)
 \begin{figure}[H] \centering
 		\includegraphics[width=.55\textwidth]{./pictures/rp.png}
 		\caption[Záložka RP]{Záložka RP, zdroj: autor}
@@ -197,11 +197,11 @@ QGIS. Z tohoto panelu je také možné výpočet ukončit pomocí tlačítka
 \textit{Zrušit výpočet}.
 \begin{figure}[H] \centering
 		\includegraphics[width=.9\textwidth]{./pictures/progressbar.png}
-		\caption[Informačního panel]{Informačního panel,
+		\caption[Informačního panel]{Informační panel,
 zdroj: autor}
 		\label{informacni_panel}
 \end{figure}
-\subsection{Erozní model} Po skončení výpočtu se do mapového okna a na
+\subsection{Erozní model} Po skončení výpočtu se do mapového okna na
 první a druhé místo v seznamu vrstev přidají vrstvy erozního modelu -
 \textit{EUC} a \textit{Lokální eroze}. Ukázku těchto vrstev je možné
 najít v popisu ukázkového výpočtu.
@@ -217,9 +217,11 @@ eroze ve stupních šedi.
 novými.
 
 \section{Ukázkový výpočet}
+
 \subsection{Vzorová data} Pro ukázkový výpočet jsou použita vzorová
 data. Ta obsahují 3 vrstvy \textit{DMT\_sample}, \textit{BPEJ\_Sample}
 a \textit{LPIS\_Sample}.
+%%% ML: chybi odkaz na testovaci data umistena v Git repozitari
 \begin{figure}[H] \centering
 		\includegraphics[width=.4\textwidth]{./pictures/dmt_layer1.png}
 		\caption[Vrstva DMT\_sample]{Vrstva DMT\_sample,
@@ -240,6 +242,8 @@ zdroj: autor}
 \end{figure}
 \subsection{Nastavení vstupů a výpočet} Nastavení vstupních hodnot se
 provede podle obecného návodu, kdy se jako EUC vrstva zvolí
+%%% ML: nebavili jsme se o tom, ze se vrtsva EUC bude mirne od LPIS
+%%% lisit? (tak jak to mate popsano v textu)
 LPIS\_sample, v následujících záložkách názvy požadovaných vrstev
 odpovídají jménu vzorových dat. Po výpočtu faktorů K a C v daných
 záložkách se vrstvy obarví.
@@ -272,9 +276,12 @@ důvodu využití vzorových (volně šiřitelných) dat DMT z DMR 5G.
 		\caption[Vrstva G faktor]{Vrstva G faktor, zdroj:
 autor}
 		\label{g_sample}
-\end{figure}
-\section{Autoři} Pro Labolatoř GeoForAll - České vysoké učení
-technické v Praze
+              \end{figure}
+              
+%%% ML: text nize bych v priloze neuvadel
+              
+% \section{Autoři} Pro Labolatoř GeoForAll - České vysoké učení
+% technické v Praze
 
-Jako bakalářskou práci vytvořil Radek Novotný pod vedením Ing. Martina
-Landy, PhD.
+% Jako bakalářskou práci vytvořil Radek Novotný pod vedením Ing. Martina
+% Landy, PhD.
