@@ -4,6 +4,7 @@ V této kapitole jsou popsány mapové podklady využívané při výpočtu
 faktorů pro USLE. V České republice se jedná zejména o vrstvy 
 BPEJ~($K, G_P$), LPIS~($C$) a~DMT($LS$).
 \section{BPEJ}
+\label{3-bpej}
 Prvním krokem k vytvoření systému hodnocení půdy BPEJ bylo v roce 1961
 zahájení celosvětově ojedinělého Komplexního průzkumu půd(KPP), při
 kterém bylo odebráno okolo 700~000~ půdních sond, ze kterých byly
@@ -33,6 +34,7 @@ určuje kombinaci skeletovitosti půdního profilu s hloubkou půdy(0-9),
 tato číslice je využívána pro získání hloubky půdy při určení
 $G_P$.\cite{Novotny2013}
 \section{LPIS}
+\label{3-lpis}
 \begin{figure}[H]
     \centering \includegraphics[scale=0.7]{./pictures/lpis.png}
       \caption[Ukázka GIS online aplikace Registr půd]{Ukázka online
@@ -72,6 +74,7 @@ třeba zjistit pěstované plodiny.\cite{Novotny2014}
 \end{table}
 \FloatBarrier
 \section{DMT}
+\label{3-dmt}
 %%% ML: nejaky obrazek/screenshot?
 %%% RN: Idealne bych chtel vlozit porovnani 4G/5G, zatim jsem
 % nenasel nic vhodneho.
@@ -91,8 +94,14 @@ pravidelné síti 5~x~5~m, která je tvořena body s~určenou nadmořskou
 výškou~(Bpv). Pro tento model byla vypočtena úplná střední chyba výšky
 0,3~m v odkrytém terénu a 1~m v zalesněném terénu.
 \subsection{DMR 5G}
+\label{3-dmr5g}
 Pro vytvoření páté generace digitálního modelu terénu byla použita
 stejná data jako pro čtvrtou generaci. DMR~5G se tedy od předchozího
 DMR~4G liší především použitím nepravidelné trojúhelníkové bodové
 sítě~(TIN). Tím bylo dosaženo nižší úplné střední chyby výšky a to
 0,18~m v odkrytém terénu a 0,3~m v zalesněném terénu.
+\begin{figure}[H]
+    \centering \includegraphics[scale=0.32]{./pictures/dmr.png}
+      \caption[Ukázka Digitálního modelu reliéfu]{Ukázka Digitálního modelu reliéfu, zdroj: Gismentors\cite{gismentorsdmr}}
+      \label{fig:lpis}
+\end{figure}

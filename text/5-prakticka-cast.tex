@@ -4,18 +4,20 @@
 celé této práce, zásuvném modulu Soil Erosion pro QGIS, a to zejména o
 zvolených technických řešeních. Informace o~pluginu z pohledu
 %%% ML: uvest link na prilohu (\ref{})
-uživatele shrnuje manuál nacházející se v příloze.
+%%% RN: opraveno
+uživatele shrnuje manuál nacházející se v příloze \ref{6-manual}.
 \section{Vývoj} Při vývoji pluginu bylo čerpáno z literatury o
 programu QGIS\cite{masteringQgis} a programovacím jazyce
 Python\cite{learningPython}\cite{diveIntoPython}, ale také využito
 internetu a zkušeností široké základny vývojářů
 %%% ML: stackexchange je mozna prilis obecny, lepsi ML
 %%% https://lists.osgeo.org/mailman/listinfo/qgis-user
-QGIS\cite{stackexchange}. Celý vývoj probíhal v angličtině s využitím
+%%% RN: pridano
+QGIS\cite{stackexchange}\cite{qgisuserdiscussion}. Celý vývoj probíhal v angličtině s využitím
 %%% ML: davejte si pozor na dlouha souveti. V textu je jich
 %%% hodne. Exemplar nize jsem rozdelil.
 webové služby GitHub (kap.~\ref{github}), jež podporuje verzovací
-nástroj Git. Celá práce je tedy, kromě přiloženého CD, dostupná právě
+nástroj Git. Celá práce je tedy, kromě~při-loženého CD, dostupná právě
 i z GitHub repositáře\cite{mujgithub}.
 \subsection{Kostra} Pomocí zásuvného modulu Plugin Builder, který je
 zařazen do oficiálního repositáře QGIS~(kap.~\ref{qgis}), byl vytvořen
@@ -33,21 +35,22 @@ faktorům rovnice USLE počítaným ze zadaných vstupů.
 
 Definování vstupů v jednotlivých záložkách probíhá pomocí
 rozbalovacího seznamu z třídy \texttt{QgsMapLayerComboBox}, který
-obsahuje vrstvy načtené v QGIS. Pro tento seznam bylo nastaveno
+obsahuje vrstvy načtené v QGIS. Pro~ten-to seznam bylo nastaveno
 omezení typu vrstvy dle požadavků dalšího výpočtu.  Druhou možností
 vstupu vrstvy je tlačítko třídy \texttt{QPushButton}, které načítá do
 QGIS novou vrstvu znovu s omezením na její typ. Poslední typ vstupu se
 %%% ML: ve vete 2x "pomoci"
-nachází v záložce RP, jedná se o vstup pomocí pole třídy
+%%% RN: opraveno
+nachází v záložce RP, jedná se o vstup polem třídy
 \texttt{QLineEdit} pomocí zapsání číselné hodnoty.
 
-V modulu jsou také další tři tlačítka z třídy \texttt{QPushButton}. V
-záložkách K a C jsou to tlačítka pro výpočet jednotlivých faktorů ve
-zvolené vstupní vrstvě a pod záložkami se nachází tlačítko spouštějící
+V modulu jsou také další tři tlačítka z třídy \texttt{QPushButton}. 
+V~záložkách K~a~C jsou to tlačítka pro~výpočet jednotlivých faktorů ve
+zvolené vstupní vrstvě a~pod~záložkami se nachází tlačítko spouštějící
 výpočet erozního modelu. Všechny objekty modulu se také přizpůsobují
 zvolené šířce okna.
 \subsection{Zdrojový kód} Zdrojový kód byl psán v jazyce Python
-2.7~(kap.~\ref{python}) ve vývojovém prostředí PyCharm, vyvinutém
+2.7 (kap.~\ref{python}) ve vývojovém prostředí PyCharm(kap.~\ref{pycharm}), vyvinutém
 českou společností JetBrains. Dále byl pro testování změn v~kódu
 použit Plugin Reloader, který je stejně jako Plugin Builder součástí
 oficiálního repositáře QGIS.
@@ -58,10 +61,10 @@ angličtině, došlo v poslední fázi k jeho překladu a lokalizaci do
 \section{Popis struktury kódu} Strukturu kódu lze rozdělit na dvě
 části – tělo modulu a knihovnu \textit{pyerosion}.
 %%% ML: nekde o tridy ale spise o "modulu" (python soubory)
-\subsection{Knihovna pyerosion} Tato knihovna obsahuje třídu
+\subsection{Knihovna pyerosion} Tato knihovna obsahuje modul (python soubor)
 \texttt{erosionbase.py} vycházející z projektu QGIS Erosion
-plugin\cite{erosiongithub} a vytvořené třídy \texttt{erosionusle.py} a
-\texttt{read\_csv.py}.
+plugin\cite{erosiongithub} a vytvořené moduly \texttt{erosionusle.py} a
+\texttt{read\_csv.py} obsahující stejnojmenné třídy.
 \subsubsection{Třída ErosionBase} Tato třída v původní formátu
 sloužila ke spuštění programu GRASS GIS 7~(kap.~\ref{grassgis}) a
 nastavení výpočetního prostředí, tedy lokace a mapsetu. Dále byla
@@ -74,7 +77,7 @@ z \texttt{ErosionBase} probíhá veškerý výpočet odehrávající se v
 prostředí GRASS GIS. K tomu je využito příkaz \texttt{run\_command} z
 Python knihovny systému GRASS \texttt{grass.script.core}. Podrobný
 %%% ML: doplnit
-postup je popsán dále v $-----------$
+postup je popsán dále v kap. \ref{popisgrass}.
 
 \subsubsection{Třída ReadCSV} Třída \texttt{ReadCSV} slouží ke čtení
 CSV (comma-separated values) souborů, ve kterých jsou uloženy hodnoty
@@ -87,11 +90,12 @@ souborem \texttt{soil\_erosion\_dockwidget.py} s hlavní třídou
 rozhraním umístěným v souboru
 \texttt{soil\_erosion\_dockwidget\_base.ui}. V této třídě jsou
 %%% ML: objekty -> asi lepe "widgety"
-definovány funkce pro jednotlivé objekty GUI, import dat a výpočetní
+%%% RN: opraveno
+definovány funkce pro jednotlivé widgety GUI, import dat a výpočetní
 část probíhající v QGIS. Jsou zde také definovány chybové hlášení, jež
 jsou vypsány při nesprávném vstupu či chybě ve výpočtu. V druhé třídě
 %%% ML: souboru -> asi lepe "modulu"
-tohoto souboru \texttt{ComputeThread} dochází ke spuštění výpočtu v
+tohoto modulu \texttt{ComputeThread} dochází ke spuštění výpočtu v
 systému GRASS GIS, který probíhá v samostatném výpočetním vlákně a
 neovlivňuje další funkce QGIS. Během výpočtu jsou pomocí signálů
 přenášeny zprávy o stavu výpočtu na informační panel QGIS.
@@ -102,7 +106,7 @@ přenášeny zprávy o stavu výpočtu na informační panel QGIS.
 pluginu.
 	\item \texttt{soil\_erosion.py} – Sloužící k zařazení pluginu
 do prostředí QGIS, jeho spuštění a ukončení.
-	\item \texttt{plugin\_upload.py} – Soubor pro nahrání modulu
+	\item \texttt{plugin\_upload.py} – Soubor pro nahrání pluginu
 do QGIS repositáře zásuvných modulů.
 	\item \texttt{metadata.txt} – Textový soubor obsahující údaje
 o pluginu.
@@ -124,15 +128,18 @@ rozebrány dále.
       \label{diagram}
 \end{figure}
 \newpage
-\subsection{Popis výpočtu v GRASS GIS a použitých modulů} Tato sekce
+\subsection{Popis výpočtu v GRASS GIS a použitých modulů}
+\label{popisgrass}
+Tato sekce
 popisuje funkce, vstupy a výstupy použitých modulů, tj. nástrojů systému GRASS GIS.
 \begin{enumerate}
 	\item \texttt{g.region} – Nastavení výpočetního regionu.
 	\item \texttt{r.slope.aspect} – Výpočet sklonu na základě
           rastru DMT.
           %%% ML: maska se nastavuje aktualne z EUC
-	\item \texttt{r.mask} – Nastavení masky podle zájmového území,
-tedy rastru DMT.
+          %%% RN: opraveno
+	\item \texttt{r.mask} – Nastavení masky podle pozemků v zájmovém území. 
+	Tedy vrstvy EUC.
 	\item \texttt{r.watershed} – Výpočet akumulace odtoku na
 základě rastru DMT. (Tato funkce byla upřednostněna před funkcí
 \texttt{r.terraflow} na základě \textit{Metodiky GIS pro navrhování
@@ -159,11 +166,11 @@ je pro další vývoj počítáno)
 \subsection{Popis hlavních metod výpočtu v QGIS} V této části jsou
 %%% ML: Radeji nez o "funkcich" byste mel mluvit o "metodach" (i dale
 %%% v textu). Metody jsou clenske funkce dane tridy.
-popsány nejdůležitější funkce třídy \texttt{SoilErosionDockWidget},
+popsány nejdůležitější metody třídy \texttt{SoilErosionDockWidget},
 kterými je implementována část výpočtu odehrávající se v QGIS.
-\paragraph{Funkce \texttt{onAddKFactor()}} Funkce sloužící k přiřazení
+\paragraph{Metoda \texttt{onAddKFactor()}} Metoda sloužící k přiřazení
 K faktoru dle HPJ. K tomu je využit soubor \texttt{k\_factor.csv},
-který vznikl na základě tabulky \ref{hpj_k}. Funkce se spustí po
+který vznikl na základě tabulky \ref{hpj_k}. Metoda se spustí po
 kliknutí na tlačítko \textit{Vypočítat K faktor} v záložce \textit{K}.
 \begin{algorithm}
 \caption{Přidání K faktoru do atributové tabulky}
@@ -180,13 +187,13 @@ dle čísla HPJ}
     \end{algorithmic}
 \end{algorithm}
 
-\paragraph{Funkce \texttt{onAddCFactor()}} Funkce sloužící k určení C
+\paragraph{Metoda \texttt{onAddCFactor()}} Metoda sloužící k určení C
 faktoru na základě typu využití půdy a zvoleného osevního postupu pro
 ornou půdu. Hodnota dle typu využití půdy je určována přímo v kódu,
 pro hodnoty C faktoru pro osevní postupy je využit soubor
 %%% ML: doplnit
-\texttt{c\_factor.csv} vytvořený z tabulky $--------$. Ke spuštění
-funkce dojde stisknutím tlačítka \textit{Vypočítat C faktor} v záložce
+\texttt{c\_factor.csv} vytvořený z tabulky \ref{osevni_c}. Ke spuštění
+metody dojde stisknutím tlačítka \textit{Vypočítat C faktor} v záložce
 \textit{C}.
 \begin{algorithm}
 \caption{Přidání C faktoru do atributové tabulky}
@@ -203,7 +210,7 @@ zvoleného osevního postupu}
     	\ENDFOR \STATE{Informuj o dokončení funkce}
     \end{algorithmic}
 \end{algorithm} \FloatBarrier
-\paragraph{Funkce \texttt{importResults()}} Tato funkce je zavolána po
+\paragraph{Metoda \texttt{importResults()}} Tato metoda je zavolána po
 provedení výpočtu v systému GRASS GIS, importuje výsledek zpět do QGIS mapového
 okna a následně počítá zonální statistikou průměrné hodnoty na
 jednotlivých erozně uzavřených celcích do nové vrstvy EUC.
@@ -228,8 +235,10 @@ vrstev. Toho bylo dosaženo spuštěním výpočtu jen v případě, že se CRS
 zvolených vrstev rovná a zároveň se jedná o souřadnicový systém z datasetu
 %%% ML: zde bych mozna zminil, ze podminky jsou prilis striktni a
 %%% uvazuje se o podpore uzivatelskych CRS
+%%% RN: doplneno
 EPSG~(European Petroleum Survey Group), které jsou v systému GRASS GIS
-definovány.
+definovány. Jelikož jsou tyto podmínky značně striktní, uvažuje se o 
+podpoře uživatelských CRS.
 
 V případě nesouladu je zobrazena chybová hláška a uživatel vyzván k
 opravě.
@@ -237,13 +246,17 @@ opravě.
 \section{Testovací data} Oblast testovacích dat byla zvolena na
 %%% ML: prilis zkratkovite, mate nekde uvedeno, ze jde o vzorek dat ze
 %%% stranek CUZK, zde je to pouze naznaceno 
-základě nutnosti využití vzorových dat z DMR~5G pro vytvoření rastru
+%%% RN: rozvedeno
+základě nutnosti využití vzorových dat z~we-bu ČÚZK\cite{cuzk} pro vytvoření rastru
 %%% ML: zde by se hodily odkazy do kapitoly 3 (\ref{}), ono Vam obecne
 %%% v textu chybi provazanost odkazu
-digitálního modelu terénu. Další vstupní data - BPEJ a LPIS jsou k
+%%% RN: pridano
+digitálního modelu terénu (kap.~\ref{3-dmt}). Pro~tento model byly využity data
+z DMR 5G (kap.~\ref{3-dmr5g}).Další vstupní data - BPEJ (kap.~\ref{3-bpej}) a LPIS (kap.~\ref{3-lpis}) jsou k
 dispozici volně a jen byly oříznuty podle vytvořeného DMT. Dále byly
 ve vrstvě LPIS změněny typy pozemků tak, aby měla větší zastoupení
 orná půda.
 
 %%% ML: opet chybi odkaz, reference
-Náhled vstupních vrstev je k dispozici v přiloženém manuálu.
+%%% RN: pridan
+Náhled vstupních vrstev je k dispozici v přiloženém manuálu - příloha \ref{6-manual}.

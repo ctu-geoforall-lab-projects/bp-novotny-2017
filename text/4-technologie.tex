@@ -1,16 +1,19 @@
 %!TEX ROOT=radek-novotny-bp-2017.tex
 %%% ML: v teto kapitole obecne chybi zdroje, reference
-%%% RN: Doplneny reference, jeste chybi u Grass doplnim
+%%% RN: Doplneny reference, grass - doplneno
 \chapter{Technologie}
 \label{3-technologie}
 Cílem této kapitoly je v krátkosti popsat technologie, jež byly
 použity pro implementaci teoretických poznatků do softwarového
-nástroje – zásuvného modulu pro QGIS.
+nástroje – zásuvného modulu pro~QGIS.
 
 %%% ML: poznamkam pod carou v nazvech kapitol by bylo dobre se vyhnout
 %%% (napr. presunem loga do textu
+%%% RN: to jsem nevedel, ovsem umisteni loga za nazvem se mi zda 
+%%% graficky nejhezci, upravil jsem alespon odkazy, tak ze odkazuji
+%%% na stranky dane technologie(z techto stranek vzdy pochazi i logo)
 \section[QGIS]{QGIS \includegraphics[scale=0.055]{./pictures/qgis.png} 
-\footnote{http://www.qgis.org/}}
+\footnote{\url{http://www.qgis.org/}}}
 \label{qgis}
 \begin{figure}[H]
     \centering \includegraphics[scale=0.6]{./pictures/qgis_screen.png}
@@ -30,7 +33,7 @@ Python 3 s Qt5 a PyQt5. Od svého vzniku je QGIS udržován a dále
 vyvíjen dobrovolníky.
 
 QGIS podporuje většinu funkcí, které jsou od GIS očekávány, ať už se
-jedná o podporu mnoha vstupních formátů vektorových i rastrových dat,
+jedná o~podporu mnoha vstupních formátů vektorových i rastrových dat,
 výběr a úpravy objektů nebo práci s atributovými tabulkami. Výhodou je
 rovněž podpora nástrojů GRASS GIS, pomocí kterých jsou zvládány
 složitější výpočetní operace.  Silnou stránkou jsou rovněž zásuvné
@@ -41,7 +44,7 @@ zjednodušen. V QGIS je pluginů velké množství, čímž se významně
 rozšiřují možnosti práce se softwarem. Zásuvný modul pro QGIS je i
 výsledkem této práce.\cite{masteringQgis}
 \section[GRASS GIS]{GRASS GIS \includegraphics[scale=0.12]
-{./pictures/grass.png} \footnote{https://grass.osgeo.org/download/logos/}}
+{./pictures/grass.png} \footnote{\url{https://grass.osgeo.org/}}}
 \label{grassgis}
 \begin{figure}[H]
     \centering \includegraphics[scale=0.6]{./pictures/grass_screen.png}
@@ -51,7 +54,7 @@ výsledkem této práce.\cite{masteringQgis}
 \end{figure}
 GRASS GIS (Geographic Resources Analysis Support System) je stejně
 jako QGIS multiplatformním geografickým informačním systémem, který je
-volně šiřitelný pod licencí GNU/GPL. Jeho vývoj započala U.S. Army
+volně šiřitelný pod~licencí GNU/GPL. Jeho vývoj započala U.S. Army
 Corps of Enginneer/CERL (Construction Engineering Research Lab) už
 počátkem 80. let, na jejich konci byly veškeré zdrojové kódy uvolněny
 veřejnosti a v roce 1995 CERL z projektu odešel úplně. Další vývoj se
@@ -61,7 +64,7 @@ projekt zařazen do Open Source Geospatial Foundation.
 
 GRASS pracuje s vektorovými i rastrovými daty pomocí modulů, kterých
 je z obdobných důvodů jako u QGIS mnoho. Technika použití modulů je
-spjata s dlouhou historií a počátky vývoje softwaru, kdy bylo potřeba
+spjata s~dlouhou historií a počátky vývoje softwaru, kdy bylo potřeba
 s výkonem procesoru i využitím operační paměti šetřit.
 
 Dalším specifikem GRASS GIS je nutnost pracovat s daty v pevně
@@ -81,12 +84,15 @@ systematizovat. Struktura je rozdělena na databázi, lokaci a mapset.
 \end{itemize}
 GRASS je možné ovládat, jak z příkazové řádky, tak pomocí GUI. Další
 možností je přistupovat k modulům GRASS pomocí GUI QGIS, které mnoho
-uživatelů shledává přívětivějším.
+uživatelů shledává přívětivějším.\cite{grass}
 
 %%% ML: proc je tady nova stranka?
+%%% RN: kdyz tam neni zustane na samostatne strance pycharm, na dalsi 
+%%% githu a na dalsi qt, po pridani nove stranky vypadaji stranky plneji
+%%% a jsou rozdeleny vice logicky
 \newpage
 \section[Python]{Python \includegraphics[scale=0.2]{./pictures/python.png}
-\footnote{https://www.python.org/community/logos/}}
+\footnote{\url{https://www.python.org/}}}
 \label{python}
 Celý kód byl psán ve skriptovacím programovacím jazyce Python. Jedná
 se o objektově orientovaný jazyk představený v roce 1991 Guido van
@@ -108,8 +114,8 @@ verzi Python 3 a měl by být kompatibilní s oběma verzemi.
 \cite{diveIntoPython}\cite{learningPython}
 
 \section[PyCharm]{Pycharm \includegraphics[scale=0.2]
-{./pictures/pycharm.png} \footnote{https://www.jetbrains.com/pycharm/}}
-\label{python}
+{./pictures/pycharm.png} \footnote{\url{https://www.jetbrains.com/pycharm/}}}
+\label{pycharm}
 \vspace{-10pt}
 \begin{figure}[H]
     \centering \includegraphics[scale=0.45]{./pictures/pycharm_screen.png}
@@ -126,7 +132,7 @@ automatické doplňování textu, hledání syntaktických chyb či vytváření
 oddělených projektů. Osobně oceňuji zejména přehlednost a~rychlost 
 psaní kódu v tomto IDE.\cite{masteringPycharm}
 \section[GitHub]{GitHub \includegraphics[scale=0.06]{./pictures/github.png} 
-\footnote{https://github.com/}}
+\footnote{\url{https://github.com/}}}
 \label{github}
 \begin{figure}[H]
     \centering \includegraphics[scale=0.45]{./pictures/github_screen.png}
@@ -136,16 +142,18 @@ psaní kódu v tomto IDE.\cite{masteringPycharm}
 \end{figure}
 GitHub je webová služba podporující verzovací nástroj Git, což je
 distribuovaný (kolektivní) systém správy verzí. Git byl vytvořen
-Linusem Torvaldsem pro vývoj jádra operačního systému Linux a funguje
-pod licencí GNU/GPL. Na tomto základu je tedy postaven GitHub, který
-pro open source projekty zdarma nabízí vytvoření repositáře se
+Linusem Torvaldsem pro vývoj jádra operačního systému Linux. Na 
+tomto základu je tedy postaven GitHub, který je pro komerční využití 
+placenou službou. Ovšem 
+pro open source projekty funguje zdarma a nabízí vytvoření repositáře se
 zdrojovým kódem, dokumentací, historií verzování, systémem pro
 sledování problémů (Issue tracking), zobrazování rozdílů mezi verzemi
 %%% ML: GitHub jiz ale open source neni...
+%%% RN: snad opraveno
 a mnoho dalšího.\cite{introducingGithub}
 
 \section[Qt]{Qt \includegraphics[scale=0.20]{./pictures/qt.png} 
-\footnote{https://www.qt.io/ide/}}
+\footnote{\url{https://www.qt.io/ide/}}}
 \label{qt}
 \begin{figure}[H]
     \centering \includegraphics[scale=0.6]{./pictures/qt_screen.png}
