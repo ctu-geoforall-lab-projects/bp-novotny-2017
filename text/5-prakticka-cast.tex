@@ -2,7 +2,7 @@
 \chapter{Praktická část}
 \label{4-prakticka-cast} Následující kapitola pojednává o výsledku
 celé této práce, zásuvném modulu Soil Erosion pro QGIS, a to zejména o
-zvolených technických řešeních. Informace o~pluginu z pohledu
+zvolených technických řešeních. Informace o~plu-ginu z pohledu
 %%% ML: uvest link na prilohu (\ref{})
 %%% RN: opraveno
 uživatele shrnuje manuál nacházející se v příloze \ref{6-manual}.
@@ -81,7 +81,7 @@ postup je popsán dále v kap. \ref{popisgrass}.
 
 \subsubsection{Třída ReadCSV} Třída \texttt{ReadCSV} slouží ke čtení
 CSV (comma-separated values) souborů, ve kterých jsou uloženy hodnoty
-K faktoru pro jednotlivé HPJ a C faktoru pro osevní postupy. Tyto
+K faktoru pro jednotlivé HPJ(tab.~\ref{hpj_k}) a C faktoru pro osevní postupy(tab.~\ref{osevni_c}). Tyto
 soubory jsou uloženy v adresáři \texttt{code\_tables}.
 
 \subsection{Tělo zásuvného modulu} Tělo zásuvného modulu je tvořeno
@@ -102,7 +102,7 @@ přenášeny zprávy o stavu výpočtu na informační panel QGIS.
 
 \paragraph{Dalšími součástmi těla pluginu jsou soubory:}
 \begin{itemize}
-	\item \texttt{init.py} - Sloužící k základní inicializaci
+	\item \texttt{init.py} - Soubor, jež slouží k základní inicializaci
 pluginu.
 	\item \texttt{soil\_erosion.py} – Sloužící k zařazení pluginu
 do prostředí QGIS, jeho spuštění a ukončení.
@@ -118,7 +118,7 @@ resources.qrc, poskytuje informace o ikoně pluginu.
 \end{itemize}
 \newpage
 \subsection{Schéma výpočtu} Zde je zobrazeno schéma výpočtu barevně
-odlišující část probíhající v QGIS od části probíhající v systému
+odlišující část probíhající v QGIS od~části probíhající v systému
 GRASS GIS. Postup výpočtu částečně vychází z
 \textit{Gismentors}\cite{gismentors}. Jednotlivé kroky výpočtu jsou
 rozebrány dále.
@@ -142,7 +142,7 @@ popisuje funkce, vstupy a výstupy použitých modulů, tj. nástrojů systému 
 	Tedy vrstvy EUC.
 	\item \texttt{r.watershed} – Výpočet akumulace odtoku na
 základě rastru DMT. (Tato funkce byla upřednostněna před funkcí
-\texttt{r.terraflow} na základě \textit{Metodiky GIS pro navrhování
+\texttt{r.terraflow} na základě \textit{Metodiky GIS pro navr-hování
 TPEO}\cite{Dostal2014}.)
 	\item \texttt{r.mapcalc} – Pomocí mapové algebry vypočítán
 faktor LS na základě sklonu, akumulace a rozlišení rastrů dle rovnice
@@ -155,7 +155,7 @@ do sjednocené vrstvy.
 sloupce K, který obsahovala vrstva BPEJ a C, který obsahovala vrstva
 LPIS.
 	\item \texttt{v.to.rast} – Vytvoření rastru z hodnot sloupce
-KC
+KC.
 	\item \texttt{r.mapcalc} – Pomocí mapové algebry vypočítán
 výsledný faktor G z rastrů KC, LS a zadaných hodnot R a P.
 	\item \texttt{r.colors} – Nastavení tabulky barev výsledného rastru. (V
@@ -175,7 +175,7 @@ kliknutí na tlačítko \textit{Vypočítat K faktor} v záložce \textit{K}.
 \begin{algorithm}
 \caption{Přidání K faktoru do atributové tabulky}
 \label{alg:onAddKFactor}
-    \begin{algorithmic}[1] \STATE{\textbf{funkce} přidejKfaktor}
+    \begin{algorithmic}[1] \STATE{\textbf{metoda} přidejKfaktor}
 \STATE{načti vrstvu BPEJ} \STATE{zkontroluj zda obsahuje pole BPEJ}
 \IF{neobsahuje pole K} \STATE{přidej pole K}
     	\ENDIF \FOR{prvky ve vrstvě BPEJ} \IF{pole BPEJ = 99}
@@ -198,7 +198,7 @@ metody dojde stisknutím tlačítka \textit{Vypočítat C faktor} v záložce
 \begin{algorithm}
 \caption{Přidání C faktoru do atributové tabulky}
 \label{alg:onAddKFactor}
-    \begin{algorithmic}[1] \STATE{\textbf{funkce} přidejCfaktor}
+    \begin{algorithmic}[1] \STATE{\textbf{metoda} přidejCfaktor}
 \STATE{načti vrstvu LPIS} \STATE{zkontroluj zda obsahuje pole
 KULTURAKOD} \STATE{Nastav symbologii vrstvy dle typu využití půdy}
 \IF{neobsahuje pole C} \STATE{přidej pole C}
@@ -217,7 +217,7 @@ jednotlivých erozně uzavřených celcích do nové vrstvy EUC.
 \begin{algorithm}
 \caption{Závěrečná část výpočtu probíhající v QGIS}
 \label{alg:onAddKFactor}
-    \begin{algorithmic}[1] \STATE{\textbf{funkce} přidejVýsledky }
+    \begin{algorithmic}[1] \STATE{\textbf{metoda} přidejVýsledky }
 \STATE{přidej rastr vypočtený GRASS na vrchol seznamu vrstev jako
 \textit{G Faktor}} \STATE{vytvoř vrstvu \textit{EUC} z vrstvy zadané v
 poli \textit{EUC}} \STATE{vypočti zonální statistikou průměr do
@@ -252,8 +252,8 @@ základě nutnosti využití vzorových dat z~we-bu ČÚZK\cite{cuzk} pro vytvo�
 %%% v textu chybi provazanost odkazu
 %%% RN: pridano
 digitálního modelu terénu (kap.~\ref{3-dmt}). Pro~tento model byly využity data
-z DMR 5G (kap.~\ref{3-dmr5g}).Další vstupní data - BPEJ (kap.~\ref{3-bpej}) a LPIS (kap.~\ref{3-lpis}) jsou k
-dispozici volně a jen byly oříznuty podle vytvořeného DMT. Dále byly
+z DMR 5G (kap.~\ref{3-dmr5g}). Další vstupní data - BPEJ (kap.~\ref{3-bpej}) a LPIS (kap.~\ref{3-lpis}) jsou k
+dispozici volně a jen byly oříznuty podle vytvořené-ho DMT. Dále byly
 ve vrstvě LPIS změněny typy pozemků tak, aby měla větší zastoupení
 orná půda.
 
