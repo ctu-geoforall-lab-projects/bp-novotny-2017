@@ -17,16 +17,15 @@ ztráty půdy pro definované erozně uzavřené celky.
 
 Zásuvný modul je pod licencí GNU/GPL.
 
-Případné chyby a nápady na vylepšení zásuvného modulu prosím pište na
-stránku
+Případné chyby a nápady na vylepšení zásuvného modulu, prosím, pište na~stránku
 pluginu\footnote{\url{https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017/issues}}.
 
 \section{Instalace}
 \label{manual_instalace} Zásuvný modul \textit{Soil Erosion} je v
 současnosti veden jako \uv{Experimentální} a není zařazen do
 oficiálního repositáře QGIS. Jedinou odlišností od instalace jiných
-zásuvných modulů je nutnost přidání repositáře laboratoře
-\textit{CTU GeoForAll Lab}, ve kterém je plugin \textit{Soil Erosion}
+zásuv-ných modulů je nutnost přidání repositáře laboratoře
+\textit{CTU GeoForAll Lab}, ve~kterém je plugin \textit{Soil Erosion}
 umístěn.
 
 
@@ -103,7 +102,7 @@ zásuvného modulu v menu, zdroj: autor}
 \section{Návod k použití}
 \label{navod_k_pouziti} Pro vytvoření erozního modelu je nutné
 vyplnění pěti záložek, ve kterých jsou definovány pozemky, na kterých
-bude výpočet probíhat (EUC), a voleny vstupy pro určení faktorů v
+bude výpočet probíhat (EUC), a voleny vstupy pro~určení faktorů v
 rovnici USLE (LS, K, C a RP).
 \subsection{EUC} Určení erozně uzavřených celků (pozemků), pro které
 bude určována průměrná roční ztráta, probíhá v záložce EUC.
@@ -126,11 +125,11 @@ dát pozor, aby na většině plochy EUC byly definovány faktory K a C.
 funkčnost výpočtu doporučeno zkontrolovat návaznosti polygonů. Zda v
 místech, kde se jedná o jeden EUC rozdělený mezi několik vlastníků
 (uživatelů), na sebe polygony navazují (případně se překrývají). (EUC
-1A a EUC 1B)
+1A a EUC 1B).
 
-Naopak v místech, kde jsou pozemky erozně odděleny technické
-protierozním opatření či silnicí, musí být mezi jednotlivými polygony
-mezera. (EUC 2 a EUC 3)
+Naopak v místech, kde jsou pozemky erozně odděleny technickým
+protierozním opatřením či silnicí, musí být mezi jednotlivými polygony
+mezera. (EUC 2 a EUC 3).
 \begin{figure}[H] \centering
 		\includegraphics[width=.7\textwidth]{./pictures/rozdeleni_euc.png}
 		\caption[Zobrazení EUC se zahrnutými
@@ -180,7 +179,7 @@ modulu.
 \paragraph{Tip:} Hodnoty C lze poté manuálně upravovat v atributové
 tabulce (stejně lze upravovat i hodnoty K)
 \subsection{R,P} V poslední záložce \textit{R,P} je možné upravit
-hodnotu faktoru přívalového deště \textit{R} pro danou oblast. Tato
+hodnotu faktoru přívalového deště \textit{R} pro~danou oblast. Tato
 hodnota je nastavena na 40, což je průměrná hodnota pro ČR. Dále pak
 hodnotu faktoru protierozních opatření \textit{P}, ta je nastavena na
 1 (= Nejsou použita žádná agrotechnická protierozní opatření.)
@@ -207,8 +206,8 @@ první a druhé místo v seznamu vrstev přidají vrstvy erozního modelu -
 najít v popisu ukázkového výpočtu.
 \begin{itemize}
 	\item Erozní model: Vektorová polygonová vrstva \textit{EUC}
-je vytvořená z vrstvy zadané v záložce EUC. Do atributové tabulky této
-vrstvy je přidán nový sloupec G s hodnotou průměrné roční ztráty půdy
+je vytvořená z vrstvy zadané v~záložce EUC. Do atributové tabulky této
+vrstvy je přidán nový sloupec G s~hodnotou průměrné roční ztráty půdy
 pro jednotlivé pozemky, tyto pozemky jsou rovněž obarveny dle tabulky
 ohrožení půdy.
 	\item G faktor: Rastrová vrstva zobrazující lokální hodnoty
@@ -219,7 +218,7 @@ novými.
 \section{Ukázkový výpočet}
 
 \subsection{Vzorová data} Pro ukázkový výpočet jsou použita vzorová
-data umístěná v GitHub repositáři\footnote{\url{https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017/raw/master/sample_data/erosion-sample-data.zip}} Ta obsahují 3 vrstvy \textit{DMT\_sample}, \textit{BPEJ\_Sample}
+data umístěná v GitHub repositáři\footnote{\url{https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017/raw/master/sample_data/erosion-sample-data.zip}}. Ta obsahují 3 vrstvy \textit{DMT\_sample}, \textit{BPEJ\_Sample}
 a \textit{LPIS\_Sample}.
 %%% ML: chybi odkaz na testovaci data umistena v Git repozitari
 %%% RN: doplneno
@@ -261,7 +260,7 @@ faktoru]{Vrstva BPEJ\_sample po výpočtu K faktoru, zdroj: autor}
 		\caption[Vrstva LPIS po výpočtu C faktoru]{Vrstva LPIS
 po výpočtu C faktoru, zdroj: autor}
 		\label{lpis_sample2}
-\end{figure} V poslední záložce R,P jsou ponechány výchozí hodnoty a
+\end{figure} V poslední záložce R,~P jsou ponechány výchozí hodnoty a
 plugin je spuštěn.
 \newpage
 \subsection{Výsledný model} Výsledkem výpočtu by měly být následující

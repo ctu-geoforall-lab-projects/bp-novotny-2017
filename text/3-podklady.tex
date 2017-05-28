@@ -1,14 +1,14 @@
 %!TEX ROOT=radek-novotny-bp-2017.tex
 \chapter{Podklady}
-V této kapitole jsou popsány mapové podklady využívané při výpočtu 
-faktorů pro USLE. V České republice se jedná zejména o vrstvy 
+V této kapitole jsou popsány mapové podklady, jež jsou využívány při výpočtu 
+faktorů \hbox{pro~USLE}. V České republice se jedná zejména o vrstvy 
 BPEJ~($K, G_P$), LPIS~($C$) a~DMT($LS$).
 \section{BPEJ}
 \label{3-bpej}
 Prvním krokem k vytvoření systému hodnocení půdy BPEJ bylo v roce 1961
 zahájení celosvětově ojedinělého Komplexního průzkumu půd(KPP), při
-kterém bylo odebráno okolo 700~000~ půdních sond, ze kterých byly
-zpracovány mapové podklady. Na základě nichž byl v roce 1971 začala
+kterém bylo odebráno okolo 700~000~půdních sond, ze kterých byly
+zpracovány mapové podklady. Na základě nichž začala v roce 1971
 tvorba systému ocenění zemědělské půdy - proběhla tzv.~Bonitace
 zemědělského půdního fondu.
 
@@ -26,8 +26,8 @@ celostátní databázi volně ke stažení ve formátu Esri Shapefile\cite{spucr
 \end{figure}
 Bonitovaná půdně ekologická jednotka je vyjádřena pětimístným kódem ve
 formátu - X.XX.XX. Kdy první číslice určuje příslušící klimatický
-region(0-9). Druhá a třetí zařazuje půdu do hlavní půdní
-jednotky(HPJ)(01-78), pomocí které je ve většině případů možné určit K
+region(0-9). Druhá a~třetí zařazuje půdu do hlavní půdní
+jednotky(HPJ)(01-78), pomocí které je ve~vět-šině případů možné určit K
 faktor~(viz. tab.\ref{hpj_k}). Čtvrtá číslice vymezuje kombinaci
 sklonitosti a expozice svahu ke světovým stranám(0-9). Pátá číslice
 určuje kombinaci skeletovitosti půdního profilu s hloubkou půdy(0-9),
@@ -41,11 +41,11 @@ $G_P$.\cite{Novotny2013}
         GIS aplikace Registr půd, zdroj: Registr půd\cite{lpis}}
       \label{fig:lpis}
 \end{figure}
-V roce 1999 se Česká republika zavázala vybudovat do vstupu do EU
-systém evidence půdy, který bude založený na uživatelských
-vztazích. Jelikož takový systém v ČR do té doby nebyl, tak první verze
+V roce 1999 se Česká republika zavázala před vstupem do EU vybudovat
+systém evi-dence půdy, který bude založený na uživatelských
+vztazích. Jelikož takový systém v~ČR do té doby nebyl, tak první verze
 z roku 2002 vznikla zakreslením půdních bloků z leteckých snímků do
-offline geografického informačního systému, tyto bloky byly následně
+offline geografického informačního systému. Tyto bloky byly následně
 schváleny příslušnými uživateli půdy. Toto první řešení bylo v roce
 2004 nahrazeno online aplikací Registr půdy\cite{lpis}, která
 usnadnila přístup k materiálům LPIS. Ty lze z Registru půdy exportovat
@@ -80,8 +80,8 @@ třeba zjistit pěstované plodiny.\cite{Novotny2014}
 % nenasel nic vhodneho.
 %%% ML: neco jako
 %%% http://freegis.fsv.cvut.cz/gwiki/%C4%8C%C3%9AZK_DMT/DMP anebo http://training.gismentors.eu/grass-gis-pokrocily/lidar/dmr-dmp-cuzk.html ?
-Pro výpočet LS faktoru se v ČR při využití GIS používají především
-digitální model reliéfu vytvořenými ČÚZK\cite{cuzk}. Výpočty nad
+Pro výpočet LS faktoru s využitím GIS se v ČR používá především
+digitální model reliéfu vytvořený ČÚZK\cite{cuzk}. Výpočty nad
 DMR~4G jsou rychlejší díky pravidelné mřížce, zatímco výpočty nad
 DMR~5G poskytují přesnější model terénu.
 \subsection{DMR 4G}
@@ -89,7 +89,7 @@ DMR~5G poskytují přesnější model terénu.
 %%% RN: Rozdelil jsem ji na dve
 Digitální model reliéfu České republiky 4.~generace~(DMR~4G)
 vznikl leteckým laserovým skenováním v letech 2009 až 2013. DMR~4G 
-zobrazuje přirozený nebo lidskou činností upravený zemský povrch v 
+zobrazuje přirozený nebo~lidskou činností upravený zemský povrch v 
 pravidelné síti 5~x~5~m, která je tvořena body s~určenou nadmořskou
 výškou~(Bpv). Pro tento model byla vypočtena úplná střední chyba výšky
 0,3~m v odkrytém terénu a 1~m v zalesněném terénu.

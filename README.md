@@ -2,7 +2,7 @@
 
 ## Název
 
-**TODO**
+Zásuvný modul QGIS pro výpočet erozního smyvu na orné půdě
 
 ## Student
 
@@ -14,7 +14,7 @@ Ing. Martin Landa, Ph.D.
 
 ## Oponent
 
-TODO
+doc. Ing. Josef Krása, Ph.D.
 
 ## Obhajoba
 
