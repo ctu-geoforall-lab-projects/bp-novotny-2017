@@ -22,4 +22,4 @@ doc. Ing. Josef Krása, Ph.D.
 
 ## Text
 
-TODO
+[radek-novotny-bp-2017.pdf](https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017/raw/master/text/radek-novotny-bp-2017.pdf)
