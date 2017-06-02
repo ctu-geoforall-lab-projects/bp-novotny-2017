@@ -1,6 +1,11 @@
 Zásuvný modul Soil Erosion pro QGIS
 ===================================
- 
+
+.. warning:: Tato dokumentace odpovídá stavu vývoje pluginu při
+   odevzdání bakalářské práce (`PDF
+   <https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017/raw/master/text/radek-novotny-bp-2017.pdf>`__). Aktuální
+   dokumentace pluginu je dostupná na https://ctu-geoforall-lab.github.io/qgis-soil-erosion-plugin/.
+
 Soil Erosion Plugin slouží pro výpočet 
 a prezentaci erozního smyvu na orné půdě.
 

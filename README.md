@@ -23,3 +23,9 @@ doc. Ing. Josef Krása, Ph.D.
 ## Text
 
 [radek-novotny-bp-2017.pdf](https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017/raw/master/text/radek-novotny-bp-2017.pdf)
+
+## Navazující vývoj
+
+Tento repositář je zmrazen termínem odevzdání bakalářské práce.
+
+Další vývoj probíhá v navazujícím repositáři https://github.com/ctu-geoforall-lab/qgis-soil-erosion-plugin
