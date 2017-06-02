@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Soil Erosion QGIS Plugin &mdash; Soil Erosion QGIS Plugin 0.1 documentation</title>
+  <title>Zásuvný modul Soil Erosion pro QGIS &mdash; Soil Erosion QGIS Plugin 0.1 documentation</title>
   
 
   
@@ -89,6 +89,8 @@
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="navod.html">Návod k použití</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ukazkovy_vypocet.html">Ukázkový výpočet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autori.html">Autoři</a></li>
 </ul>
 
             
@@ -119,7 +121,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="#">Docs</a> &raquo;</li>
       
-    <li>Soil Erosion QGIS Plugin</li>
+    <li>Zásuvný modul Soil Erosion pro QGIS</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -133,38 +135,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="soil-erosion-qgis-plugin">
-<h1>Soil Erosion QGIS Plugin<a class="headerlink" href="#soil-erosion-qgis-plugin" title="Permalink to this headline">¶</a></h1>
-<p>Zásuvný plugin Soil Erosion slouží pro výpočet
+  <div class="section" id="zasuvny-modul-soil-erosion-pro-qgis">
+<h1>Zásuvný modul Soil Erosion pro QGIS<a class="headerlink" href="#zasuvny-modul-soil-erosion-pro-qgis" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Tato dokumentace odpovídá stavu vývoje pluginu při
+odevzdání bakalářské práce (<a class="reference external" href="https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017/raw/master/text/radek-novotny-bp-2017.pdf">PDF</a>). Aktuální
+dokumentace pluginu je dostupná na <a class="reference external" href="https://ctu-geoforall-lab.github.io/qgis-soil-erosion-plugin/">https://ctu-geoforall-lab.github.io/qgis-soil-erosion-plugin/</a>.</p>
+</div>
+<p>Soil Erosion Plugin slouží pro výpočet
 a prezentaci erozního smyvu na orné půdě.</p>
 <p>Vstupem jsou vektorové vrstvy <a class="reference external" href="http://www.spucr.cz/bpej/celostatni-databaze-bpej">Bonitovaných půdně ekologických jednotek (BPEJ)</a>, <a class="reference external" href="http://eagri.cz/public/app/eagriapp/lpisdata/">Registru půd (LPIS)</a> a rastrová vrstva digitálního modelu terénu.</p>
-<p>Výstupem je rastrová vrstva znázorňující hodnotu smyvu
-.. a vektorová vrstva obsahující výsledné hodnoty průměrné
-.. dlouhodobé ztráty půdy pro definované erozně uzavřené celky.</p>
-<p>Případné chyby a nápady na vylepšení zásuvného modulu prosím pište na <a class="reference external" href="https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/issues">stránku</a>.</p>
-<p>Contents:</p>
+<p>Výstupem je rastrová vrstva znázorňující lokální hodnotu smyvu
+a vektorová vrstva obsahující výsledné hodnoty průměrné
+dlouhodobé ztráty půdy pro definované erozně uzavřené celky.</p>
+<p><a class="reference external" href="https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017">Zásuvný modul</a>
+je pod licencí GNU/GPL.</p>
+<p>Případné chyby a nápady na vylepšení zásuvného modulu prosím pište na <a class="reference external" href="https://github.com/ctu-geoforall-lab-projects/bp-novotny-2017/issues">stránku</a>.</p>
+<p>Obsah:</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="navod.html">Návod k použití</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-euc">Záložka EUC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-l-s">Záložka L,S</a></li>
-<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-k">Záložka K</a></li>
-<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-c">Záložka C</a></li>
-<li class="toctree-l2"><a class="reference internal" href="navod.html#zalozka-r-p">Záložka R,P</a></li>
-<li class="toctree-l2"><a class="reference internal" href="navod.html#tlacitko-compute-erosion-model">Tlačítko Compute erosion model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#euc">EUC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#l-s">L,S</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#k">K</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#c">C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#r-p">R,P</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#vypocet-erozniho-modelu">Výpočet erozního modelu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navod.html#erozni-model">Erozní model</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ukazkovy_vypocet.html">Ukázkový výpočet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ukazkovy_vypocet.html#vzorova-data">Vzorová data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ukazkovy_vypocet.html#nastaveni-vstupu-a-vypocet">Nastavení vstupů a výpočet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ukazkovy_vypocet.html#vysledny-model">Výsledný model</a></li>
 </ul>
-</div>
-<div class="section" id="autori">
-<h2>Autoři<a class="headerlink" href="#autori" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://geomatics.fsv.cvut.cz/research/geoforall/">Labolatoř GeoForAll</a> České vysoké
-učení technické v Praze</p>
-<ul class="simple">
-<li>Radek Novotný</li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="autori.html">Autoři</a></li>
 </ul>
-<p>Vedoucí: Martin Landa</p>
 </div>
 </div>
 

@@ -34,6 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Soil Erosion QGIS Plugin 0.1 documentation" href="index.html"/>
+        <link rel="next" title="Ukázkový výpočet" href="ukazkovy_vypocet.html"/>
         <link rel="prev" title="Instalace" href="instalace.html"/> 
 
   
@@ -89,14 +90,17 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Návod k použití</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#zalozka-euc">Záložka EUC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#zalozka-l-s">Záložka L,S</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#zalozka-k">Záložka K</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#zalozka-c">Záložka C</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#zalozka-r-p">Záložka R,P</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tlacitko-compute-erosion-model">Tlačítko Compute erosion model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#euc">EUC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#l-s">L,S</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#k">K</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c">C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#r-p">R,P</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vypocet-erozniho-modelu">Výpočet erozního modelu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#erozni-model">Erozní model</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ukazkovy_vypocet.html">Ukázkový výpočet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autori.html">Autoři</a></li>
 </ul>
 
             
@@ -144,79 +148,128 @@
   <div class="section" id="navod-k-pouziti">
 <h1>Návod k použití<a class="headerlink" href="#navod-k-pouziti" title="Permalink to this headline">¶</a></h1>
 <p>Pro vytvoření erozního modelu je nutné vyplnění pěti záložek, ve kterých jsou
-voleny vstupy pro určení faktorů v rovnici USLE.</p>
-<div class="section" id="zalozka-euc">
-<h2>Záložka EUC<a class="headerlink" href="#zalozka-euc" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>Zde se volí polygonová vektorová vrstva (.shp) určující erozně uzavřené celky (pozemky),
-pro které bude určována průměrná roční ztráta. Vrstvu je možné zvolit ze seznamu
-vrstev, či ji nahrát přes tlačítko <cite>Load(.shp)</cite>.</div></blockquote>
+definovány pozemky, na kterých bude výpočet probíhat (EUC), a voleny vstupy
+pro určení faktorů v rovnici USLE (LS, K, C a RP).</p>
+<div class="section" id="euc">
+<h2>EUC<a class="headerlink" href="#euc" title="Permalink to this headline">¶</a></h2>
+<p>Určení erozně uzavřených celků (pozemků), pro které bude určována průměrná
+roční ztráta, probíhá v záložce EUC.</p>
 <div class="figure align-center" id="id1">
 <img alt="_images/euc.png" src="_images/euc.png" />
 <p class="caption"><span class="caption-text">Figure 1: Záložka EUC</span></p>
 </div>
-</div>
-<div class="section" id="zalozka-l-s">
-<h2>Záložka L,S<a class="headerlink" href="#zalozka-l-s" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>Zde se určuje raster digitálního modelu terénu, nad kterým bude probíhat
-výpočet faktorů délky a sklonu svahu (L, S). Vrstvu je možné zvolit ze seznamu
-vrstev, či ji nahrát přes tlačítko <cite>Load(raster)</cite>.</div></blockquote>
-<div class="figure align-center" id="id2">
-<img alt="_images/ls.png" src="_images/ls.png" />
-<p class="caption"><span class="caption-text">Figure 2: Záložka L,S</span></p>
-</div>
-</div>
-<div class="section" id="zalozka-k">
-<h2>Záložka K<a class="headerlink" href="#zalozka-k" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>Zde se volí polygonová vektorová vrstva (.shp) BPEJ, vrstva musí obsahovat pole
-s názvem <cite>*BPEJ*</cite> ve formátu ‘X.XX.XX’, ze kterého se pomocí tlačítka <cite>Compute
-K Factor</cite>, vypočte hodnota K. Případně je možné použít vrstvu s už vypočteným
-K faktorem v poli <cite>K</cite>. Vrstvu je možné zvolit ze seznamu vrstev, či ji nahrát
-přes tlačítko <cite>Load(.shp)</cite>.</div></blockquote>
-<div class="figure align-center" id="id3">
-<img alt="_images/k.png" src="_images/k.png" />
-<p class="caption"><span class="caption-text">Figure 3: Záložka K</span></p>
-</div>
-</div>
-<div class="section" id="zalozka-c">
-<h2>Záložka C<a class="headerlink" href="#zalozka-c" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>Zde se volí polygonová vektorová vrstva (.shp) LPIS, vrstva musí obsahovat pole
-s názvem <cite>*KULTURAKOD*</cite> s jednoznakovým kódem pro využití pozemku. V rolovací
-nabídce se volí primární plodina pěstovaná na pozemcích s ornou půdou. Poté se
-C faktor nastaví kliknutím na tlačítko <cite>Compute C Factor</cite>.</div></blockquote>
-<div class="figure align-center" id="id4">
-<img alt="_images/c.png" src="_images/c.png" />
-<p class="caption"><span class="caption-text">Figure 4: Záložka C</span></p>
+<p>Zde se volí polygonová vektorová vrstva (.shp) definující EUC. Vrstvu je možné
+zvolit ze seznamu vrstev, či ji nahrát přes tlačítko <cite>Nahrát (.shp)</cite>.</p>
+<p>Tato vrstva většinou vychází z vrstvy LPIS, ovšem je rovněž možné
+volit svou vlastní vrstvu.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Při zvolení vlastní vrstvy je potřeba dát pozor, aby na většině
+plochy EUC byly definovány faktory K a C.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Při využití dat LPIS vyexportovaných z <a class="reference external" href="http://eagri.cz/public/app/eagriapp/lpisdata/">Registru půd (LPIS)</a> a BPEJ z <a href="#id6"><span class="problematic" id="id7">`celostátní
-databáze&lt;http://www.spucr.cz/bpej/celostatni-databaze-bpej&gt;`_</span></a>, jejich
+<p>Při využítí vrstvy LPIS je pro správnou funkčnost výpočtu doporučeno
+zkontrolovat návaznosti polygonů. Zda v místech, kde se jedná o jeden
+EUC rozdělený mezi několik vlastníků (uživatelů), na sebe polygony
+navazují (případně se překrývají). (EUC 1A a EUC 1B)</p>
+<p>Naopak v místech, kde jsou pozemky erozně odděleny technické protierozním
+opatření či silnicí, musí být mezi jednotlivými polygony mezera.
+(EUC 2 a EUC 3)</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="_images/rozdeleni_euc.png"><img alt="_images/rozdeleni_euc.png" src="_images/rozdeleni_euc.png" style="width: 75%;" /></a>
+<p class="caption"><span class="caption-text">Figure 2: Zobrazení EUC se zahrnutými překážkami</span></p>
+</div>
+<p class="last">Pro základní kontrolu je vhodné využití <a class="reference external" href="http://geoportal.cuzk.cz/(S(30jees5ocuget4qwpqlemkdv))/Default.aspx?mode=TextMeta&amp;side=wms.verejne&amp;metadataID=CZ-CUZK-WMS-ORTOFOTO-P&amp;metadataXSL=metadata.sluzba&amp;head_tab=sekce-03-gp&amp;menu=3121">ortofota</a>.</p>
+</div>
+</div>
+<div class="section" id="l-s">
+<h2>L,S<a class="headerlink" href="#l-s" title="Permalink to this headline">¶</a></h2>
+<p>V záložce L,S se určuje rastr digitálního modelu terénu, nad kterým bude probíhat
+výpočet faktorů délky a sklonu svahu (L, S). Vrstvu je možné zvolit ze seznamu
+vrstev, či ji nahrát přes tlačítko <cite>Nahrát (rastr)</cite>.</p>
+<div class="figure align-center" id="id3">
+<img alt="_images/ls.png" src="_images/ls.png" />
+<p class="caption"><span class="caption-text">Figure 3: Záložka L,S</span></p>
+</div>
+</div>
+<div class="section" id="k">
+<h2>K<a class="headerlink" href="#k" title="Permalink to this headline">¶</a></h2>
+<p>V záložce K se volí polygonová vektorová vrstva (.shp) BPEJ, vrstva musí obsahovat pole
+s názvem <cite>*BPEJ*</cite> ve formátu &#8216;X.XX.XX&#8217;, ze kterého se pomocí tlačítka <cite>Vypočítat
+K faktor</cite>, vypočte hodnota K a vrstva se dle jeho hodnoty barevně rozliší.
+Případně je možné použít vrstvu s předem vypočteným K faktorem v poli <cite>K</cite>.
+Vrstvu je možné zvolit ze seznamu vrstev, či ji nahrát přes tlačítko <cite>Nahrát (.shp)</cite>.</p>
+<div class="figure align-center" id="id4">
+<img alt="_images/k.png" src="_images/k.png" />
+<p class="caption"><span class="caption-text">Figure 4: Záložka K</span></p>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">Hodnoty K lze poté manuálně upravovat v atributové tabulce (stejně lze
+upravovat i hodnoty C)</p>
+</div>
+</div>
+<div class="section" id="c">
+<h2>C<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h2>
+<p>Záložka C slouží ke zvolení polygonové vektorové vrstvy (.shp) LPIS, vrstva musí obsahovat pole
+s názvem <cite>*KULTURAKOD*</cite> s jednoznakovým kódem pro využití pozemku. V rolovací
+nabídce se volí primární osevní postup užívaný na pozemcích s ornou půdou. Poté se
+C faktor nastaví kliknutím na tlačítko <cite>Vypočítat C faktor</cite>, přičemž současně
+dojde k barevnému rozlišení dle využití pozemku.</p>
+<div class="figure align-center" id="id5">
+<img alt="_images/c.png" src="_images/c.png" />
+<p class="caption"><span class="caption-text">Figure 5: Záložka C</span></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Při využití dat LPIS vyexportovaných z <a class="reference external" href="http://eagri.cz/public/app/eagriapp/lpisdata/">Registru půd (LPIS)</a> a BPEJ z <a class="reference external" href="http://www.spucr.cz/bpej/celostatni-databaze-bpej">celostátní
+databáze</a>, jejich
 formát odpovídá požadavkům zásuvného modulu.</p>
 </div>
 <div class="admonition tip">
 <p class="first admonition-title">Tip</p>
-<p class="last">Hodnoty K a C lze poté manuálně upravovat v atributové tabulce.</p>
+<p class="last">Hodnoty C lze poté manuálně upravovat v atributové tabulce (stejně lze
+upravovat i hodnoty K)</p>
 </div>
 </div>
-<div class="section" id="zalozka-r-p">
-<h2>Záložka R,P<a class="headerlink" href="#zalozka-r-p" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>Zde je možné upravit hodnotu faktoru přívalového deště <cite>R</cite> a faktoru protierozních
-opatření <cite>P</cite>.</div></blockquote>
-<div class="figure align-center" id="id5">
+<div class="section" id="r-p">
+<h2>R,P<a class="headerlink" href="#r-p" title="Permalink to this headline">¶</a></h2>
+<p>V poslední záložce R,P je možné upravit hodnotu faktoru přívalového deště <cite>R</cite> pro danou oblast,
+tato hodnota je nastavena na 40, průměrná hodnota pro ČR. Dále pak hodnotu
+faktoru protierozních opatření <cite>P</cite>, ta je nastavena na 1 (= Nejsou použita žádná
+agrotechnická protierozní opatření.)</p>
+<div class="figure align-center" id="id6">
 <img alt="_images/rp.png" src="_images/rp.png" />
-<p class="caption"><span class="caption-text">Figure 5: Záložka R,P</span></p>
+<p class="caption"><span class="caption-text">Figure 6: Záložka R,P</span></p>
 </div>
 </div>
-<div class="section" id="tlacitko-compute-erosion-model">
-<h2>Tlačítko Compute erosion model<a class="headerlink" href="#tlacitko-compute-erosion-model" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div>Po nastavení všech vstupních hodnot se stisknutím tlačítka provede výpočet
-erozního modelu. Tlačítko je viditelné ze všech záložek.</div></blockquote>
+<div class="section" id="vypocet-erozniho-modelu">
+<h2>Výpočet erozního modelu<a class="headerlink" href="#vypocet-erozniho-modelu" title="Permalink to this headline">¶</a></h2>
+<p>Po nastavení všech vstupních hodnot se stisknutím tlačítka provede výpočet
+erozního modelu. Tlačítko je viditelné ze všech záložek. Po spuštění výpočtu
+jsou zobrazovány informace o jeho průběhu pomocí panelu v horní části QGIS.
+Z tohoto panelu je také možné výpočet ukončit pomocí tlačítka <cite>Zrušit výpočet</cite>.</p>
+<div class="figure align-center" id="id7">
+<img alt="_images/progressbar.png" src="_images/progressbar.png" />
+<p class="caption"><span class="caption-text">Figure 7: Informačního panel</span></p>
+</div>
+</div>
+<div class="section" id="erozni-model">
+<h2>Erozní model<a class="headerlink" href="#erozni-model" title="Permalink to this headline">¶</a></h2>
+<p>Po skončení výpočtu se do mapového okna a na první a druhé místo v seznamu
+vrstev přidají vrstvy erozního modelu - <cite>EUC</cite> a <cite>Lokální eroze</cite>. Ukázku těchto
+vrstev je možné najít v popisu ukázkového výpočtu.</p>
+<ul class="simple">
+<li>Erozní model:
+Vektorová polygonová vrstva <cite>EUC</cite> je vytvořená z vrstvy zadané v záložce <cite>EUC</cite>.
+Do atributové tabulky této vrstvy je přidán nový sloupec <cite>G</cite> s hodnotou průměrné
+roční ztráty půdy pro jednotlivé pozemky, tyto pozemky jsou rovněž obarveny dle
+tabulky ohrožení půdy.</li>
+<li>G faktor:
+Rastrová vrstva zobrazující lokální hodnoty eroze ve stupních šedi.</li>
+</ul>
+<p>Při spuštění nového výpočtu se vytvořené vrstvy nahradí novými.</p>
 </div>
 </div>
 
@@ -226,6 +279,8 @@ erozního modelu. Tlačítko je viditelné ze všech záložek.</div></blockquot
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ukazkovy_vypocet.html" class="btn btn-neutral float-right" title="Ukázkový výpočet" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="instalace.html" class="btn btn-neutral" title="Instalace" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
